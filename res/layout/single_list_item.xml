@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="fill_parent"
     android:padding="3dip" >
-    
-  <!-- Image -->
-  <ImageView
+
+    <ImageView
         android:id="@+id/image_label"
         android:layout_width="100dip"
         android:layout_height="150dip"
@@ -13,46 +12,74 @@
         android:gravity= "left"
         android:contentDescription="TODO"
         android:src="@drawable/ic_launcher" />
-  
-  <!-- Name Label -->
-    <TextView
-        android:id="@+id/author_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/image_label"
-        android:layout_toRightOf="@+id/image_label"
-        android:textSize="12sp"
-        android:textColor="#43bd00"
-        android:text="TextView" />
-  <!-- Description Label -->
-  	    <TextView
-        android:id="@+id/publisher_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/author_label"
-        android:layout_toRightOf="@+id/image_label"
-        android:text="TextView" 
-        android:textSize="12sp"/>
-    
-    <TextView
-        android:id="@+id/price_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/publisher_label"
-        android:layout_toRightOf="@+id/image_label"
-        android:text="TextView" 
-        android:textSize="12sp"/>
     <TextView
         android:id="@+id/title_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/price_label"
+        android:layout_alignTop="@+id/image_label"
         android:layout_toRightOf="@+id/image_label"
-        android:text="TextView" 
-        android:textSize="12sp"/>
- 
+        android:layout_marginTop="30dp"
+        android:textSize="12sp"
+        android:textColor="#3b5998" 
+        android:text="TextView"/>
+    
+
+    <TextView
+        android:id="@+id/publisher_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/title_label"
+        android:layout_toRightOf="@+id/image_label"
+        android:textSize="12sp"
+        android:textColor="#4e4e4e"
+        android:text="TextView"/>
+    
+   <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:orientation="vertical"
+        android:layout_below="@+id/publisher_label"
+        android:layout_toRightOf="@+id/image_label"> 
+    
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" 
+	        android:orientation="horizontal">
+	         
+	        <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="No. of pages : "
+		        android:textSize="12sp"
+		        android:textColor="#4e4e4e" />
+	                
+		    <TextView
+		        android:id="@+id/price_label"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="12sp"
+		        android:textColor="#4e4e4e"/>
+	    </LinearLayout>
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" 
+	        android:orientation="horizontal">
+	         
+	        <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="Author : "
+		        android:textSize="12sp"
+		        android:textColor="#4e4e4e" />
+	                
+		    <TextView
+		        android:id="@+id/author_label"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="12sp"
+		        android:textColor="#4e4e4e"/>
+	    </LinearLayout>
+   </LinearLayout> 
 </RelativeLayout>

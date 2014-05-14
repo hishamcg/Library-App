@@ -22,13 +22,11 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -49,12 +47,12 @@ public class BestsellerList extends Activity {
 	// contacts JSONArray
 	JSONArray list = null;
 
-	Drawable drawable_from_url(String url, String src_name)
+/*	Drawable drawable_from_url(String url, String src_name)
 			throws java.net.MalformedURLException, java.io.IOException {
 		return Drawable.createFromStream(
 				((java.io.InputStream) new java.net.URL(url).getContent()),
 				src_name);
-	}
+	}*/
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,10 +82,10 @@ public class BestsellerList extends Activity {
 				JSONObject c = list.getJSONObject(i);
 				
 				// Storing each json item in variable
-				String author = c.getString(TAG_TITLE);
+				String author = c.getString(TAG_AUTHOR);
 				String page = c.getString(TAG_PAGE);
 				String language = c.getString(TAG_LANGUAGE);
-				String title = c.getString(TAG_AUTHOR);
+				String title = c.getString(TAG_TITLE);
 				String isbn = c.getString(TAG_ISBN);
 				//String imageUrl = "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg";
 
@@ -150,15 +148,17 @@ public class BestsellerList extends Activity {
 						.getText().toString();
 				String isbn = ((TextView) view.findViewById(R.id.isbn))
 						.getText().toString();
-				System.out.println("###############"+isbn);
+				System.out.println("########isbn#######"+isbn);
+				System.out.println("#######title#######"+title);
+				System.out.println("########publisher#######"+publisher);
 				
 				// Starting new intent
 				Intent in = new Intent(getApplicationContext(),
 						SingleMenuItemActivity.class);
 				in.putExtra(TAG_AUTHOR, author);
 				in.putExtra(TAG_TITLE, title);
-				in.putExtra(TAG_LANGUAGE, price);
-				in.putExtra(TAG_PAGE, publisher);
+				in.putExtra(TAG_LANGUAGE, publisher);
+				in.putExtra(TAG_PAGE, price);
 				in.putExtra(TAG_IMAGE_URL, "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
 				startActivity(in);
 

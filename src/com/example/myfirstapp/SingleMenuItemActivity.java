@@ -1,12 +1,17 @@
 package com.example.myfirstapp;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,11 +23,11 @@ public class SingleMenuItemActivity  extends Activity {
 				((java.io.InputStream) new java.net.URL(url).getContent()),
 				src_name);}
 	// JSON node keys
-	private static final String TAG_AUTHOR = "author";
-	private static final String TAG_PUBLISHER = "publisher";
-	private static final String TAG_PRICE = "price";
-	private static final String TAG_TITLE = "title";
+	private static final String TAG_AUTHOR = "author_id";
 	private static final String TAG_IMAGE_URL = "image";
+	private static final String TAG_PAGE = "no_of_pages";
+	private static final String TAG_LANGUAGE = "language";
+	private static final String TAG_TITLE = "title";
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,10 +38,12 @@ public class SingleMenuItemActivity  extends Activity {
         
         // Get JSON values from previous intent
         String author = in.getStringExtra(TAG_AUTHOR);
-        String publisher = in.getStringExtra(TAG_PUBLISHER);
-        String price = in.getStringExtra(TAG_PRICE);
+        String publisher = in.getStringExtra(TAG_LANGUAGE);
+        String price = in.getStringExtra(TAG_PAGE);
         String title = in.getStringExtra(TAG_TITLE);
         String image = in.getStringExtra(TAG_IMAGE_URL);
+        
+        
         
         // Displaying all values on the screen
         TextView lblAuthor = (TextView) findViewById(R.id.author_label);
@@ -49,8 +56,10 @@ public class SingleMenuItemActivity  extends Activity {
         lblPublisher.setText(publisher);
         lblPrice.setText(price);
         lblTitle.setText(title);
-        /*try {
-			lblimage.setBackgroundDrawable(drawable_from_url(image,"@drawable/ic_launcher"));
+        lblimage.setImageBitmap(getBitmapFromURL(image));
+        
+      /*  try {
+			lblimage.setImageDrawable(drawable_from_url(image,""));
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,4 +68,23 @@ public class SingleMenuItemActivity  extends Activity {
 			e.printStackTrace();
 		}*/
     }
+
+	public static Bitmap getBitmapFromURL(String src) {
+	    try {
+	        Log.e("src",src);
+	        URL url = new URL(src);
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setDoInput(true);
+	        connection.connect();
+	        InputStream input = connection.getInputStream();
+	        Bitmap myBitmap = BitmapFactory.decodeStream(input);
+	        Log.e("Bitmap","returned");
+	        return myBitmap;
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        Log.e("Exception",e.getMessage());
+	        return null;
+	    }
+}
+
 }

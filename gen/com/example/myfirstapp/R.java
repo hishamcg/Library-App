@@ -86,7 +86,7 @@ public final class R {
     public static final class id {
         public static final int action_settings=0x7f08001c;
         public static final int author=0x7f08000f;
-        public static final int author_label=0x7f080015;
+        public static final int author_label=0x7f080018;
         public static final int button1=0x7f080001;
         public static final int button2=0x7f08000a;
         public static final int button3=0x7f08000b;
@@ -112,7 +112,7 @@ public final class R {
         public static final int textView5=0x7f08001a;
         public static final int textView6=0x7f08001b;
         public static final int title=0x7f080011;
-        public static final int title_label=0x7f080018;
+        public static final int title_label=0x7f080015;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
