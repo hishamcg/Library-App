@@ -21,77 +21,120 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int image=0x7f020029;
-        public static final int image_1=0x7f020001;
-        public static final int image_10=0x7f020002;
-        public static final int image_11=0x7f020003;
-        public static final int image_12=0x7f020004;
-        public static final int image_13=0x7f020005;
-        public static final int image_14=0x7f020006;
-        public static final int image_15=0x7f020007;
-        public static final int image_16=0x7f020008;
-        public static final int image_17=0x7f020009;
-        public static final int image_18=0x7f02000a;
-        public static final int image_19=0x7f02000b;
-        public static final int image_2=0x7f02000c;
-        public static final int image_20=0x7f02000d;
-        public static final int image_21=0x7f02000e;
-        public static final int image_22=0x7f02000f;
-        public static final int image_23=0x7f020010;
-        public static final int image_24=0x7f020011;
-        public static final int image_25=0x7f020012;
-        public static final int image_26=0x7f020013;
-        public static final int image_27=0x7f020014;
-        public static final int image_28=0x7f020015;
-        public static final int image_29=0x7f020016;
-        public static final int image_3=0x7f020017;
-        public static final int image_30=0x7f020018;
-        public static final int image_31=0x7f020019;
-        public static final int image_32=0x7f02001a;
-        public static final int image_33=0x7f02001b;
-        public static final int image_34=0x7f02001c;
-        public static final int image_35=0x7f02001d;
-        public static final int image_36=0x7f02001e;
-        public static final int image_37=0x7f02001f;
-        public static final int image_38=0x7f020020;
-        public static final int image_39=0x7f020021;
-        public static final int image_4=0x7f020022;
-        public static final int image_40=0x7f020023;
-        public static final int image_5=0x7f020024;
-        public static final int image_6=0x7f020025;
-        public static final int image_7=0x7f020026;
-        public static final int image_8=0x7f020027;
-        public static final int image_9=0x7f020028;
+        public static final int bg=0x7f020000;
+        public static final int book_icon=0x7f020001;
+        public static final int book_icon_black=0x7f020002;
+        public static final int find_1=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
+        public static final int icon_photos_tab=0x7f020005;
+        public static final int image_1=0x7f020006;
+        public static final int image_10=0x7f020007;
+        public static final int image_11=0x7f020008;
+        public static final int image_12=0x7f020009;
+        public static final int image_13=0x7f02000a;
+        public static final int image_14=0x7f02000b;
+        public static final int image_15=0x7f02000c;
+        public static final int image_16=0x7f02000d;
+        public static final int image_17=0x7f02000e;
+        public static final int image_18=0x7f02000f;
+        public static final int image_19=0x7f020010;
+        public static final int image_2=0x7f020011;
+        public static final int image_20=0x7f020012;
+        public static final int image_21=0x7f020013;
+        public static final int image_22=0x7f020014;
+        public static final int image_23=0x7f020015;
+        public static final int image_24=0x7f020016;
+        public static final int image_25=0x7f020017;
+        public static final int image_26=0x7f020018;
+        public static final int image_27=0x7f020019;
+        public static final int image_28=0x7f02001a;
+        public static final int image_29=0x7f02001b;
+        public static final int image_3=0x7f02001c;
+        public static final int image_30=0x7f02001d;
+        public static final int image_31=0x7f02001e;
+        public static final int image_32=0x7f02001f;
+        public static final int image_33=0x7f020020;
+        public static final int image_34=0x7f020021;
+        public static final int image_35=0x7f020022;
+        public static final int image_36=0x7f020023;
+        public static final int image_37=0x7f020024;
+        public static final int image_38=0x7f020025;
+        public static final int image_39=0x7f020026;
+        public static final int image_4=0x7f020027;
+        public static final int image_40=0x7f020028;
+        public static final int image_5=0x7f020029;
+        public static final int image_6=0x7f02002a;
+        public static final int image_7=0x7f02002b;
+        public static final int image_8=0x7f02002c;
+        public static final int image_9=0x7f02002d;
+        public static final int jb_logo=0x7f02002e;
+        public static final int jb_logo2=0x7f02002f;
+        public static final int map_tag=0x7f020030;
+        public static final int map_tag2=0x7f020031;
+        public static final int map_tag3=0x7f020032;
+        public static final int my_map=0x7f020033;
+        public static final int my_map2=0x7f020034;
+        public static final int my_search=0x7f020035;
+        public static final int red_button=0x7f020036;
+        public static final int search_btn=0x7f020037;
+        public static final int tab_focused=0x7f020038;
+        public static final int tab_indicator=0x7f020039;
+        public static final int tab_pressed=0x7f02003a;
+        public static final int tab_selected=0x7f02003b;
+        public static final int tab_unselected=0x7f02003c;
     }
     public static final class id {
-        public static final int action_settings=0x7f08000d;
-        public static final int author=0x7f080005;
-        public static final int author_label=0x7f080009;
-        public static final int button1=0x7f080002;
-        public static final int editText1=0x7f080003;
-        public static final int image=0x7f080004;
-        public static final int list=0x7f080000;
-        public static final int price=0x7f080008;
-        public static final int price_label=0x7f08000b;
-        public static final int publisher=0x7f080006;
-        public static final int publisher_label=0x7f08000a;
-        public static final int textView1=0x7f080001;
-        public static final int title=0x7f080007;
-        public static final int title_label=0x7f08000c;
+        public static final int action_settings=0x7f08001c;
+        public static final int author=0x7f08000f;
+        public static final int author_label=0x7f080015;
+        public static final int button1=0x7f080001;
+        public static final int button2=0x7f08000a;
+        public static final int button3=0x7f08000b;
+        public static final int button4=0x7f08000c;
+        public static final int button5=0x7f08000d;
+        public static final int editText1=0x7f080000;
+        public static final int image=0x7f08000e;
+        public static final int imageView1=0x7f080003;
+        public static final int image_label=0x7f080014;
+        public static final int isbn=0x7f080013;
+        public static final int list=0x7f080002;
+        public static final int price=0x7f080012;
+        public static final int price_label=0x7f080017;
+        public static final int publisher=0x7f080010;
+        public static final int publisher_label=0x7f080016;
+        public static final int tab1=0x7f080005;
+        public static final int tab2=0x7f080006;
+        public static final int tab3=0x7f080008;
+        public static final int textView=0x7f080019;
+        public static final int textView1=0x7f080004;
+        public static final int textView2=0x7f080007;
+        public static final int textView3=0x7f080009;
+        public static final int textView5=0x7f08001a;
+        public static final int textView6=0x7f08001b;
+        public static final int title=0x7f080011;
+        public static final int title_label=0x7f080018;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int activity_main_page=0x7f030001;
-        public static final int list_item=0x7f030002;
-        public static final int row_item=0x7f030003;
-        public static final int single_list_item=0x7f030004;
+        public static final int bestseller_layout=0x7f030002;
+        public static final int default_book_list=0x7f030003;
+        public static final int front_page=0x7f030004;
+        public static final int latest_layout=0x7f030005;
+        public static final int list_item=0x7f030006;
+        public static final int main=0x7f030007;
+        public static final int row_item=0x7f030008;
+        public static final int search_activity=0x7f030009;
+        public static final int single_list_item=0x7f03000a;
+        public static final int tab_layout=0x7f03000b;
+        public static final int verification_page=0x7f03000c;
     }
     public static final class menu {
-        public static final int jsonparser=0x7f070000;
-        public static final int main=0x7f070001;
-        public static final int main_page=0x7f070002;
-        public static final int single_menu_item=0x7f070003;
+        public static final int front_page=0x7f070000;
+        public static final int jsonparser=0x7f070001;
+        public static final int main=0x7f070002;
+        public static final int main_page=0x7f070003;
+        public static final int single_menu_item=0x7f070004;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
@@ -101,6 +144,12 @@ public final class R {
         public static final int title_activity_jsonparser=0x7f050002;
         public static final int title_activity_main_page=0x7f050006;
         public static final int title_activity_single_menu_item=0x7f050003;
+        public static final int title_default_book_list=0x7f050009;
+        public static final int title_front_page=0x7f050007;
+        public static final int title_json_parser=0x7f05000b;
+        public static final int title_search_activity=0x7f05000c;
+        public static final int title_signup_activity=0x7f05000a;
+        public static final int title_tab_layout=0x7f050008;
     }
     public static final class style {
         /** 
@@ -129,5 +178,11 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f060001;
+        /**  <item name="android:shadowColor" >#000000</item>
+	    <item name="android:shadowDx" >1</item>
+	    <item name="android:shadowDy" >1</item> 
+	    <item name="android:shadowRadius" >2</item>
+         */
+        public static final int button_text=0x7f060002;
     }
 }

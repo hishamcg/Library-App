@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class MainPage extends Activity {
 	private static final String SEARCH_URL = "url";
@@ -24,10 +23,10 @@ public class MainPage extends Activity {
         	public void onClick(View v){
         		String searchText = ((EditText) findViewById(R.id.editText1)).getText().toString();
         		Log.i("searchTExt", searchText);
-        		Intent searchlib = new Intent(getApplicationContext(), MainActivity.class);
-        		searchlib.putExtra(SEARCH_URL, searchText);
+        		Intent signup = new Intent(getApplicationContext(), SignupActivity.class);
+        		signup.putExtra(SEARCH_URL, searchText);
         		
-        		startActivity(searchlib);
+        		startActivity(signup);
         	}
         });
     }

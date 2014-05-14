@@ -6,6 +6,8 @@ public class Book {
 	private String publisher;
 	private String price;
 	private String imageUrl;
+	private String isbn;
+	
 
 	
 	public String getTitle() {
@@ -38,7 +40,12 @@ public class Book {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	
+	public String getIsbn() {
+		return isbn;
+	}
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
 	
 
 }

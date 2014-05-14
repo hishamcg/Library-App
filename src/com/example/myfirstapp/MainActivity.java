@@ -1,5 +1,6 @@
 package com.example.myfirstapp;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +10,19 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,15 +37,15 @@ public class MainActivity extends Activity {
 	// JSON Node names
 	private static final String TAG_CONTACTS = "contacts";
 	private static final String TAG_AUTHOR = "author";
-	private static final String TAG_CATEGORY_ID = "cat_id";
-	private static final String TAG_CREATED_AT = "created_at";
-	private static final String TAG_EDITION = "edition";
-	private static final String TAG_ID = "id";
+	//private static final String TAG_CATEGORY_ID = "cat_id";
+	//private static final String TAG_CREATED_AT = "created_at";
+	//private static final String TAG_EDITION = "edition";
+	//private static final String TAG_ID = "id";
 	private static final String TAG_IMAGE_URL = "image";
 	private static final String TAG_PRICE = "price";
 	private static final String TAG_PUBLISHER = "publisher";
 	private static final String TAG_TITLE = "title";
-	private static final String TAG_UPDATED_AT = "updated_at";
+	//private static final String TAG_UPDATED_AT = "updated_at";
 
 	// private static final String TAG_PHONE = "phone";
 	// private static final String TAG_PHONE_MOBILE = "mobile";
@@ -57,22 +66,38 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		 final Button my_Button = (Button) findViewById(R.id.button1);
+       
+       my_Button.setOnClickListener(new Button.OnClickListener() {
+    	   public void onClick(View v){
+       		String searchText = ((EditText) findViewById(R.id.editText1)).getText().toString();
+       		Log.i("searchTExt", searchText);
+       		Intent signup = new Intent(getApplicationContext(), MainActivity.class);
+       		signup.putExtra(SEARCH_URL, searchText);
+       		
+       		startActivity(signup);
+    	   }
+       });
+		
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
 
 		System.out.println("score");
 		Intent searchlib = getIntent();
 		String fin = searchlib.getStringExtra(SEARCH_URL);
 
 		String url = "http://"+SERVER_BASE_URL+"/mylib/search.json?q=" + fin;
-
+		System.out.println(fin);
 		// Hashmap for ListView
 		List<Book> bookList = new ArrayList<Book>();
-
+		System.out.println("im ere 1");
 		// Creating JSON Parser instance
 		JSONParser jParser = new JSONParser();
-
+		System.out.println("im ere 2");
 		// getting JSON string from URL
 		JSONObject json = jParser.getJSONFromUrl(url);
-
+		System.out.println("im ere 3");
 		try {
 			// Getting Array of Contacts
 			contacts = json.getJSONArray(TAG_CONTACTS);
@@ -83,7 +108,7 @@ public class MainActivity extends Activity {
 
 				// Storing each json item in variable
 				String author = c.getString(TAG_AUTHOR);
-				String id = c.getString(TAG_ID);
+				//String id = c.getString(TAG_ID);
 				String imageUrl = c.getString(TAG_IMAGE_URL);
 				String price = "Price: Rs"+c.getString(TAG_PRICE);
 				String publisher = c.getString(TAG_PUBLISHER);
@@ -161,4 +186,30 @@ public class MainActivity extends Activity {
 
 	}
 
+	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+		  ImageView bmImage;
+
+		  public DownloadImageTask(ImageView bmImage) {
+		      this.bmImage = bmImage;
+		  }
+
+		  protected Bitmap doInBackground(String... urls) {
+		      String urldisplay = urls[0];
+		      Bitmap mIcon11 = null;
+		      try {
+		        InputStream in = new java.net.URL(urldisplay).openStream();
+		        mIcon11 = BitmapFactory.decodeStream(in);
+		      } catch (Exception e) {
+		          Log.e("Error", e.getMessage());
+		          e.printStackTrace();
+		      }
+		      return mIcon11;
+		  }
+
+		  protected void onPostExecute(Bitmap result) {
+		      bmImage.setImageBitmap(result);
+		  }
+		}
 }
+
+

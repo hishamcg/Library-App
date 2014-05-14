@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#2e3681">
+    
+    <ImageView
+        android:id="@+id/imageView1"
+        android:contentDescription="@string/hello"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/jb_logo2" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:text="Search Page"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
+
+    <Button
+        android:background="@drawable/red_button"
+        android:id="@+id/button1"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="Search"
+        style="@style/button_text" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:layout_above="@+id/button1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="#FFFFFF"
+        android:hint="Search Book" >
+
+        <requestFocus />
+    </EditText>
+
+</RelativeLayout>

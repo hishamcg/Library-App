@@ -8,5 +8,12 @@
     <string name="hello">Hello World, MainActivity!</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main_page">MainPage</string>
+    <string name="title_front_page">FrontPage</string>
+    <string name="title_tab_layout">AndroidTabLayoutActivity</string>
+    <string name="title_default_book_list">DefaultBookList</string>
+    <string name="title_signup_activity">SignupActivity</string>
+    <string name="title_json_parser">JSONParser</string>
+    <string name="title_search_activity">SearchActivity</string>
+    
 
 </resources>
