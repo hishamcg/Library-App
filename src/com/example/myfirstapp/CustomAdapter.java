@@ -61,6 +61,7 @@ public class CustomAdapter extends ArrayAdapter<Book> {
 			    View rowView = inflater.inflate(R.layout.row_item, parent, false);
 		TextView title = (TextView) rowView.findViewById(R.id.title);
 		TextView author = (TextView) rowView.findViewById(R.id.author);
+		TextView category = (TextView) rowView.findViewById(R.id.category);
 		TextView publisher = (TextView) rowView.findViewById(R.id.publisher);
 		TextView price = (TextView) rowView.findViewById(R.id.price);
 		TextView isbn = (TextView) rowView.findViewById(R.id.isbn);
@@ -70,6 +71,7 @@ public class CustomAdapter extends ArrayAdapter<Book> {
 		 .execute(book.getImageUrl());
 		title.setText(book.getTitle());
 		author.setText(book.getAuthor());
+		category.setText(book.getCategory());
 		publisher.setText(book.getPublisher());
   		price.setText(book.getPrice());
   		isbn.setText(book.getIsbn());

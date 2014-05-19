@@ -24,6 +24,7 @@ public class SingleMenuItemActivity  extends Activity {
 				src_name);}
 	// JSON node keys
 	private static final String TAG_AUTHOR = "author_id";
+	private static final String TAG_CATEGORY = "category";
 	private static final String TAG_IMAGE_URL = "image";
 	private static final String TAG_PAGE = "no_of_pages";
 	private static final String TAG_LANGUAGE = "language";
@@ -38,6 +39,7 @@ public class SingleMenuItemActivity  extends Activity {
         
         // Get JSON values from previous intent
         String author = in.getStringExtra(TAG_AUTHOR);
+        String category = in.getStringExtra(TAG_CATEGORY);
         String publisher = in.getStringExtra(TAG_LANGUAGE);
         String price = in.getStringExtra(TAG_PAGE);
         String title = in.getStringExtra(TAG_TITLE);
@@ -47,12 +49,14 @@ public class SingleMenuItemActivity  extends Activity {
         
         // Displaying all values on the screen
         TextView lblAuthor = (TextView) findViewById(R.id.author_label);
+        TextView lblCategory = (TextView) findViewById(R.id.category_label);
         TextView lblPublisher = (TextView) findViewById(R.id.publisher_label);
         TextView lblPrice = (TextView) findViewById(R.id.price_label);
         TextView lblTitle = (TextView) findViewById(R.id.title_label);
         ImageView lblimage = (ImageView) findViewById(R.id.image_label);
         
         lblAuthor.setText(author);
+        lblCategory.setText(category);
         lblPublisher.setText(publisher);
         lblPrice.setText(price);
         lblTitle.setText(title);

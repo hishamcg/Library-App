@@ -7,6 +7,7 @@ public class Book {
 	private String price;
 	private String imageUrl;
 	private String isbn;
+	private String category;
 	
 
 	
@@ -21,6 +22,12 @@ public class Book {
 	}
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
 	}
 	public String getPublisher() {
 		return publisher;

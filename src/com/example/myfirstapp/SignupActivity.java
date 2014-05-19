@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class SignupActivity extends Activity {
 
 	private static final String SEARCH_URL = "url";
-	private static final String SERVER_BASE_URL = "192.168.2.118:4321";
+	private static final String SERVER_BASE_URL = "staging.justbooksclc.com:8787";
 	// JSON Node names
 	private static final String SUCCESS = "success";
 	String NUMBER;
@@ -27,7 +27,7 @@ public class SignupActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.verification_page);
+		setContentView(R.layout.front_page);
 		
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
@@ -36,8 +36,8 @@ public class SignupActivity extends Activity {
 		Intent signup = getIntent();
 		String numb = signup.getStringExtra(SEARCH_URL);
 		
-		final TextView mTextView = (TextView) findViewById(R.id.textView5);
-		mTextView.setText(numb.toString());
+//		final TextView mTextView = (TextView) findViewById(R.id.textView5);
+//		mTextView.setText(numb.toString());
 
 		String url = "http://"+SERVER_BASE_URL+"/api/v1/sessions.json?phone=" + numb;
 		System.out.println("score here"+ numb);
@@ -65,6 +65,7 @@ public class SignupActivity extends Activity {
 		      SharedPreferences.Editor   editor = preferences.edit();
 			  //SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
 			  editor.putString("AUTH_TOKEN", auth_token);
+			  editor.putString("NUMBER", numb);
 			  editor.putString("MEMBERSHIP_NO", membership_no);
 			  editor.putString("DATE_OF_SIGNUP", data_of_signup);
 			  System.out.println("im commiting");
@@ -77,8 +78,6 @@ public class SignupActivity extends Activity {
 			  System.out.println("memb no is : "+memb);
 			  String auth = value.getString("AUTH_TOKEN","");
 			  System.out.println("auth value is : "+auth);
-			  final TextView TextView = (TextView) findViewById(R.id.textView6);
-			  TextView.setText(memb.toString());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

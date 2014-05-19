@@ -20,6 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,13 +33,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class BestsellerList extends Activity {
-
+	private ProgressDialog progress;
 	// url to make request
 	private static final String SEARCH_URL = "url";
-	private static final String SERVER_BASE_URL = "192.168.2.118:4321";
+	private static final String SERVER_BASE_URL = "staging.justbooksclc.com:8787";
 	// JSON Node names
 	private static final String TAG_WISHLIST = "wishlists";
-	private static final String TAG_AUTHOR = "author_id";
+	private static final String TAG_AUTHOR = "author";
+	private static final String TAG_CATEGORY = "category";
 	private static final String TAG_IMAGE_URL = "image";
 	private static final String TAG_PAGE = "no_of_pages";
 	private static final String TAG_LANGUAGE = "language";
@@ -57,16 +60,20 @@ public class BestsellerList extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		progress = new ProgressDialog(this);
+		progress.hide();
 		setContentView(R.layout.bestseller_layout);
 		
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 		
-		SharedPreferences value = getPreferences(MODE_PRIVATE);
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		String auth_token = value.getString("AUTH_TOKEN","");
+		String memb = value.getString("MEMBERSHIP_NO","");
+		String numb = value.getString("NUMBER","");
 		
 		System.out.println("score");
-		String url = "http://"+SERVER_BASE_URL+"/api/v1/wishlists.json?auth_token=SRciNGKqPKDqEStase-9&phone=9686448557";
+		String url = "http://"+SERVER_BASE_URL+"/api/v1/wishlists.json?auth_token="+auth_token+"&phone="+numb+"&membership_no="+memb;
 		// Hashmap for ListView
 		List<Book> bookList = new ArrayList<Book>();
 		// Creating JSON Parser instance
@@ -83,6 +90,7 @@ public class BestsellerList extends Activity {
 				
 				// Storing each json item in variable
 				String author = c.getString(TAG_AUTHOR);
+				String category = c.getString(TAG_CATEGORY);
 				String page = c.getString(TAG_PAGE);
 				String language = c.getString(TAG_LANGUAGE);
 				String title = c.getString(TAG_TITLE);
@@ -100,6 +108,7 @@ public class BestsellerList extends Activity {
 				Book book = new Book();
 				book.setTitle(title);
 				book.setAuthor(author);
+				book.setCategory(category);
 				book.setPrice(page);
 				book.setPublisher(language);
 				//book.setImageUrl("http://"+SERVER_BASE_URL+"/assets/"+imageUrl);
@@ -133,12 +142,18 @@ public class BestsellerList extends Activity {
 		lv.setAdapter(adapter);
 		// Launching new screen on Selecting Single ListItem
 		lv.setOnItemClickListener(new OnItemClickListener() {
-
+			
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				progress.setMessage("Loading");
+    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    	        progress.setIndeterminate(true);
+    	        progress.show();
 				// getting values from selected ListItem
 				String author = ((TextView) view.findViewById(R.id.author))
+						.getText().toString();
+				String category = ((TextView) view.findViewById(R.id.category))
 						.getText().toString();
 				String publisher = ((TextView) view
 						.findViewById(R.id.publisher)).getText().toString();
@@ -156,6 +171,7 @@ public class BestsellerList extends Activity {
 				Intent in = new Intent(getApplicationContext(),
 						SingleMenuItemActivity.class);
 				in.putExtra(TAG_AUTHOR, author);
+				in.putExtra(TAG_CATEGORY, category);
 				in.putExtra(TAG_TITLE, title);
 				in.putExtra(TAG_LANGUAGE, publisher);
 				in.putExtra(TAG_PAGE, price);
