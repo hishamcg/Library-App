@@ -5,21 +5,22 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapListView extends Activity {
+public class MapListView extends FragmentActivity {
     // Google Map
     private GoogleMap googleMap;
     String text = "latlog.txt"; //your text file name in the assets folder
@@ -39,7 +40,7 @@ public class MapListView extends Activity {
 		
 		System.out.println("blahhhhhhhhhhhhhhhhhhhh"+gohere[1]+"---"+andhere[0]+"---"+andhere[1]+"---"+andhere[2]);
 		
-        googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
+        googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
      
         gps = new GPSTracker(MapListView.this);
@@ -134,7 +135,7 @@ public class MapListView extends Activity {
     private void initilizeMap() {
     	
         if (googleMap == null) {
-            googleMap = ((MapFragment) getFragmentManager().findFragmentById(
+            googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(
                     R.id.map)).getMap();
  
             // check if map is created successfully or not

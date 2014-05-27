@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myfirstapp"
+    android:installLocation="preferExternal"
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="11" 
+    <uses-sdk android:minSdkVersion="8" 
               android:targetSdkVersion="18"/>
 
     <permission
@@ -13,7 +14,7 @@
     <permission
         android:name="com.example.myfirstapp.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
-
+	
     <uses-permission android:name="com.example.myfirstapp.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -48,8 +49,7 @@
 		<meta-data android:name="com.google.android.gms.version"
            android:value="@integer/google_play_services_version" />
 		<!-- Goolge Maps API Key -->
-		<meta-data android:name="com.google.android.maps.v2.API_KEY"
-		     android:value="AIzaSyD76UIGo3vGNQACSaCmw1s3jk2bJ4T1dNk" />
+		
 		
         <activity
             android:name="com.example.myfirstapp.FrontPage"
@@ -128,9 +128,10 @@
                 <category android:name="com.example.myfirstapp" />
             </intent-filter>
         </receiver>
-
+		<uses-library android:name="com.google.android.maps"/>
         <service android:name="com.example.myfirstapp.GCMNotificationIntentService" />
-        
+        <meta-data android:name="com.google.android.maps.v2.API_KEY"
+		     android:value="AIzaSyD76UIGo3vGNQACSaCmw1s3jk2bJ4T1dNk" />    
     </application>
 
 </manifest>

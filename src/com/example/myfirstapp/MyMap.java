@@ -12,18 +12,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MyMap extends Activity {
     // Google Map
@@ -97,9 +92,9 @@ public class MyMap extends Activity {
             String[] somthing=new String[values.size()];
             
             for (int i=0;i<dist.length;i++)
-            {//somthing[i] = String.valueOf(dist[i][0])+";"+String.valueOf(dist[i][1]) ;
-            	String[] brooo = String.valueOf(dist[i][0]).split(",");
-            	somthing[i] = brooo[0];
+            {somthing[i] = String.valueOf(dist[i][0])+";"+String.valueOf(dist[i][1]) ;
+//            	String[] brooo = String.valueOf(dist[i][0]).split(",");
+//            	somthing[i] = brooo[0];
             	
              System.out.println(somthing[i]);}
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
