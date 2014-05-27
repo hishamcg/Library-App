@@ -95,7 +95,7 @@
 	        android:layout_height="30dp"
 	        android:layout_marginLeft="0dp"		
 	        android:layout_marginBottom="5dp"
-	        android:background="@drawable/book_icon_black" />
+	        android:background="@drawable/icon_click" />
          <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

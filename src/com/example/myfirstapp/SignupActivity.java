@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.widget.TextView;
 
 public class SignupActivity extends Activity {
 
@@ -82,7 +81,7 @@ public class SignupActivity extends Activity {
 			e.printStackTrace();
 		}
 		
-		Intent frontpage = new Intent(getApplicationContext(), FrontPage.class);
+		Intent frontpage = new Intent(getApplicationContext(), RegisterActivity.class);
 		//searchlib.putExtra(SEARCH_URL, searchText);
 		
 		startActivity(frontpage);

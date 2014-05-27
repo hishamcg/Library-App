@@ -14,18 +14,21 @@
 		<EditText
 	        android:id="@+id/editText1"
 	        android:layout_width="260dp"
-	        android:layout_height="30dp"
-	        android:background="#e4e4e4"
+	        android:layout_height="wrap_content"
+	        android:padding="6dp"
+	        android:layout_marginBottom="10dp"
+	        android:layout_marginTop="2dp"
+	        android:background="@drawable/edittext_style"
+	        android:singleLine="true"
 	        android:hint="Search" >
 	        <requestFocus />
 	    </EditText>
 	    <Button
 	        android:background="@drawable/search_btn"
 	        android:id="@+id/button1"
-	        android:layout_width="30dp"
-	        android:layout_height="30dp"
-	        android:layout_marginLeft="10dp"
-	        android:text=""/>
+	        android:layout_width="35dp"
+	        android:layout_height="35dp"
+	        android:layout_marginLeft="5dp"/>
 	  </LinearLayout>
     <ListView
         android:id="@+id/list"

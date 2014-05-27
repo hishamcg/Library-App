@@ -1,6 +1,5 @@
 package com.example.myfirstapp;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +8,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -22,55 +20,42 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-
-	// url to make request
-	// private static String url =
-	// "http://192.168.20.101:3000/mylib/search.json?q=a";
-	private static final String SEARCH_URL = "url";
-	//private static final String SERVER_BASE_URL = "192.168.1.12:3000";
-	private static final String SERVER_BASE_URL = "dry-everglades-8791.herokuapp.com";
+	private ProgressDialog progress;
+	private static final String SERVER_BASE_URL = "staging.justbooksclc.com:8787";
+	
 	// JSON Node names
-	private static final String TAG_CONTACTS = "contacts";
+	private static final String SEARCH_URL = "url";
+	private static final String TAG_SEARCHLIST = "titles";
 	private static final String TAG_AUTHOR = "author";
-	//private static final String TAG_CATEGORY_ID = "cat_id";
-	//private static final String TAG_CREATED_AT = "created_at";
-	//private static final String TAG_EDITION = "edition";
-	//private static final String TAG_ID = "id";
+	private static final String TAG_CATEGORY = "category";
 	private static final String TAG_IMAGE_URL = "image";
-	private static final String TAG_PRICE = "price";
-	private static final String TAG_PUBLISHER = "publisher";
+	private static final String TAG_PAGE = "no_of_pages";
+	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
-	//private static final String TAG_UPDATED_AT = "updated_at";
-
-	// private static final String TAG_PHONE = "phone";
-	// private static final String TAG_PHONE_MOBILE = "mobile";
-	// private static final String TAG_PHONE_HOME = "home";
-	// private static final String TAG_PHONE_OFFICE = "office";
+	private static final String TAG_ISBN = "isbn";
 
 	// contacts JSONArray
-	JSONArray contacts = null;
-
-	Drawable drawable_from_url(String url, String src_name)
-			throws java.net.MalformedURLException, java.io.IOException {
-		return Drawable.createFromStream(
-				((java.io.InputStream) new java.net.URL(url).getContent()),
-				src_name);
-	}
+	JSONArray list = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		progress = new ProgressDialog(this);
+		progress.hide();
 		
 		 final Button my_Button = (Button) findViewById(R.id.button1);
        
-       my_Button.setOnClickListener(new Button.OnClickListener() {
+           my_Button.setOnClickListener(new Button.OnClickListener() {
     	   public void onClick(View v){
+    		progress.setMessage("Loading");
+   	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+   	        progress.setIndeterminate(true);
+   	        progress.show();
        		String searchText = ((EditText) findViewById(R.id.editText1)).getText().toString();
        		Log.i("searchTExt", searchText);
        		Intent signup = new Intent(getApplicationContext(), MainActivity.class);
@@ -87,32 +72,36 @@ public class MainActivity extends Activity {
 		Intent searchlib = getIntent();
 		String fin = searchlib.getStringExtra(SEARCH_URL);
 
-		String url = "http://"+SERVER_BASE_URL+"/mylib/search.json?q=" + fin;
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		String auth_token = value.getString("AUTH_TOKEN","");
+		String memb = value.getString("MEMBERSHIP_NO","");
+		String numb = value.getString("NUMBER","");
+		
+		System.out.println("score");
+		String url = "http://"+SERVER_BASE_URL+"/api/v1/search.json?phone="+numb+"&auth_token="+auth_token+"&membership_no="+memb+"&q="+fin;
 		System.out.println(fin);
 		// Hashmap for ListView
 		List<Book> bookList = new ArrayList<Book>();
-		System.out.println("im ere 1");
 		// Creating JSON Parser instance
 		JSONParser jParser = new JSONParser();
-		System.out.println("im ere 2");
 		// getting JSON string from URL
 		JSONObject json = jParser.getJSONFromUrl(url);
-		System.out.println("im ere 3");
 		try {
-			// Getting Array of Contacts
-			contacts = json.getJSONArray(TAG_CONTACTS);
+			// Getting Array of Books
+			list = json.getJSONArray(TAG_SEARCHLIST);
 
-			// looping through All Contacts
-			for (int i = 0; i < contacts.length(); i++) {
-				JSONObject c = contacts.getJSONObject(i);
-
+			// looping through All Books
+			for (int i = 0; i < list.length(); i++) {
+				JSONObject c = list.getJSONObject(i);
+				
 				// Storing each json item in variable
 				String author = c.getString(TAG_AUTHOR);
-				//String id = c.getString(TAG_ID);
-				String imageUrl = c.getString(TAG_IMAGE_URL);
-				String price = "Price: Rs"+c.getString(TAG_PRICE);
-				String publisher = c.getString(TAG_PUBLISHER);
+				String category = c.getString(TAG_CATEGORY);
+				String page = c.getString(TAG_PAGE);
+				String language = c.getString(TAG_LANGUAGE);
 				String title = c.getString(TAG_TITLE);
+				String isbn = c.getString(TAG_ISBN);
+				//String imageUrl = "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg";
 
 				// Phone number is agin JSON Object
 				/*
@@ -125,11 +114,12 @@ public class MainActivity extends Activity {
 				Book book = new Book();
 				book.setTitle(title);
 				book.setAuthor(author);
-				book.setPrice(price);
-				book.setPublisher(publisher);
+				book.setCategory(category);
+				book.setPrice(page);
+				book.setPublisher(language);
 				//book.setImageUrl("http://"+SERVER_BASE_URL+"/assets/"+imageUrl);
-				book.setImageUrl(imageUrl);
-				
+				book.setImageUrl("http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
+				book.setIsbn(isbn);
 				
 				// adding HashList to ArrayList
 				bookList.add(book);
@@ -137,19 +127,9 @@ public class MainActivity extends Activity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
 		/**
 		 * Updating parsed JSON data into ListView
 		 * */
-		/*ListAdapter adapter = new SimpleAdapter(this, contactList,
-				R.layout.list_item, new String[] { TAG_AUTHOR, TAG_PUBLISHER,
-						TAG_PRICE, TAG_TITLE, TAG_IMAGE }, new int[] {
-						R.id.author, R.id.publisher, R.id.price, R.id.title,
-						R.id.image });*/
-		// ImageView imageView = (ImageView) ArrayList.findViewById(R.id.image);
-		// imageView.setImageResource(R.drawable.image);
-
-		// adapter.setImageResource(R.drawable.image);
 		Book[] bookAry = new Book[bookList.size()];
 		CustomAdapter adapter = new CustomAdapter(this, bookList.toArray(bookAry));
 //		setListAdapter(adapter);
@@ -158,12 +138,18 @@ public class MainActivity extends Activity {
 		lv.setAdapter(adapter);
 		// Launching new screen on Selecting Single ListItem
 		lv.setOnItemClickListener(new OnItemClickListener() {
-
+			
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				progress.setMessage("Loading");
+    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    	        progress.setIndeterminate(true);
+    	        progress.show();
 				// getting values from selected ListItem
 				String author = ((TextView) view.findViewById(R.id.author))
+						.getText().toString();
+				String category = ((TextView) view.findViewById(R.id.category))
 						.getText().toString();
 				String publisher = ((TextView) view
 						.findViewById(R.id.publisher)).getText().toString();
@@ -171,14 +157,21 @@ public class MainActivity extends Activity {
 						.getText().toString();
 				String title = ((TextView) view.findViewById(R.id.title))
 						.getText().toString();
-
+				String isbn = ((TextView) view.findViewById(R.id.isbn))
+						.getText().toString();
+				System.out.println("########isbn#######"+isbn);
+				System.out.println("#######title#######"+title);
+				System.out.println("########publisher#######"+publisher);
+				
 				// Starting new intent
 				Intent in = new Intent(getApplicationContext(),
 						SingleMenuItemActivity.class);
 				in.putExtra(TAG_AUTHOR, author);
+				in.putExtra(TAG_CATEGORY, category);
 				in.putExtra(TAG_TITLE, title);
-				in.putExtra(TAG_PRICE, price);
-				in.putExtra(TAG_PUBLISHER, publisher);
+				in.putExtra(TAG_LANGUAGE, publisher);
+				in.putExtra(TAG_PAGE, price);
+				in.putExtra(TAG_IMAGE_URL, "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
 				startActivity(in);
 
 			}
@@ -186,30 +179,4 @@ public class MainActivity extends Activity {
 
 	}
 
-	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-		  ImageView bmImage;
-
-		  public DownloadImageTask(ImageView bmImage) {
-		      this.bmImage = bmImage;
-		  }
-
-		  protected Bitmap doInBackground(String... urls) {
-		      String urldisplay = urls[0];
-		      Bitmap mIcon11 = null;
-		      try {
-		        InputStream in = new java.net.URL(urldisplay).openStream();
-		        mIcon11 = BitmapFactory.decodeStream(in);
-		      } catch (Exception e) {
-		          Log.e("Error", e.getMessage());
-		          e.printStackTrace();
-		      }
-		      return mIcon11;
-		  }
-
-		  protected void onPostExecute(Bitmap result) {
-		      bmImage.setImageBitmap(result);
-		  }
-		}
 }
-
-

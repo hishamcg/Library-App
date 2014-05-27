@@ -4,17 +4,25 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="14" 
+    <uses-sdk android:minSdkVersion="11" 
               android:targetSdkVersion="18"/>
 
-    
     <permission
-        android:name="info.androidhive.googlemapsv2.permission.MAPS_RECEIVE"
+        android:name="com.example.myfirstapp.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
- 
-    <uses-permission android:name="info.androidhive.googlemapsv2.permission.MAPS_RECEIVE" />
+    <permission
+        android:name="com.example.myfirstapp.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.myfirstapp.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.c2dm.intent.REGISTRATION" />
+    <uses-permission android:name="com.example.myfirstapp.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
  
@@ -57,8 +65,16 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="com.example.myfirstapp.MapListView"
+            android:label="MapListView" >
+        </activity>
+        <activity
             android:name="com.example.myfirstapp.SignupActivity"
             android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.example.myfirstapp.SearchPage"
+            android:label="SearchPage" >
         </activity>
         <activity
             android:name="com.example.myfirstapp.DefaultBookList"
@@ -91,6 +107,29 @@
             android:name="com.example.myfirstapp.MyMap"
             android:label="MyMap" >
         </activity>
+
+	<activity
+            android:name="com.example.myfirstapp.RegisterActivity"
+            android:label="RegisterActivity" >
+	</activity>
+	<activity
+            android:name="com.example.myfirstapp.GCMMainActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="GCMMainActivity" >
+        </activity>
+
+        <receiver
+            android:name="com.example.myfirstapp.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.example.myfirstapp.c2dm.intent.RECEIVE" />
+                <action android:name="com.example.myfirstapp.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.example.myfirstapp" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.example.myfirstapp.GCMNotificationIntentService" />
         
     </application>
 

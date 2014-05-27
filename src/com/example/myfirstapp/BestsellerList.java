@@ -34,8 +34,6 @@ import android.widget.TextView;
 
 public class BestsellerList extends Activity {
 	private ProgressDialog progress;
-	// url to make request
-	private static final String SEARCH_URL = "url";
 	private static final String SERVER_BASE_URL = "staging.justbooksclc.com:8787";
 	// JSON Node names
 	private static final String TAG_WISHLIST = "wishlists";

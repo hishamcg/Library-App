@@ -30,25 +30,21 @@ public class FrontPage extends Activity {
 	  }
 	@Override
 	  public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId())
-        {
-        case R.id.menu_bookmark:
-            // Single menu item is selected do something
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_bookmark) {
+			// Single menu item is selected do something
             // Ex: launching new activity/screen or show alert message
             Toast.makeText(FrontPage.this, "Bookmark is Selected", Toast.LENGTH_SHORT).show();
-            return true;
- 
-        case R.id.menu_save:
-            Toast.makeText(FrontPage.this, "Save is Selected", Toast.LENGTH_SHORT).show();
-            return true;
- 
-        case R.id.menu_search:
-            Toast.makeText(FrontPage.this, "Search is Selected", Toast.LENGTH_SHORT).show();
-            return true;
-            
-        default:
-            return super.onOptionsItemSelected(item);
-	    }
+			return true;
+		} else if (itemId == R.id.menu_save) {
+			Toast.makeText(FrontPage.this, "Save is Selected", Toast.LENGTH_SHORT).show();
+			return true;
+		} else if (itemId == R.id.menu_search) {
+			Toast.makeText(FrontPage.this, "Search is Selected", Toast.LENGTH_SHORT).show();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
+		}
 	  } 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +117,6 @@ public class FrontPage extends Activity {
     	        progress.show();
         		Intent searchlib = new Intent(getApplicationContext(), MainPage.class);
         		//searchlib.putExtra(SEARCH_URL, searchText);
-        		
         		startActivity(searchlib);
         	}
         });
@@ -159,11 +154,11 @@ public class FrontPage extends Activity {
     	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     	        progress.setIndeterminate(true);
     	        progress.show();
-        		Intent searchlib = new Intent(getApplicationContext(), MainActivity.class);
-        		searchlib.putExtra(SEARCH_URL, "a");
+        		Intent searchlib = new Intent(getApplicationContext(), SearchPage.class);
         		startActivity(searchlib);
         	}
         });
+        progress.hide();
     }
     
 }
