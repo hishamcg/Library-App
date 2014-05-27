@@ -97,7 +97,10 @@ public class MyMap extends Activity {
             String[] somthing=new String[values.size()];
             
             for (int i=0;i<dist.length;i++)
-            {somthing[i] = String.valueOf(dist[i][0])+";"+String.valueOf(dist[i][1]) ;
+            {//somthing[i] = String.valueOf(dist[i][0])+";"+String.valueOf(dist[i][1]) ;
+            	String[] brooo = String.valueOf(dist[i][0]).split(",");
+            	somthing[i] = brooo[0];
+            	
              System.out.println(somthing[i]);}
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, somthing);

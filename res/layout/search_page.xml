@@ -15,16 +15,6 @@
         android:layout_marginTop="20dp"
         android:src="@drawable/jb_logo2" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:text="Search Page"
-        android:textColor="#ffffff"
-        android:textSize="20sp" />
-
     <Button
         android:background="@drawable/red_button"
         android:id="@+id/button1"
@@ -44,7 +34,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:background="@drawable/edittext_style"
-        android:hint="Enter Key Word"
+        android:hint="Title/Author/ISBN"
         android:singleLine="true">
         <requestFocus />
     </EditText>

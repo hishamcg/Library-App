@@ -37,9 +37,11 @@ public class MainPage extends Activity {
         	}
         });
     }
-	@Override
-	public void onBackPressed() {
-	    // your code.
-	}
+//	@Override
+//	public void onBackPressed() {
+//	    // your code.
+//		Intent back = new Intent(getApplicationContext(), FrontPage.class);
+//		startActivity(back);
+//	}
     
 }

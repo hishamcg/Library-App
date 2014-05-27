@@ -295,13 +295,13 @@ containing a value of this type.
         public static final int publisher_label=0x7f050026;
         public static final int rtbProductRating=0x7f050028;
         public static final int satellite=0x7f050002;
-        public static final int tab1=0x7f05000a;
+        public static final int tab1=0x7f050009;
         public static final int tab2=0x7f05000b;
         public static final int tab3=0x7f05000d;
         public static final int tablerow1=0x7f050011;
         public static final int terrain=0x7f050003;
         public static final int textView=0x7f05002b;
-        public static final int textView1=0x7f050009;
+        public static final int textView1=0x7f05000a;
         public static final int textView2=0x7f05000c;
         public static final int textView3=0x7f05000e;
         public static final int title=0x7f05001b;

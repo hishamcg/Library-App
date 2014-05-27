@@ -132,13 +132,13 @@ int id publisher 0x7f05001a
 int id publisher_label 0x7f050026
 int id rtbProductRating 0x7f050028
 int id satellite 0x7f050002
-int id tab1 0x7f05000a
+int id tab1 0x7f050009
 int id tab2 0x7f05000b
 int id tab3 0x7f05000d
 int id tablerow1 0x7f050011
 int id terrain 0x7f050003
 int id textView 0x7f05002b
-int id textView1 0x7f050009
+int id textView1 0x7f05000a
 int id textView2 0x7f05000c
 int id textView3 0x7f05000e
 int id title 0x7f05001b

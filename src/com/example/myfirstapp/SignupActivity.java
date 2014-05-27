@@ -81,7 +81,7 @@ public class SignupActivity extends Activity {
 			e.printStackTrace();
 		}
 		
-		Intent frontpage = new Intent(getApplicationContext(), RegisterActivity.class);
+		Intent frontpage = new Intent(getApplicationContext(), FrontPage.class);
 		//searchlib.putExtra(SEARCH_URL, searchText);
 		
 		startActivity(frontpage);

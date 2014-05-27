@@ -37,9 +37,9 @@ public class SearchPage extends Activity {
         	}
         });
     }
-	@Override
-	public void onBackPressed() {
-	    // your code.
-	}
-    
+//	@Override
+//	public void onBackPressed() {
+//	    // your code.
+//	}
+//    
 }
