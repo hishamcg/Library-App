@@ -158,7 +158,11 @@ public class FrontPage extends Activity {
         		startActivity(searchlib);
         	}
         });
-        progress.hide();
     }
+	@Override
+	public void onRestart(){
+		super.onResume();
+		progress.hide();
+	}
     
 }

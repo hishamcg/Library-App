@@ -20,13 +20,13 @@ public class SignupActivity extends Activity {
 	private static final String SUCCESS = "success";
 	String NUMBER;
 	private static final String USER_INFO = "info";
-	private static final String AUTH_TOKEN = "auth_token";
+	private static final String AUTH_TOKEN = "api_key";
 	private static final String MEMBERSHIP_NO = "membership_no";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.front_page);
+		//setContentView(R.layout.front_page);
 		
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
@@ -81,7 +81,8 @@ public class SignupActivity extends Activity {
 			e.printStackTrace();
 		}
 		
-		Intent frontpage = new Intent(getApplicationContext(), FrontPage.class);
+//		Intent frontpage = new Intent(getApplicationContext(), FrontPage.class);
+		Intent frontpage = new Intent(getApplicationContext(), RegisterActivity.class);
 		//searchlib.putExtra(SEARCH_URL, searchText);
 		
 		startActivity(frontpage);
@@ -94,5 +95,5 @@ public class SignupActivity extends Activity {
 //		}
 //		
 	}
-
+	
 }
