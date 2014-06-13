@@ -73,6 +73,23 @@ public class FrontPage extends FragmentActivity {
 			Intent about = new Intent(getApplicationContext(), HelpActivity.class);
     		startActivity(about);
 			return true;
+		} else if (itemId == R.id.logout) {
+			SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		    SharedPreferences.Editor   editor = preferences.edit();
+		    editor.putString("AUTH_TOKEN", "0");
+		    editor.putString("MEMBERSHIP_NO", "0");
+		    editor.putString("DATE_OF_SIGNUP", "0");
+		    editor.commit();
+		    progress.setMessage("Loading");
+	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	        progress.setIndeterminate(true);
+	        progress.show();
+	        
+		    Intent login = new Intent(getApplicationContext(), SignupPage.class);
+		    login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    		startActivity(login);
+			return true;
 		}else {
 			return super.onOptionsItemSelected(item);
 		}

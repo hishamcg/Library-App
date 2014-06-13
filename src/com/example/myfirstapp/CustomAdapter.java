@@ -66,6 +66,7 @@ public class CustomAdapter extends ArrayAdapter<Book> {
 		TextView price = (TextView) rowView.findViewById(R.id.price);
 		TextView isbn = (TextView) rowView.findViewById(R.id.isbn);
 		TextView title_id = (TextView) rowView.findViewById(R.id.title_id);
+		TextView rental_id = (TextView) rowView.findViewById(R.id.rental_id);
 
 		Book book = bookArry[position];
 		new DownloadImageTask((ImageView) rowView.findViewById(R.id.image))
@@ -77,6 +78,7 @@ public class CustomAdapter extends ArrayAdapter<Book> {
   		price.setText(book.getPrice());
   		isbn.setText(book.getIsbn());
   		title_id.setText(book.getId());
+  		rental_id.setText(book.getRental_id());
 
 		return rowView;
 	}

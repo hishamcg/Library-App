@@ -55,6 +55,10 @@
         android:layout_width="0dip"
         android:layout_height="0dip" />
     <TextView
+        android:id="@+id/rental_id"
+        android:layout_width="0dip"
+        android:layout_height="0dip" />
+    <TextView
 	        android:id="@+id/price"
 	        android:layout_width="0dip"
 	        android:layout_height="0dip"/>

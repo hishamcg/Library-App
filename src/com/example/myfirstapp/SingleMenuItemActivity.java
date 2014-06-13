@@ -56,11 +56,12 @@ public class SingleMenuItemActivity  extends Activity {
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
 	private static final String TAG_ID = "title_id";
+	private static final String RENTAL_ID = "rental_id";
+	String rental_id = "";
 	
 	@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
-      menuInflater.inflate(R.menu.front_page, menu);
       menuInflater.inflate(R.menu.activity_main_actions, menu);
       //return true;
       return super.onCreateOptionsMenu(menu);
@@ -153,6 +154,7 @@ public class SingleMenuItemActivity  extends Activity {
 	        	
 	        }
         	else if(message.equals("current")){
+        		rental_id = in.getStringExtra(RENTAL_ID);
         		click4.setVisibility(View.VISIBLE);
         		click2.setVisibility(View.GONE);
         		click3.setVisibility(View.GONE);
@@ -307,6 +309,58 @@ public class SingleMenuItemActivity  extends Activity {
     	        progress.show();
     	        
     	        String url = "http://staging.justbooksclc.com:8787/api/v1/wishlists/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
+    			
+    			InputStream inputStream = null;
+    	        String result = "";
+    	        try {
+    	 
+    	            // 1. create HttpClient
+    	            HttpClient httpclient = new DefaultHttpClient();
+    	 
+    	            // 2. make POST request to the given URL
+    	            HttpPost httpPost = new HttpPost(url);
+
+    	            // 6. httpPost.setHeader("Accept", "");
+    	            httpPost.setHeader("Content-type", "");
+    	 
+    	            // 8. Execute POST request to the given URL
+    	            HttpResponse httpResponse = httpclient.execute(httpPost);
+    	 
+    	            // 9. receive response as inputStream
+    	            inputStream = httpResponse.getEntity().getContent();
+
+    	            // 10. convert inputstream to string
+    	            if(inputStream != null)
+    	            {//result = convertInputStreamToString(inputStream);
+    	            	result = "Worked!";
+	    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+	    	            StringBuilder responseStrBuilder = new StringBuilder();
+	
+	    	            String inputStr;
+	    	            while ((inputStr = streamReader.readLine()) != null)
+	    	                responseStrBuilder.append(inputStr);
+	
+	    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
+	    	            String INFO = jsonObject.getString(USER_INFO);
+	    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
+	    	            }
+    	            else
+    	                result = "Did not work!";
+    	            Log.d("++++++++++++++", result);
+    	        } catch (Exception e) {
+    	            Log.d("InputStream", e.getLocalizedMessage());
+    	        }
+    	        progress.hide();
+        	}
+        });
+        click4.setOnClickListener(new Button.OnClickListener() {
+        	public void onClick(View v){
+        		progress.setMessage("Loading");
+    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    	        progress.setIndeterminate(true);
+    	        progress.show();
+    	        
+    	        String url = "http://staging.justbooksclc.com:8787/api/v1/orders/pickup.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&rental_id="+rental_id+"&membership_no="+memb;
     			
     			InputStream inputStream = null;
     	        String result = "";

@@ -9,6 +9,7 @@ public class Book {
 	private String isbn;
 	private String category;
 	private String title_id;
+	private String rental_id;
 	
 
 	
@@ -59,6 +60,12 @@ public class Book {
 	}
 	public void setId(String title_id) {
 		this.title_id = title_id;
+	}
+	public String getRental_id() {
+		return rental_id;
+	}
+	public void setRental_id(String rental_id) {
+		this.rental_id = rental_id;
 	}
 	
 

@@ -33,6 +33,7 @@ public class CurrentlyReadingFragment extends ListFragment {
 	private static final String TAG_ISBN = "isbn";
 	private static final String TAG_ID = "id";
 	private static final String TAG_ID_call = "title_id";
+	private static final String RENTAL_ID = "rental_id";
 
 	// contacts JSONArray
 	JSONArray list = null;
@@ -50,7 +51,7 @@ public class CurrentlyReadingFragment extends ListFragment {
 	String numb = value.getString("NUMBER","");
 	
 	System.out.println("score");
-	String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/books_at_home.json?api_key="+auth_token+"&phone=9738349134";
+	String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/books_at_home.json?api_key="+auth_token+"&phone="+numb;
 	// Hashmap for ListView
 	List<Book> bookList = new ArrayList<Book>();
 	// Creating JSON Parser instance
@@ -73,6 +74,7 @@ public class CurrentlyReadingFragment extends ListFragment {
 			String title = c.getString(TAG_TITLE);
 			String isbn = c.getString(TAG_ISBN);
 			String title_id = c.getString(TAG_ID);
+			String rental_id = c.getString(RENTAL_ID);
 			
 			System.out.println("########id#######"+title_id);
 			//String imageUrl = "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg";
@@ -95,6 +97,7 @@ public class CurrentlyReadingFragment extends ListFragment {
 			book.setImageUrl("http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
 			book.setIsbn(isbn);
 			book.setId(title_id);
+			book.setRental_id(rental_id);
 			
 			
 			
@@ -133,6 +136,8 @@ public class CurrentlyReadingFragment extends ListFragment {
 				.getText().toString();
 		String title_id = ((TextView) view.findViewById(R.id.title_id))
 				.getText().toString();
+		String rental_id = ((TextView) view.findViewById(R.id.rental_id))
+				.getText().toString();
 		System.out.println("########isbn#######"+isbn);
 		System.out.println("########id#######"+title_id);
 		System.out.println("#######title#######"+title);
@@ -147,6 +152,7 @@ public class CurrentlyReadingFragment extends ListFragment {
 		in.putExtra(TAG_PAGE, price);
 		in.putExtra(TAG_IMAGE_URL, "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
 		in.putExtra(TAG_ID_call, title_id);
+		in.putExtra(RENTAL_ID, rental_id);
 		in.putExtra("message", "current");
 		in.putExtra("check","logged_in");
 		

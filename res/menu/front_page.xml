@@ -17,4 +17,8 @@
           android:icon="@drawable/book_icon_black"
           android:textSize="12sp" 
           android:title="Subscription holidays"/> 
+    <item android:id="@+id/logout"
+          android:icon="@drawable/book_icon_black"
+          android:textSize="12sp" 
+          android:title="logout"/>
 </menu>
