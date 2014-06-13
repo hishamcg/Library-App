@@ -8,6 +8,7 @@ public class Book {
 	private String imageUrl;
 	private String isbn;
 	private String category;
+	private String title_id;
 	
 
 	
@@ -52,6 +53,12 @@ public class Book {
 	}
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
+	}
+	public String getId() {
+		return title_id;
+	}
+	public void setId(String title_id) {
+		this.title_id = title_id;
 	}
 	
 

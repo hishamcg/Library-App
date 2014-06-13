@@ -44,6 +44,7 @@ public class BestsellerList extends Activity {
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
 	private static final String TAG_ISBN = "isbn";
+	private static final String TAG_ID = "title_id";
 
 	// contacts JSONArray
 	JSONArray list = null;
@@ -71,7 +72,7 @@ public class BestsellerList extends Activity {
 		String numb = value.getString("NUMBER","");
 		
 		System.out.println("score");
-		String url = "http://"+SERVER_BASE_URL+"/api/v1/wishlists.json?auth_token="+auth_token+"&phone="+numb+"&membership_no="+memb;
+		String url = "http://"+SERVER_BASE_URL+"/api/v1/wishlists.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 		// Hashmap for ListView
 		List<Book> bookList = new ArrayList<Book>();
 		// Creating JSON Parser instance
@@ -93,6 +94,9 @@ public class BestsellerList extends Activity {
 				String language = c.getString(TAG_LANGUAGE);
 				String title = c.getString(TAG_TITLE);
 				String isbn = c.getString(TAG_ISBN);
+				String title_id = c.getString(TAG_ID);
+				
+				System.out.println("########id#######"+title_id);
 				//String imageUrl = "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg";
 
 				// Phone number is agin JSON Object
@@ -112,6 +116,9 @@ public class BestsellerList extends Activity {
 				//book.setImageUrl("http://"+SERVER_BASE_URL+"/assets/"+imageUrl);
 				book.setImageUrl("http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
 				book.setIsbn(isbn);
+				book.setId(title_id);
+				
+				
 				
 				// adding HashList to ArrayList
 				bookList.add(book);
@@ -161,7 +168,10 @@ public class BestsellerList extends Activity {
 						.getText().toString();
 				String isbn = ((TextView) view.findViewById(R.id.isbn))
 						.getText().toString();
+				String title_id = ((TextView) view.findViewById(R.id.title_id))
+						.getText().toString();
 				System.out.println("########isbn#######"+isbn);
+				System.out.println("########id#######"+title_id);
 				System.out.println("#######title#######"+title);
 				System.out.println("########publisher#######"+publisher);
 				
@@ -174,6 +184,7 @@ public class BestsellerList extends Activity {
 				in.putExtra(TAG_LANGUAGE, publisher);
 				in.putExtra(TAG_PAGE, price);
 				in.putExtra(TAG_IMAGE_URL, "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
+				in.putExtra(TAG_ID, title_id);
 				startActivity(in);
 
 			}
@@ -181,4 +192,9 @@ public class BestsellerList extends Activity {
 
 	}
 
+	@Override
+	public void onResume(){
+		super.onResume();
+		progress.hide();
+	}
 }

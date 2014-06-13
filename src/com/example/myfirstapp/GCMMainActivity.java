@@ -20,7 +20,7 @@ public class GCMMainActivity extends Activity {
 		appUtil = new ShareExternalServer();
 
 		regId = getIntent().getStringExtra("regId");
-		Log.d("MainActivity", "regId: " + regId);
+		Log.d("GCMMainActivity", "regId: " + regId);
 
 		final Context context = this;
 		shareRegidTask = new AsyncTask<Void, Void, String>() {

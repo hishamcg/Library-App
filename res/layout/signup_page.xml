@@ -1,0 +1,84 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:background="#2e3681">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:contentDescription="@string/hello"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/jb_logo2" />
+
+    <Button
+        android:background="@drawable/red_button"
+        android:id="@+id/button2"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:textColor="#ffffff"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="Sign In"
+        style="@style/button_text" />
+
+	  <LinearLayout
+	      android:id="@+id/button3"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:layout_alignLeft="@+id/button2"
+	      android:layout_alignTop="@+id/button5"
+	      android:layout_marginLeft="22dp"
+	      android:background="@drawable/icon_click"
+	      android:clickable="true"
+	      android:orientation="vertical" >
+
+	      <ImageView
+	          android:layout_width="30dp"
+	          android:layout_height="30dp"
+	          android:layout_marginBottom="5dp"
+	          android:layout_marginLeft="10dp"
+	          android:background="@drawable/map_tag"
+	          android:contentDescription="@string/hello" />
+
+	      <TextView
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:text="Locate Store"
+	          android:textColor="#ffffff"
+	          android:textSize="10sp" />
+	  </LinearLayout>
+
+	  <LinearLayout
+	      android:id="@+id/button5"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:layout_alignParentBottom="true"
+	      android:layout_alignRight="@+id/button2"
+	      android:layout_marginBottom="40dp"
+	      android:layout_marginRight="15dp"
+	      android:background="@drawable/icon_click"
+	      android:clickable="true"
+	      android:orientation="vertical" >
+
+	      <ImageView
+	          android:layout_width="30dp"
+	          android:layout_height="30dp"
+	          android:layout_marginBottom="5dp"
+	          android:layout_marginLeft="15dp"
+	          android:background="@drawable/my_search"
+	          android:contentDescription="@string/hello" />
+
+	      <TextView
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:text="Search Books"
+	          android:textColor="#ffffff"
+	          android:textSize="10sp" />
+	  </LinearLayout>
+ 
+</RelativeLayout>

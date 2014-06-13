@@ -5,13 +5,16 @@
     -->
     <item android:id="@+id/menu_bookmark"
           android:icon="@drawable/book_icon_black"
-          android:textSize="12sp"/>
+          android:textSize="12sp"
+          android:title="Renew plan"/>
  
     <item android:id="@+id/menu_save"
           android:icon="@drawable/book_icon_black"
-          android:textSize="12sp"/>
+          android:textSize="12sp"
+          android:title="Change plan"/>
  
     <item android:id="@+id/menu_search"
           android:icon="@drawable/book_icon_black"
-          android:textSize="12sp"/> 
+          android:textSize="12sp" 
+          android:title="Subscription holidays"/> 
 </menu>

@@ -1,5 +1,7 @@
 package com.example.myfirstapp;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,6 +18,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,10 +43,59 @@ public class MainActivity extends Activity {
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
 	private static final String TAG_ISBN = "isbn";
-
+	private static final String TAG_ID = "id";
+	private static final String TAG_ID_call = "title_id";
+	
+	Intent searchlib = getIntent();
+	String fin = searchlib.getStringExtra(SEARCH_URL);
+	String check_log = searchlib.getStringExtra("check");
 	// contacts JSONArray
 	JSONArray list = null;
-
+	
+	@Override
+	  public boolean onCreateOptionsMenu(Menu menu) {
+		if (!check_log.equals("not_logged_in")){
+		MenuInflater menuInflater = getMenuInflater();
+	    menuInflater.inflate(R.menu.front_page, menu);
+	    menuInflater.inflate(R.menu.search_page_menu, menu);
+	    //return true;
+	    return super.onCreateOptionsMenu(menu);}
+		else
+			return false;
+	  }
+	@Override
+	  public boolean onOptionsItemSelected(MenuItem item) {
+		if (!check_log.equals("not_logged_in")){
+			progress = new ProgressDialog(this);
+			progress.setMessage("Loading");
+	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	        progress.setIndeterminate(true);
+	        progress.show();
+			int itemId = item.getItemId();
+			if (itemId == R.id.action_back) {
+				// Single menu item is selected do something
+	        // Ex: launching new activity/screen or show alert message
+	        finish();
+				return true;
+			} else if (itemId == R.id.action_storage) {
+				Intent searchlib = new Intent(getApplicationContext(), AndroidTabLayoutActivity.class);
+			startActivity(searchlib);
+				return true;
+			} else if (itemId == R.id.action_place) {
+				Intent searchlib = new Intent(getApplicationContext(), MyMap.class);
+			startActivity(searchlib);
+				return true;
+			} else if (itemId == R.id.action_help) {
+				Intent about = new Intent(getApplicationContext(), HelpActivity.class);
+			startActivity(about);
+				return true;
+			}else {
+				return super.onOptionsItemSelected(item);
+			}
+		}else
+			return false;
+	  } 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,8 +124,6 @@ public class MainActivity extends Activity {
 		StrictMode.setThreadPolicy(policy);
 
 		System.out.println("score");
-		Intent searchlib = getIntent();
-		String fin = searchlib.getStringExtra(SEARCH_URL);
 
 		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		String auth_token = value.getString("AUTH_TOKEN","");
@@ -78,15 +131,16 @@ public class MainActivity extends Activity {
 		String numb = value.getString("NUMBER","");
 		
 		System.out.println("score");
-		String url = "http://"+SERVER_BASE_URL+"/api/v1/search.json?phone="+numb+"&auth_token="+auth_token+"&membership_no="+memb+"&q="+fin;
-		System.out.println(fin);
+		
 		// Hashmap for ListView
 		List<Book> bookList = new ArrayList<Book>();
 		// Creating JSON Parser instance
 		JSONParser jParser = new JSONParser();
 		// getting JSON string from URL
-		JSONObject json = jParser.getJSONFromUrl(url);
+		
 		try {
+			String url = "http://"+SERVER_BASE_URL+"/api/v1/search.json?phone="+numb+"&api_key="+auth_token+"&membership_no="+memb+"&q="+URLEncoder.encode(fin, "UTF-8");
+			JSONObject json = jParser.getJSONFromUrl(url);
 			// Getting Array of Books
 			list = json.getJSONArray(TAG_SEARCHLIST);
 
@@ -101,6 +155,7 @@ public class MainActivity extends Activity {
 				String language = c.getString(TAG_LANGUAGE);
 				String title = c.getString(TAG_TITLE);
 				String isbn = c.getString(TAG_ISBN);
+				String title_id = c.getString(TAG_ID);
 				//String imageUrl = "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg";
 
 				// Phone number is agin JSON Object
@@ -120,11 +175,15 @@ public class MainActivity extends Activity {
 				//book.setImageUrl("http://"+SERVER_BASE_URL+"/assets/"+imageUrl);
 				book.setImageUrl("http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
 				book.setIsbn(isbn);
+				book.setId(title_id);
 				
 				// adding HashList to ArrayList
 				bookList.add(book);
 			}
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		/**
@@ -159,6 +218,8 @@ public class MainActivity extends Activity {
 						.getText().toString();
 				String isbn = ((TextView) view.findViewById(R.id.isbn))
 						.getText().toString();
+				String title_id = ((TextView) view.findViewById(R.id.title_id))
+						.getText().toString();
 				System.out.println("########isbn#######"+isbn);
 				System.out.println("#######title#######"+title);
 				System.out.println("########publisher#######"+publisher);
@@ -172,11 +233,19 @@ public class MainActivity extends Activity {
 				in.putExtra(TAG_LANGUAGE, publisher);
 				in.putExtra(TAG_PAGE, price);
 				in.putExtra(TAG_IMAGE_URL, "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
+				in.putExtra("message", "create");
+				in.putExtra(TAG_ID_call, title_id);
+				in.putExtra("check", check_log);
 				startActivity(in);
 
 			}
 		});
 
+	}
+	@Override
+	public void onResume(){
+		super.onResume();
+		progress.hide();
 	}
 
 }

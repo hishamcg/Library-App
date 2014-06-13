@@ -19,9 +19,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
@@ -31,75 +34,72 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class LatestList extends Activity {
-
-	// url to make request
-	// private static String url =
-	// "http://192.168.20.101:3000/mylib/search.json?q=a";
-	private static final String SEARCH_URL = "url";
-	//private static final String SERVER_BASE_URL = "192.168.1.12:3000";
-	private static final String SERVER_BASE_URL = "dry-everglades-8791.herokuapp.com";
+	private ProgressDialog progress;
+	private static final String SERVER_BASE_URL = "staging.justbooksclc.com:8787";
 	// JSON Node names
-	private static final String TAG_CONTACTS = "contacts";
+	private static final String TAG_WISHLIST = "wishlists";
 	private static final String TAG_AUTHOR = "author";
-	//private static final String TAG_CATEGORY_ID = "cat_id";
-	//private static final String TAG_CREATED_AT = "created_at";
-	//private static final String TAG_EDITION = "edition";
-	//private static final String TAG_ID = "id";
+	private static final String TAG_CATEGORY = "category";
 	private static final String TAG_IMAGE_URL = "image";
-	private static final String TAG_PRICE = "price";
-	private static final String TAG_PUBLISHER = "publisher";
+	private static final String TAG_PAGE = "no_of_pages";
+	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
-	//private static final String TAG_UPDATED_AT = "updated_at";
-
-	// private static final String TAG_PHONE = "phone";
-	// private static final String TAG_PHONE_MOBILE = "mobile";
-	// private static final String TAG_PHONE_HOME = "home";
-	// private static final String TAG_PHONE_OFFICE = "office";
+	private static final String TAG_ISBN = "isbn";
+	private static final String TAG_ID = "title_id";
 
 	// contacts JSONArray
-	JSONArray contacts = null;
+	JSONArray list = null;
 
-	Drawable drawable_from_url(String url, String src_name)
+/*	Drawable drawable_from_url(String url, String src_name)
 			throws java.net.MalformedURLException, java.io.IOException {
 		return Drawable.createFromStream(
 				((java.io.InputStream) new java.net.URL(url).getContent()),
 				src_name);
-	}
+	}*/
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.latest_layout);
+		progress = new ProgressDialog(this);
+		progress.hide();
+		setContentView(R.layout.bestseller_layout);
 		
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
-
+		
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		String auth_token = value.getString("AUTH_TOKEN","");
+		String memb = value.getString("MEMBERSHIP_NO","");
+		String numb = value.getString("NUMBER","");
+		
 		System.out.println("score");
-		String url = "http://"+SERVER_BASE_URL+"/mylib/search.json?q=e";
+		String url = "http://"+SERVER_BASE_URL+"/api/v1/wishlists.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 		// Hashmap for ListView
 		List<Book> bookList = new ArrayList<Book>();
-		System.out.println("im ere 1");
 		// Creating JSON Parser instance
 		JSONParser jParser = new JSONParser();
-		System.out.println("im ere 2");
 		// getting JSON string from URL
 		JSONObject json = jParser.getJSONFromUrl(url);
-		System.out.println("im ere 3");
 		try {
 			// Getting Array of Contacts
-			contacts = json.getJSONArray(TAG_CONTACTS);
+			list = json.getJSONArray(TAG_WISHLIST);
 
 			// looping through All Contacts
-			for (int i = 0; i < contacts.length(); i++) {
-				JSONObject c = contacts.getJSONObject(i);
-
+			for (int i = 0; i < list.length(); i++) {
+				JSONObject c = list.getJSONObject(i);
+				
 				// Storing each json item in variable
 				String author = c.getString(TAG_AUTHOR);
-				//String id = c.getString(TAG_ID);
-				String imageUrl = c.getString(TAG_IMAGE_URL);
-				String price = "Price: Rs"+c.getString(TAG_PRICE);
-				String publisher = c.getString(TAG_PUBLISHER);
+				String category = c.getString(TAG_CATEGORY);
+				String page = c.getString(TAG_PAGE);
+				String language = c.getString(TAG_LANGUAGE);
 				String title = c.getString(TAG_TITLE);
+				String isbn = c.getString(TAG_ISBN);
+				String title_id = c.getString(TAG_ID);
+				
+				System.out.println("########id#######"+title_id);
+				//String imageUrl = "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg";
 
 				// Phone number is agin JSON Object
 				/*
@@ -112,10 +112,14 @@ public class LatestList extends Activity {
 				Book book = new Book();
 				book.setTitle(title);
 				book.setAuthor(author);
-				book.setPrice(price);
-				book.setPublisher(publisher);
+				book.setCategory(category);
+				book.setPrice(page);
+				book.setPublisher(language);
 				//book.setImageUrl("http://"+SERVER_BASE_URL+"/assets/"+imageUrl);
-				book.setImageUrl(imageUrl);
+				book.setImageUrl("http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
+				book.setIsbn(isbn);
+				book.setId(title_id);
+				
 				
 				
 				// adding HashList to ArrayList
@@ -145,12 +149,18 @@ public class LatestList extends Activity {
 		lv.setAdapter(adapter);
 		// Launching new screen on Selecting Single ListItem
 		lv.setOnItemClickListener(new OnItemClickListener() {
-
+			
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				progress.setMessage("Loading");
+    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    	        progress.setIndeterminate(true);
+    	        progress.show();
 				// getting values from selected ListItem
 				String author = ((TextView) view.findViewById(R.id.author))
+						.getText().toString();
+				String category = ((TextView) view.findViewById(R.id.category))
 						.getText().toString();
 				String publisher = ((TextView) view
 						.findViewById(R.id.publisher)).getText().toString();
@@ -158,14 +168,25 @@ public class LatestList extends Activity {
 						.getText().toString();
 				String title = ((TextView) view.findViewById(R.id.title))
 						.getText().toString();
-
+				String isbn = ((TextView) view.findViewById(R.id.isbn))
+						.getText().toString();
+				String title_id = ((TextView) view.findViewById(R.id.title_id))
+						.getText().toString();
+				System.out.println("########isbn#######"+isbn);
+				System.out.println("########id#######"+title_id);
+				System.out.println("#######title#######"+title);
+				System.out.println("########publisher#######"+publisher);
+				
 				// Starting new intent
 				Intent in = new Intent(getApplicationContext(),
 						SingleMenuItemActivity.class);
 				in.putExtra(TAG_AUTHOR, author);
+				in.putExtra(TAG_CATEGORY, category);
 				in.putExtra(TAG_TITLE, title);
-				in.putExtra(TAG_PRICE, price);
-				in.putExtra(TAG_PUBLISHER, publisher);
+				in.putExtra(TAG_LANGUAGE, publisher);
+				in.putExtra(TAG_PAGE, price);
+				in.putExtra(TAG_IMAGE_URL, "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
+				in.putExtra(TAG_ID, title_id);
 				startActivity(in);
 
 			}
@@ -173,4 +194,9 @@ public class LatestList extends Activity {
 
 	}
 
+	@Override
+	public void onResume(){
+		super.onResume();
+		progress.hide();
+	}
 }

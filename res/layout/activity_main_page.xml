@@ -18,26 +18,27 @@
     <Button
         android:background="@drawable/red_button"
         android:id="@+id/button1"
-        android:layout_width="250dp"
-        android:layout_height="30dp"
+        android:layout_width="85dp"
+        android:layout_height="35dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:textColor="#fff"
-        android:text="Sign Up"
+        android:textColor="#ffffff"
+        android:text="Sign In"
         style="@style/button_text" />
 
     <EditText
         android:id="@+id/editText1"
         android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:padding="6dp"
+        android:layout_height="35dp"
+        android:textSize="16sp"
+        android:paddingLeft="10dp"
         android:layout_above="@+id/button1"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:background="@drawable/edittext_style"
         android:hint="Enter Mobile number"
-        android:ems="10"
-        android:inputType="phone" 
+        android:inputType="number"
+        android:textColor="#444444"
         android:singleLine="true">
         <requestFocus />
     </EditText>
@@ -48,6 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/editText1"
         android:layout_centerHorizontal="true"
+        android:textColor="#ffffff"
+        android:textStyle="italic"
         android:layout_marginBottom="23dp"
         android:text="No Internet Connection"
         android:textAppearance="?android:attr/textAppearanceMedium" />

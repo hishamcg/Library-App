@@ -2,129 +2,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:background="#2e3681">
 
-    <ImageView
+<!--     <ImageView
         android:id="@+id/imageView1"
-        android:contentDescription="@string/hello"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:contentDescription="@string/hello"
+	    android:layout_centerHorizontal="true"
         android:src="@drawable/jb_logo2" />
-
-    <Button
-        android:background="@drawable/red_button"
-        android:id="@+id/button2"
-        android:layout_width="250dp"
-        android:layout_height="40dp"
-        android:textColor="#ffffff"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Signup"
-        style="@style/button_text" />
     <LinearLayout
-        android:id="@+id/layout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
+	    android:id="@+id/layout1"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_marginBottom="10dp"
+	    android:orientation="horizontal" >
+	
 	    <TextView
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:textSize="16sp"
+	        android:text="Welcome "
 	        android:textColor="#ffffff"
-	        android:text="Welcome " />
+	        android:textSize="16sp" />
+	
 	    <TextView
 	        android:id="@+id/textView1"
 	        android:layout_width="wrap_content"
-	        android:textColor="#ffffff"
 	        android:layout_height="wrap_content"
-	        android:textSize="16sp"
-	        android:text="Hisham" />
-	</LinearLayout>
-<TableLayout 
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
-    android:layout_height="wrap_content" 
-    android:layout_width="wrap_content">
-                	
-    <TableRow
-        android:id="@+id/tablerow1"
-        android:layout_marginLeft="10dip"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+	        android:layout_marginBottom="15dp"
+	        android:text="Hisham"
+	        android:textColor="#ffffff"
+	        android:textSize="16sp" />
+	</LinearLayout> -->
+    
+	<android.support.v4.view.ViewPager
+	    android:id="@+id/viewpager"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/imageView1" />
 
-    </TableRow>
-	<TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip">
-       <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:orientation="vertical">
-         <Button
-	        android:id="@+id/button3"
-	        android:contentDescription="@string/hello"
-	        android:layout_width="30dp"
-	        android:layout_height="30dp"	
-	        android:layout_marginBottom="5dp"   
-	        android:layout_marginLeft="10dp"      
-	        android:background="@drawable/map_tag" />
-         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Locate Store"
-            android:textSize="10sp"
-            android:textColor="#ffffff"/>   
-	  </LinearLayout>
-	  <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:layout_marginLeft="40dp"
-        android:orientation="vertical">
-         <Button
-	        android:id="@+id/button4"
-	        android:contentDescription="@string/hello"
-	        android:layout_width="30dp"
-	        android:layout_height="30dp"
-	        android:layout_marginLeft="0dp"		
-	        android:layout_marginBottom="5dp"
-	        android:background="@drawable/icon_click" />
-         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Top rated"
-            android:textSize="10sp"
-            android:textColor="#ffffff"/> 
-	  </LinearLayout>
-	  <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:layout_marginLeft="40dp"
-        android:orientation="vertical">
-         <Button
-	        android:id="@+id/button5"
-	        android:contentDescription="@string/hello"
-	        android:layout_width="30dp"
-	        android:layout_height="30dp"
-	        android:layout_marginLeft="15dp"		
-	        android:layout_marginBottom="5dp"
-	        android:background="@drawable/my_search" />
-         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search Books"
-            android:textSize="10sp"
-            android:textColor="#ffffff"/> 
-	  </LinearLayout>
-    </TableRow>   
-</TableLayout>  
 </RelativeLayout>

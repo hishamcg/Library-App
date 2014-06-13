@@ -10,9 +10,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="10dp">
+        android:background="#2e3681"
+        android:paddingLeft="10dp"
+        android:paddingTop="6dp">
 		<EditText
 	        android:id="@+id/editText1"
+	        android:textColor="#444444"
 	        android:layout_width="260dp"
 	        android:layout_height="wrap_content"
 	        android:padding="6dp"
@@ -21,7 +24,6 @@
 	        android:background="@drawable/edittext_style"
 	        android:singleLine="true"
 	        android:hint="Search" >
-	        <requestFocus />
 	    </EditText>
 	    <Button
 	        android:background="@drawable/search_btn"
