@@ -6,11 +6,6 @@
           android:title="back"
           android:showAsAction="ifRoom"/>
      
-    <item android:id="@+id/action_storage"
-          android:icon="@drawable/ic_action_storage"
-          android:title="storage"
-          android:showAsAction="ifRoom" />
-    
     <item android:id="@+id/action_place"
           android:icon="@drawable/ic_action_place"
           android:title="place"

@@ -28,7 +28,9 @@ public class CustomPagerAdapter extends PagerAdapter {
 	 public int getCount() {
 	  return pages.size();
 	 }
-
+	 @Override 
+	 public float getPageWidth(int position) { 
+		 return(0.5f); }
 	 @Override
 	 public boolean isViewFromObject(View view, Object object) {
 	  return view.equals(object);

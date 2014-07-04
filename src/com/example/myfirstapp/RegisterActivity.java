@@ -46,6 +46,7 @@ public class RegisterActivity extends Activity {
 					regId = registerGCM();
 					Log.d("RegisterActivity", "GCM RegId: " + regId);
 				} else {
+					regId = registerGCM();
 					Toast.makeText(getApplicationContext(),
 							"Already Registered with GCM Server!",
 							Toast.LENGTH_LONG).show();

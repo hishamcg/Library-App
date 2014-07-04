@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import com.example.myfirstapp.TabsPagerAdapter;
 
 
+@SuppressLint("NewApi")
 public class AndroidTabLayoutActivity extends FragmentActivity implements ActionBar.TabListener {
 	private ProgressDialog progress;
 	private ViewPager viewPager;
@@ -67,7 +68,7 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		progress = new ProgressDialog(this);
-		progress.hide();
+        progress.hide();
 		
 		// Initialization
 		viewPager = (ViewPager) findViewById(R.id.pager);
@@ -115,6 +116,7 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	// on tab selected
 	// show respected fragment view
 	viewPager.setCurrentItem(tab.getPosition());
+	viewPager.setOffscreenPageLimit(4);
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ListFragment;
@@ -43,75 +44,7 @@ public class CurrentlyReadingFragment extends ListFragment {
     progress = new ProgressDialog(this.getActivity());
 	progress.hide();
     
-    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-	StrictMode.setThreadPolicy(policy);
-	
-	SharedPreferences value = this.getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
-	String auth_token = value.getString("AUTH_TOKEN","");
-	String numb = value.getString("NUMBER","");
-	
-	System.out.println("score");
-	String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/books_at_home.json?api_key="+auth_token+"&phone="+numb;
-	// Hashmap for ListView
-	List<Book> bookList = new ArrayList<Book>();
-	// Creating JSON Parser instance
-	JSONParser jParser = new JSONParser();
-	// getting JSON string from URL
-	JSONObject json = jParser.getJSONFromUrl(url);
-	try {
-		// Getting Array of Contacts
-		list = json.getJSONArray(TAG_WISHLIST);
-
-		// looping through All Contacts
-		for (int i = 0; i < list.length(); i++) {
-			JSONObject c = list.getJSONObject(i);
-			
-			// Storing each json item in variable
-			String author = c.getString(TAG_AUTHOR);
-			String category = c.getString(TAG_CATEGORY);
-			String page = c.getString(TAG_PAGE);
-			String language = c.getString(TAG_LANGUAGE);
-			String title = c.getString(TAG_TITLE);
-			String isbn = c.getString(TAG_ISBN);
-			String title_id = c.getString(TAG_ID);
-			String rental_id = c.getString(RENTAL_ID);
-			
-			System.out.println("########id#######"+title_id);
-			//String imageUrl = "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg";
-
-			// Phone number is agin JSON Object
-			/*
-			 * JSONObject phone = c.getJSONObject(TAG_PHONE); String mobile
-			 * = phone.getString(TAG_PHONE_MOBILE); String home =
-			 * phone.getString(TAG_PHONE_HOME); String office =
-			 * phone.getString(TAG_PHONE_OFFICE);
-			 */
-
-			Book book = new Book();
-			book.setTitle(title);
-			book.setAuthor(author);
-			book.setCategory(category);
-			book.setPrice(page);
-			book.setPublisher(language);
-			//book.setImageUrl("http://"+SERVER_BASE_URL+"/assets/"+imageUrl);
-			book.setImageUrl("http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
-			book.setIsbn(isbn);
-			book.setId(title_id);
-			book.setRental_id(rental_id);
-			
-			
-			
-			// adding HashList to ArrayList
-			bookList.add(book);
-		}
-	} catch (JSONException e) {
-		e.printStackTrace();
-	}
-	Book[] bookAry = new Book[bookList.size()];
-	CustomAdapter adapter = new CustomAdapter(this.getActivity(), bookList.toArray(bookAry));
-//	setListAdapter(adapter);
-	// selecting single ListView item
-    setListAdapter(adapter);
+    new JSONParse1().execute();
   }
 
 
@@ -157,6 +90,76 @@ public class CurrentlyReadingFragment extends ListFragment {
 		in.putExtra("check","logged_in");
 		
 		startActivity(in);
+  }
+  private class JSONParse1 extends AsyncTask<String,String,JSONObject>{
+	  protected void onPreExecute(){
+		  
+	  }
+	  protected JSONObject doInBackground(String... args){
+		  StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		  StrictMode.setThreadPolicy(policy);
+			
+		  SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		  String auth_token = value.getString("AUTH_TOKEN","");
+		  String memb = value.getString("MEMBERSHIP_NO","");
+		  String numb = value.getString("NUMBER","");
+		
+		  System.out.println("score");
+		  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/books_at_home.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+		  JSONParser jp = new JSONParser();
+		  JSONObject json = jp.getJSONFromUrl(url);
+		  return json;
+	  }
+	  protected void onPostExecute(JSONObject json){
+		List<Book> bookList = new ArrayList<Book>();
+		if (json != null){
+			try {
+				// Getting Array of data
+				list = json.getJSONArray(TAG_WISHLIST);
+	
+				// looping through All data
+				for (int i = 0; i < list.length(); i++) {
+					JSONObject c = list.getJSONObject(i);
+					
+					// Storing each json item in variable
+					String author = c.getString(TAG_AUTHOR);
+					String category = c.getString(TAG_CATEGORY);
+					String page = c.getString(TAG_PAGE);
+					String language = c.getString(TAG_LANGUAGE);
+					String title = c.getString(TAG_TITLE);
+					String isbn = c.getString(TAG_ISBN);
+					String title_id = c.getString(TAG_ID);
+					
+					System.out.println("########id#######"+title_id);
+	
+					Book book = new Book();
+					book.setTitle(title);
+					book.setAuthor(author);
+					book.setCategory(category);
+					book.setPrice(page);
+					book.setPublisher(language);
+					book.setImageUrl("http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
+					book.setIsbn(isbn);
+					book.setId(title_id);
+					
+					
+					
+					// adding HashList to ArrayList
+					bookList.add(book);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		else{
+			
+		}
+		Book[] bookAry = new Book[bookList.size()];
+		CustomAdapter adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
+		// selecting single ListView item
+	    setListAdapter(adapter);
+		
+	  }
   }
   public void onResume(){
 		super.onResume();

@@ -5,107 +5,115 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
+import android.util.Log;
 
 public class PageZero extends Activity {
-	private ProgressDialog progress;
 	// JSON Node names
 	private static final String SUCCESS = "success";
 	String NUMBER;
 	private String SUCC = "false";
-	private static int SPLASH_TIME_OUT = 500;
-	@SuppressLint("NewApi")
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_zero);
-        progress = new ProgressDialog(this);
         
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		StrictMode.setThreadPolicy(policy);
-        
-        SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-        //SharedPreferences value = getPreferences(MODE_PRIVATE);
-		final String dateOfSignup = value.getString("DATE_OF_SIGNUP","");
+        //to receive data from notification
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            Log.i( "dd","-----------Extra:" + extras.getString("title_id") );
+        }        
+		
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		final String numb = value.getString("NUMBER", "");
-		final JSONParser jParser = new JSONParser();
 		
-		final long saveddatevalue = new Date().getTime();
-		System.out.println("here"+saveddatevalue);
-		
-		new Handler().postDelayed(new Runnable() {
-			 
-            /*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             */
-			
-            @Override
-            public void run() {
-            	if (numb != null && numb != ""){
-            		
-        			//long date_last_signup = Long.valueOf(date_of_signup).longValue();
-        			try {
-        				String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/sessions.json?phone=" + numb;
-        				JSONObject json = jParser.getJSONFromUrl(url);
-        				SUCC = json.getString(SUCCESS);
-        				System.out.println("############"+SUCC);
-        		        long date_last_signup = Long.parseLong(dateOfSignup);
-        				long diff =saveddatevalue - date_last_signup;
-        				
-        			    if(SUCC.equals("false") || diff > 25920000){
-        			    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-        				    SharedPreferences.Editor   editor = preferences.edit();
-        				    editor.putString("AUTH_TOKEN", "0");
-        				    editor.putString("MEMBERSHIP_NO", "0");
-        				    editor.putString("DATE_OF_SIGNUP", "0");
-        				    editor.commit();
-        				    System.out.println("am i supposed to be here");
-        				    
-        				    progress.setMessage("Loading");
-        			        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        			        progress.setIndeterminate(true);
-        			        progress.show();
-        			        
-        				    Intent login = new Intent(getApplicationContext(), SignupPage.class);
-        				    login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        				    login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        	        		startActivity(login);
-        				    }
-        			    else{
-        					progress.setMessage("Loading");
-        			        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        			        progress.setIndeterminate(true);
-        			        progress.show();
-        			    	Intent in = new Intent(getApplicationContext(), FrontPage.class);
-        			    	in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        			    	in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        	        		startActivity(in);
-        			    }
-        		      } catch (NumberFormatException nfe) {
-        		         System.out.println("NumberFormatException: " + nfe.getMessage());
-        		      } catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-        		}
-        		else{
-        			Intent login = new Intent(getApplicationContext(), SignupPage.class);
-        		    login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        		    login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            		startActivity(login);
-        		}
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
+		//here i'm checking if the user has already signed in or not
+		//data from shared pref (NUMBER,AUTH_TOKEN,MEMBERSHIP_NO,DATE_OF_SIGNUP)
+    	if (numb != null && numb != ""){
+    		new JSONParse().execute();
+		}
+		else{
+			Intent login = new Intent(getApplicationContext(), SignupPage.class);
+    		startActivity(login);
+		}
     }
+	private class JSONParse extends AsyncTask<String ,String , JSONObject>{
+		protected void onPreExecute(){
+			super.onPreExecute();
+			//keep this empty so that the pagezero.xml will be visible(kind of like flash screen)
+		}
+		protected JSONObject doInBackground(String... args){
+			//here i'm verifying if the user profile exists in memp
+	        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+			
+			SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+			final String numb = value.getString("NUMBER", "");
+	        
+			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/sessions.json?phone=" + numb;
+			JSONParser jp = new JSONParser();
+			JSONObject json = jp.getJSONFromUrl(url);
+			return json;
+		}
+		protected void onPostExecute(JSONObject json){
+			SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+			final String dateOfSignup = value.getString("DATE_OF_SIGNUP","");
+			final long saveddatevalue = new Date().getTime();
+			//checking if the user is valid.
+			if (json != null){
+				try {
+					SUCC = json.getString(SUCCESS);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			System.out.println("############"+SUCC);
+	        long date_last_signup = Long.parseLong(dateOfSignup);
+			long diff =saveddatevalue - date_last_signup;
+			
+			//-----uncomment to bypass authentication-----
+			//diff = 0;
+			//SUCC = "true";
+			//--------------------------------------------
+			
+			//two condition
+			//1. does he still have justbooks membership
+			//2. 30 days since last log in (this can be removed later)
+		    if(SUCC.equals("false") || diff > 25920000){
+		    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+			    SharedPreferences.Editor   editor = preferences.edit();
+			    editor.putString("AUTH_TOKEN", "0");
+			    editor.putString("MEMBERSHIP_NO", "0");
+			    editor.putString("DATE_OF_SIGNUP", "0");
+			    editor.commit();
+			    System.out.println("am i supposed to be here");
+		        
+			    Intent login = new Intent(getApplicationContext(), SignupPage.class);
+        		startActivity(login);
+			    }
+		    else{
+		    	Intent in = new Intent(getApplicationContext(), FrontPage.class);
+        		startActivity(in);
+		    }
+		    //progress.dismiss();
+		}
+	}
+	@Override
+	public void onNewIntent(Intent newIntent) {
+	    this.setIntent(newIntent);
+	    //to receive data from notification
+	    Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            Log.i( "dd","-----------Extra:" + extras.getString("title_id") );
+        }
+	    // Now getIntent() returns the updated Intent        
+	}
 }

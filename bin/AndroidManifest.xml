@@ -4,24 +4,13 @@
     
     android:versionCode="1"
     android:versionName="1.0" >
-	<uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" >
-    </uses-feature>
-    <uses-sdk android:minSdkVersion="11" 
+    
+    <uses-sdk android:minSdkVersion="10" 
               android:targetSdkVersion="19"/>
-
-    <permission
-        android:name="com.example.myfirstapp.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-    <permission
-        android:name="com.example.myfirstapp.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
-	
+    
     <uses-permission android:name="com.example.myfirstapp.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="com.google.android.c2dm.intent.REGISTRATION" />
     <uses-permission android:name="com.example.myfirstapp.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -33,6 +22,23 @@
     <!-- Required to show current location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    
+	<uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" >
+    </uses-feature>
+
+    <permission
+        android:name="com.example.myfirstapp.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <permission
+        android:name="com.example.myfirstapp.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
  
     <!-- Required OpenGL ES 2.0. for Maps V2 -->
     <uses-feature
@@ -50,8 +56,6 @@
         android:icon="@drawable/top_icon"
         android:theme="@android:style/Theme.Light" -->
         
-		<meta-data android:name="com.google.android.gms.version"
-           android:value="@integer/google_play_services_version" />
 		<!-- Goolge Maps API Key -->
 		
 		
@@ -112,6 +116,8 @@
         </activity>
         <activity
             android:name="com.example.myfirstapp.MainActivity"
+            
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:label="Search Title/Author/ISBN"
             android:uiOptions="splitActionBarWhenNarrow"> 
             <meta-data android:name="android.support.UI_OPTIONS"
@@ -141,11 +147,17 @@
             android:name="com.example.myfirstapp.MyMap"
             android:label="Stores" >
         </activity>
+        <activity
+            android:name="com.example.myfirstapp.SignInWaitingActivity"
+            android:label="waiting for authentication" 
+            android:noHistory="true">
+        </activity>
 
 		<activity
-	            android:name="com.example.myfirstapp.RegisterActivity"
-	            android:label="@string/app_name" >
+            android:name=".RegisterActivity"
+            android:label="@string/app_name" >
 		</activity>
+		
 		CallCustomerCare
 		<activity
 	            android:name="com.example.myfirstapp.CallCustomerCare"
@@ -161,17 +173,26 @@
 	        android:name=".GcmBroadcastReceiver"
 	        android:permission="com.google.android.c2dm.permission.SEND" >
 	        <intent-filter>
-	            <action android:name="com.example.myfirstapp.c2dm.intent.RECEIVE" />
+	            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 	            <action android:name="com.example.myfirstapp.c2dm.intent.REGISTRATION" />
 	
 	            <category android:name="com.example.myfirstapp" />
 	        </intent-filter>
 	    </receiver>
+        <receiver android:name="com.example.myfirstapp.SmsReceiver" >
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+	    <service android:name=".GCMNotificationIntentService" />
+	    
 		<uses-library android:name="com.google.android.maps"/>
 		
-	    <service android:name=".GCMNotificationIntentService" />
+	    <meta-data android:name="com.google.android.gms.version"
+           		   android:value="@integer/google_play_services_version" />
 	    <meta-data android:name="com.google.android.maps.v2.API_KEY"
-	   			   android:value="AIzaSyAv46DeUEmgEflCebkck8pIPnsTYgbJccI" />    
+	   			   android:value="AIzaSyAv46DeUEmgEflCebkck8pIPnsTYgbJccI" />  
+	   		  
     </application>
 
 </manifest>

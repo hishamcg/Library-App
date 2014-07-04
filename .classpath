@@ -5,7 +5,5 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="/home/hisham/Development/adt-bundle-linux-x86-20131030/sdk/extras/android/support/v4/android-support-v4.jar"/>
-	<classpathentry kind="lib" path="/home/hisham/workspace/MyFirstApp/libs/picasso-2.3.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

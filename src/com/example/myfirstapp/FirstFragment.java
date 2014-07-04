@@ -15,7 +15,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -32,6 +35,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Callback.EmptyCallback;
@@ -39,12 +43,15 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 public class FirstFragment extends Fragment {
-	
-	Drawable drawable_from_url(String url, String src_name)
-			throws java.net.MalformedURLException, java.io.IOException {
-		return Drawable.createFromStream(
-				((java.io.InputStream) new java.net.URL(url).getContent()),
-				src_name);}
+	private static final String TAG_AUTHOR = "author";
+	private static final String TAG_CATEGORY = "category";
+	private static final String TAG_PAGE = "no_of_pages";
+	private static final String TAG_IMAGE_URL = "image";
+	private static final String TAG_LANGUAGE = "language";
+	private static final String TAG_TITLE = "title";
+	private static final String TAG_ID = "title_id";
+	private static final String TIMES_RENTED = "no_of_times_rented";
+	private static final String AVG_READING = "avg_reading_times";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.first_frag, container, false);
@@ -54,26 +61,23 @@ public class FirstFragment extends Fragment {
     	final String memb = value.getString("MEMBERSHIP_NO","");
     	final String numb = value.getString("NUMBER","");
 
-/*        TextView tv = (TextView) v.findViewById(R.id.author_label);
-        tv.setText(getArguments().getString("msg"));
+        TextView tv = (TextView) v.findViewById(R.id.times_rented);
+        tv.setText(getArguments().getString("times_rented"));
         
-        TextView tv2 = (TextView) v.findViewById(R.id.category_label);
-        tv2.setText(getArguments().getString("msg2"));
+        TextView tv2 = (TextView) v.findViewById(R.id.avg_reading_time);
+        tv2.setText(getArguments().getString("avg_reading"));
         
-        TextView tv3 = (TextView) v.findViewById(R.id.price_label);
-        tv3.setText(getArguments().getString("msg3"));
-        
-        TextView tv4 = (TextView) v.findViewById(R.id.publisher_label);
-        tv4.setText(getArguments().getString("msg4"));
+        TextView tv4 = (TextView) v.findViewById(R.id.author_label);
+        tv4.setText(getArguments().getString("author"));
         
         TextView tv5 = (TextView) v.findViewById(R.id.title_label);
-        tv5.setText(getArguments().getString("msg5"));*/
+        tv5.setText(getArguments().getString("title"));
         
         ImageView tv6 = (ImageView) v.findViewById(R.id.image_label);
         final ProgressBar progressBar= (ProgressBar) v.findViewById(R.id.loading);
         
         Picasso.with(this.getActivity())
-        .load(getArguments().getString("msg"))
+        .load(getArguments().getString("image"))
         .error(R.drawable.ic_launcher)
         .into(tv6, new EmptyCallback() {
             @Override public void onSuccess() {
@@ -86,123 +90,182 @@ public class FirstFragment extends Fragment {
         });
  
         Picasso.with(this.getActivity())
-        .load(getArguments().getString("msg"))
+        .load(getArguments().getString("image"))
         .into(target);
         
         //tv6.setImageBitmap(getBitmapFromURL(getArguments().getString("msg")));
         
         final LinearLayout rental_btn = (LinearLayout) v.findViewById(R.id.button_rental);
         final LinearLayout click3 = (LinearLayout) v.findViewById(R.id.click3);
+        final LinearLayout share = (LinearLayout) v.findViewById(R.id.share);
+        final LinearLayout click_image =(LinearLayout) v.findViewById(R.id.click_image);
         
-        
+        click_image.setOnClickListener(new Button.OnClickListener(){
+        	public void onClick(View view){
+    			Intent in = new Intent(getActivity().getApplicationContext(),SingleMenuItemActivity.class);
+    			in.putExtra(TAG_AUTHOR, getArguments().getString("author"));
+    			in.putExtra(TAG_CATEGORY, getArguments().getString("category"));
+    			in.putExtra(TAG_TITLE, getArguments().getString("title"));
+    			in.putExtra(TAG_LANGUAGE, getArguments().getString("language"));
+    			in.putExtra(TAG_PAGE, getArguments().getString("page"));
+    			in.putExtra(TAG_IMAGE_URL, getArguments().getString("image"));
+    			in.putExtra(TAG_ID, getArguments().getString("tag_id"));
+    			in.putExtra(TIMES_RENTED, getArguments().getString("times_rented"));
+    			in.putExtra(AVG_READING, getArguments().getString("avg_reading"));
+    			in.putExtra("message", "create");
+    			in.putExtra("check","logged_in");
+    			startActivity(in);
+        	}
+        });
         rental_btn.setOnClickListener(new Button.OnClickListener() {
-        	public void onClick(View v){
-    	        String url = "http://staging.justbooksclc.com:8787/api/v1/orders/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+getArguments().getString("msg2")+"&membership_no="+memb;
-    			
-    			InputStream inputStream = null;
-    	        String result = "";
-    	        try {
-    	 
-    	            // 1. create HttpClient
-    	            HttpClient httpclient = new DefaultHttpClient();
-    	 
-    	            // 2. make POST request to the given URL
-    	            HttpPost httpPost = new HttpPost(url);
-
-    	            //httpPost.setHeader("Accept", "");
-    	            httpPost.setHeader("Content-type", "");
-    	 
-    	            // 8. Execute POST request to the given URL
-    	            HttpResponse httpResponse = httpclient.execute(httpPost);
-    	 
-    	            // 9. receive response as inputStream
-    	            inputStream = httpResponse.getEntity().getContent();
-    	            
-    	            // 10. convert inputstream to string
-    	            if(inputStream != null)
-    	            {//result = convertInputStreamToString(inputStream);
-    	            	result = "Worked!";
-	    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-	    	            StringBuilder responseStrBuilder = new StringBuilder();
-	
-	    	            String inputStr;
-	    	            while ((inputStr = streamReader.readLine()) != null)
-	    	                responseStrBuilder.append(inputStr);
-	
-	    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
-	    	            String INFO = jsonObject.getString("info");
-	    	            Toast.makeText(getActivity().getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
-	    	            }
-    	            else
-    	                result = "Did not work!";
-    	            Log.d("++++++++++++++", result);
-    	        } catch (Exception e) {
-    	            Log.d("InputStream", e.getLocalizedMessage());
-    	        }
+        	@SuppressWarnings("deprecation")
+			public void onClick(View v){
+        		
+        		AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
+    	        alert.setTitle(getArguments().getString("title"));
+    	        alert.setMessage("Are You Sure You want\n to rent this book ?");
+    	        alert.setCancelable(true);
+    	        alert.setButton("Yes", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int which) {
+    	        	   String url = "http://staging.justbooksclc.com:8787/api/v1/orders/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+getArguments().getString("tag_id")+"&membership_no="+memb;
+    	    			
+    	    		   InputStream inputStream = null;
+    	        	   try {
+    	        	    	 
+    	    	            // 1. create HttpClient
+    	    	            HttpClient httpclient = new DefaultHttpClient();
+    	    	 
+    	    	            // 2. make POST request to the given URL
+    	    	            HttpPost httpPost = new HttpPost(url);
+    	    	 
+    	    	            httpPost.setHeader("Content-type", "");
+    	    	 
+    	    	            // 8. Execute POST request to the given URL
+    	    	            HttpResponse httpResponse = httpclient.execute(httpPost);
+    	    	 
+    	    	            // 9. receive response as inputStream
+    	    	            inputStream = httpResponse.getEntity().getContent();
+    	    	            
+    	    	            // 10. convert inputstream to string
+    	    	            if(inputStream != null)
+    	    	            {
+    		    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+    		    	            StringBuilder responseStrBuilder = new StringBuilder();
+    		
+    		    	            String inputStr;
+    		    	            while ((inputStr = streamReader.readLine()) != null)
+    		    	                responseStrBuilder.append(inputStr);
+    		
+    		    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
+    		    	            String INFO = jsonObject.getString("info");
+    		    	            Toast.makeText(getActivity().getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
+    		    	            }
+    	    	            else
+    	    	            	Toast.makeText(getActivity().getApplicationContext(),"Sorry somthing went wrong",Toast.LENGTH_LONG).show();
+    	    	        } catch (Exception e) {
+    	    	            Log.d("InputStream", e.getLocalizedMessage());
+    	    	            Toast.makeText(getActivity().getApplicationContext(),"Sorry somthing went wrong",Toast.LENGTH_LONG).show();
+    	    	        }
+    	           }
+    	        });
+    	        alert.setButton2("No",new DialogInterface.OnClickListener() {
+    	            public void onClick(DialogInterface dialog, int id) {
+    	                dialog.cancel();
+    	            }
+    	        });
+    	        // Set the Icon for the Dialog
+    	        alert.setIcon(R.drawable.book);
+    	        alert.show();
         	}
         });
         
         click3.setOnClickListener(new Button.OnClickListener() {
+        	@SuppressWarnings("deprecation")
+			public void onClick(View v){
+        		AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
+    	        alert.setTitle(getArguments().getString("title"));
+    	        alert.setMessage("Are You Sure You want\n to rent this book");
+    	        alert.setButton("OK", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int which) {
+    	        	   String url = "http://staging.justbooksclc.com:8787/api/v1/wishlists/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+getArguments().getString("tag_id")+"&membership_no="+memb;
+    	    			
+    	    		   InputStream inputStream = null;
+    	        	   try {
+    	        	    	 
+    	    	            // 1. create HttpClient
+    	    	            HttpClient httpclient = new DefaultHttpClient();
+    	    	 
+    	    	            // 2. make POST request to the given URL
+    	    	            HttpPost httpPost = new HttpPost(url);
+    	    	 
+    	    	            httpPost.setHeader("Content-type", "");
+    	    	 
+    	    	            // 8. Execute POST request to the given URL
+    	    	            HttpResponse httpResponse = httpclient.execute(httpPost);
+    	    	 
+    	    	            // 9. receive response as inputStream
+    	    	            inputStream = httpResponse.getEntity().getContent();
+    	    	            
+    	    	            // 10. convert inputstream to string
+    	    	            if(inputStream != null)
+    	    	            {
+    		    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+    		    	            StringBuilder responseStrBuilder = new StringBuilder();
+    		
+    		    	            String inputStr;
+    		    	            while ((inputStr = streamReader.readLine()) != null)
+    		    	                responseStrBuilder.append(inputStr);
+    		
+    		    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
+    		    	            String INFO = jsonObject.getString("info");
+    		    	            Toast.makeText(getActivity().getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
+    		    	            }
+    	    	            else
+    	    	            	Toast.makeText(getActivity().getApplicationContext(),"Sorry somthing went wrong",Toast.LENGTH_LONG).show();    
+    	    	        } catch (Exception e) {
+    	    	            Log.d("InputStream", e.getLocalizedMessage());
+    	    	            Toast.makeText(getActivity().getApplicationContext(),"Sorry somthing went wrong",Toast.LENGTH_LONG).show();
+    	    	        }
+    	           }
+    	        });
+    	        alert.setButton2("No",new DialogInterface.OnClickListener() {
+    	            public void onClick(DialogInterface dialog, int id) {
+    	                dialog.cancel();
+    	            }
+    	        });
+    	        // Set the Icon for the Dialog
+    	        alert.setIcon(R.drawable.book);
+    	        alert.show();
+        	}
+        });
+        share.setOnClickListener(new Button.OnClickListener(){
         	public void onClick(View v){
-    	        
-    	        String url = "http://staging.justbooksclc.com:8787/api/v1/wishlists/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+getArguments().getString("msg2")+"&membership_no="+memb;
-    			
-    			InputStream inputStream = null;
-    	        String result = "";
-    	        try {
-    	 
-    	            // 1. create HttpClient
-    	            HttpClient httpclient = new DefaultHttpClient();
-    	 
-    	            // 2. make POST request to the given URL
-    	            HttpPost httpPost = new HttpPost(url);
-
-    	            // 6. httpPost.setHeader("Accept", "");
-    	            httpPost.setHeader("Content-type", "");
-    	 
-    	            // 8. Execute POST request to the given URL
-    	            HttpResponse httpResponse = httpclient.execute(httpPost);
-    	 
-    	            // 9. receive response as inputStream
-    	            inputStream = httpResponse.getEntity().getContent();
-
-    	            // 10. convert inputstream to string
-    	            if(inputStream != null)
-    	            {//result = convertInputStreamToString(inputStream);
-    	            	result = "Worked!";
-	    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-	    	            StringBuilder responseStrBuilder = new StringBuilder();
-	
-	    	            String inputStr;
-	    	            while ((inputStr = streamReader.readLine()) != null)
-	    	                responseStrBuilder.append(inputStr);
-	
-	    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
-	    	            String INFO = jsonObject.getString("info");
-	    	            Toast.makeText(getActivity().getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
-	    	            }
-    	            else
-    	                result = "Did not work!";
-    	            Log.d("++++++++++++++", result);
-    	        } catch (Exception e) {
-    	            Log.d("InputStream", e.getLocalizedMessage());
-    	        }
+        		Intent i=new Intent(android.content.Intent.ACTION_SEND);
+        		i.setType("text/plain");
+        		i.putExtra(android.content.Intent.EXTRA_SUBJECT,"Check this Book");
+        		i.putExtra(android.content.Intent.EXTRA_TEXT, "http://www.justbooksclc.com/titles/"+getArguments().getString("tag_id"));
+        		startActivity(Intent.createChooser(i,"Share via"));
         	}
         });
         return v;
     }
 
-    public static FirstFragment newInstance(String text,String text2){
+    public static FirstFragment newInstance(String text,String text2,String text3,String text4,String text5,String text6,String text7,String text8,String text9){
 
         FirstFragment f = new FirstFragment();
         Bundle b = new Bundle();
-        b.putString("msg", text);
-        b.putString("msg2", text2);
-//        b.putString("msg3", text3);
-//        b.putString("msg4", text4);
-//        b.putString("msg5", text5);
-//        b.putString("msg6", text6);
-//        b.putString("msg7", text7);
+        b.putString("image", text);
+        b.putString("tag_id", text2);
+        b.putString("times_rented", text3);
+        b.putString("avg_reading", text4);
+        b.putString("author", text5);
+        b.putString("title", text6);
+        b.putString("category", text7);
+        b.putString("page", text8);
+        b.putString("language", text9);
+        
+        
+   
         f.setArguments(b);
 
         return f;

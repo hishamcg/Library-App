@@ -10,9 +10,22 @@ public class Book {
 	private String category;
 	private String title_id;
 	private String rental_id;
+	private String times_rented;
+	private String avg_reading;
 	
 
-	
+	public String getTimes_rented() {
+		return times_rented;
+	}
+	public void setTimes_rented(String times_rented) {
+		this.times_rented = times_rented;
+	}
+	public String getAvg_reading() {
+		return avg_reading;
+	}
+	public void setAvg_reading(String avg_reading) {
+		this.avg_reading = avg_reading;
+	}
 	public String getTitle() {
 		return title;
 	}

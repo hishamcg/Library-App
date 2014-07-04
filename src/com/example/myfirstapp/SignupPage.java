@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -26,26 +25,17 @@ public class SignupPage extends Activity {
 
 	    my_Button2.setOnClickListener(new Button.OnClickListener() {
         	public void onClick(View v){
-        		progress.setMessage("Loading");
-    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    	        progress.setIndeterminate(true);
-    	        progress.show();
         		Intent searchlib = new Intent(getApplicationContext(), MainPage.class);
-        		//searchlib.putExtra(SEARCH_URL, searchText);
         		startActivity(searchlib);
         	}
         });
         my_Button3.setOnClickListener(new Button.OnClickListener() {
         	public void onClick(View v){
-        		String searchText = "wasssaaaap";
-        		Log.i("searchTExt", searchText);
         		progress.setMessage("Loading");
     	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     	        progress.setIndeterminate(true);
     	        progress.show();
         		Intent searchlib = new Intent(getApplicationContext(), MyMap.class);
-        		searchlib.putExtra(SEARCH_URL, searchText);
-        		
         		startActivity(searchlib);
         	}
         });
@@ -59,6 +49,7 @@ public class SignupPage extends Activity {
     	        progress.show();
         		Intent searchlib = new Intent(getApplicationContext(), MainActivity.class);
         		searchlib.putExtra("check","not_logged_in");
+        		searchlib.putExtra(SEARCH_URL,"zxyabc");
         		startActivity(searchlib);
         	}
         });

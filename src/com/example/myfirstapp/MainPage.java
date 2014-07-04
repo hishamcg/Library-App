@@ -1,13 +1,24 @@
 package com.example.myfirstapp;
 
+import java.util.Date;
+import java.util.Random;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,37 +29,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainPage extends Activity {
-	private static final String SEARCH_URL = "url";
 	private ProgressDialog progress;
+	// JSON Node names
+	private static final String SUCCESS = "success";
+	String NUMBER;
+	private static final String USER_INFO = "info";
+	private static final String AUTH_TOKEN = "api_key";
+	private static final String MEMBERSHIP_NO = "membership_no";
+	private String SUCC = "false";
 	
 	@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.list_page_menu, menu);
+        menuInflater.inflate(R.menu.login_menu, menu);
     //return true;
     return super.onCreateOptionsMenu(menu);
 	  }
 	@Override
 	  public boolean onOptionsItemSelected(MenuItem item) {
-		progress = new ProgressDialog(this);
-		progress.setMessage("Loading");
-        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setIndeterminate(true);
-        progress.show();
 		int itemId = item.getItemId();
 		if (itemId == R.id.action_back) {
-			// Single menu item is selected do something
-        // Ex: launching new activity/screen or show alert message
-        finish();
-			return true;
-		} else if (itemId == R.id.action_search) {
-			Intent searchlib = new Intent(getApplicationContext(), SearchPage.class);
-    		searchlib.putExtra("check","not_logged_in");
-    		startActivity(searchlib);
-			return true;
-		} else if (itemId == R.id.action_place) {
-			Intent searchlib = new Intent(getApplicationContext(), MyMap.class);
-			startActivity(searchlib);
+			finish();
 			return true;
 		} else if (itemId == R.id.action_help) {
 			Intent about = new Intent(getApplicationContext(), HelpActivity.class);
@@ -64,25 +65,91 @@ public class MainPage extends Activity {
         setContentView(R.layout.activity_main_page);
         progress = new ProgressDialog(this);
         progress.hide();
+        
+        TelephonyManager tm = (TelephonyManager)getSystemService(TELEPHONY_SERVICE); 
+        String number = tm.getLine1Number();
+        
         final Button my_Button = (Button) findViewById(R.id.button1);
         final TextView no_connection = (TextView) findViewById(R.id.no_connection);
+        final EditText my_numb = (EditText) findViewById(R.id.editText1);
         no_connection.setVisibility(View.GONE);
-//        final EditText my_Text = (EditText) findViewById(R.id.editText1);
-//        final String fin = my_Text.getText().toString();
+        my_numb.setText(number.replace("+91", ""));
+        
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
+		
         if (isNetworkAvailable()){
 	        my_Button.setOnClickListener(new Button.OnClickListener() {
-	        	public void onClick(View v){
-	        		progress.setMessage("Loading...");
-	    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-	    	        progress.setIndeterminate(true);
-	    	        progress.show();
-	        		String searchText = ((EditText) findViewById(R.id.editText1)).getText().toString();
-	        		Log.i("searchTExt", searchText);
-	        		Intent signup = new Intent(getApplicationContext(), SignupActivity.class);
-	        		signup.putExtra(SEARCH_URL, searchText);
+	        	@SuppressLint("InlinedApi")
+				public void onClick(View v){
+//	        		progress.setMessage("Loading...");
+//	    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//	    	        progress.setIndeterminate(true);
+//	    	        progress.show();
+	        		String phone_no = my_numb.getText().toString();
+	        		Log.i("phone_no", phone_no);
 	        		Toast.makeText(getApplicationContext(), "connnecting to server...",
-	        		Toast.LENGTH_SHORT).show();
-	        		startActivity(signup);
+	    	        Toast.LENGTH_SHORT).show();
+	        		
+
+	        		
+	        		Random r = new Random();
+        	        int pas = r.nextInt(10000 - 1000) + 1000;
+	        		
+	        		String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/sessions.json?phone=" + phone_no+"&otp="+String.valueOf(pas);
+	        		//String url = "http://192.168.2.125:3000/api/v1/sessions.json?phone="+phone_no+"&otp="+pas;
+	        		System.out.println("score here"+ phone_no);
+	        		// Creating JSON Parser instance
+	        		JSONParser jParser = new JSONParser();
+	        		
+	        		try { // getting JSON string from URL
+	      			  JSONObject json = jParser.getJSONFromUrl(url);
+	      			  SUCC = json.getString(SUCCESS);
+	      			  System.out.println(SUCC);
+	      			  
+	      			  if (SUCC.equals("true") ){
+	      				  String INFO = json.getString(USER_INFO);
+	      				  System.out.println(INFO);
+	      				  JSONObject DATA = json.getJSONObject("data");
+	      				  String auth_token = DATA.getString(AUTH_TOKEN);
+	      				  String membership_no = DATA.getString(MEMBERSHIP_NO);
+	      				  
+	      				  long datevalue = new Date().getTime();
+	      				  System.out.println("the date value is "+datevalue);
+	      			      String data_of_signup = String.valueOf(datevalue);
+	      			      
+	      			      SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+	      			      SharedPreferences.Editor   editor = preferences.edit();
+	      				  //SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+	      				  editor.putString("AUTH_TOKEN", auth_token);
+	      				  editor.putString("NUMBER", phone_no);
+	      				  editor.putString("MEMBERSHIP_NO", membership_no);
+	      				  editor.putString("DATE_OF_SIGNUP", data_of_signup);
+	      				  System.out.println("im commiting");
+	      				  editor.commit();
+	      			  }else{
+	      				  Toast toast = Toast.makeText(getApplicationContext(),"      Login Failed \nPlease Try Again Later",Toast.LENGTH_LONG);
+	      				  toast.setGravity(Gravity.TOP, 0, 170);
+	      				  toast.show();
+	      			  }
+	      				  
+	      				  
+		      		} catch (JSONException e) {
+		      			e.printStackTrace();
+		      		}
+	        		if (SUCC.equals("true")){
+	        			Intent checking_auth = new Intent(getApplicationContext(), SignInWaitingActivity.class);
+        	            checking_auth.putExtra("pas_rand", String.valueOf(pas));
+	        			startActivity(checking_auth);
+	        	      
+	        		}else{
+	        			finish();
+	        		}
+	        		
+		        		
+	        		/*Intent signup = new Intent(getApplicationContext(), SignupActivity.class);
+	        		signup.putExtra(SEARCH_URL, phone_no);
+	        		startActivity(signup);*/
 	        	}
 	        });
         }

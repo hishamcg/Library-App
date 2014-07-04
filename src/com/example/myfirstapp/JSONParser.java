@@ -11,6 +11,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +34,10 @@ public class JSONParser {
  
         // Making HTTP request
         try {
+        	jObj = null;
+        	is = null;
+        	json = "";
+      
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpGet httpPost = new HttpGet(url);
