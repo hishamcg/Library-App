@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -25,6 +24,8 @@ public class RegisterActivity extends Activity {
 	GoogleCloudMessaging gcm;
 	Context context;
 	String regId;
+	ShareExternalServer appUtil;
+	AsyncTask<Void, Void, String> shareRegidTask;
 
 	public static final String REG_ID = "regId";
 	private static final String APP_VERSION = "appVersion";
@@ -51,28 +52,76 @@ public class RegisterActivity extends Activity {
 							"Already Registered with GCM Server!",
 							Toast.LENGTH_LONG).show();
 				}
-			}
-		});
-
-		btnAppShare = (Button) findViewById(R.id.btnAppShare);
-		btnAppShare.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
 				if (TextUtils.isEmpty(regId)) {
 					Toast.makeText(getApplicationContext(), "RegId is empty!",
 							Toast.LENGTH_LONG).show();
 				} else {
-					Intent i = new Intent(getApplicationContext(),
-							GCMMainActivity.class);
-					i.putExtra("regId", regId);
-					Log.d("RegisterActivity",
-							"onClick of Share: Before starting main activity.");
-					startActivity(i);
+					appUtil = new ShareExternalServer();
+
+					regId = getIntent().getStringExtra("regId");
+					Log.d("GCMMainActivity", "regId: " + regId);
+
+					shareRegidTask = new AsyncTask<Void, Void, String>() {
+						@Override
+						protected String doInBackground(Void... params) {
+							String result = appUtil.shareRegIdWithAppServer(context, regId);
+							return result;
+						}
+
+						@Override
+						protected void onPostExecute(String result) {
+							shareRegidTask = null;
+							Toast.makeText(getApplicationContext(), result,
+									Toast.LENGTH_LONG).show();
+						}
+
+					};
+					shareRegidTask.execute(null, null, null);
 					finish();
-					Log.d("RegisterActivity", "onClick of Share: After finish.");
 				}
+				
 			}
 		});
+
+//		btnAppShare = (Button) findViewById(R.id.btnAppShare);
+//		btnAppShare.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View arg0) {
+//				if (TextUtils.isEmpty(regId)) {
+//					Toast.makeText(getApplicationContext(), "RegId is empty!",
+//							Toast.LENGTH_LONG).show();
+//				} else {
+//					appUtil = new ShareExternalServer();
+//
+//					regId = getIntent().getStringExtra("regId");
+//					Log.d("GCMMainActivity", "regId: " + regId);
+//
+//					shareRegidTask = new AsyncTask<Void, Void, String>() {
+//						@Override
+//						protected String doInBackground(Void... params) {
+//							String result = appUtil.shareRegIdWithAppServer(context, regId);
+//							return result;
+//						}
+//
+//						@Override
+//						protected void onPostExecute(String result) {
+//							shareRegidTask = null;
+//							Toast.makeText(getApplicationContext(), result,
+//									Toast.LENGTH_LONG).show();
+//						}
+//
+//					};
+//					shareRegidTask.execute(null, null, null);
+////					Intent i = new Intent(getApplicationContext(),
+////							GCMMainActivity.class);
+////					i.putExtra("regId", regId);
+////					Log.d("RegisterActivity",
+////							"onClick of Share: Before starting main activity.");
+////					startActivity(i);
+//					finish();
+//				}
+//			}
+//		});
 	}
 
 	public String registerGCM() {

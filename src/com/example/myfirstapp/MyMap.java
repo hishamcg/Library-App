@@ -24,39 +24,38 @@ import android.widget.Toast;
 public class MyMap extends ListActivity {
     // Google Map
     //ListView listView ;
-	//private static final String SERVER_BASE_URL = "192.168.2.125:4000";
-	final String[] somthing = new String[64];
+	final String[] something = new String[64];
     String text = "latlog.txt"; //your text file name in the assets folder
     GPSTracker gps;
     JSONArray list = null;
- 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         double latitude=0;
         double longitude=0;
-     
+
         gps = new GPSTracker(MyMap.this);
-        
-        // check if GPS enabled     
+
+        // check if GPS enabled
         if(gps.canGetLocation()){
-             
+
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();    
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
         }else{
             // can't get location
             // GPS or Network is not enabled
             // Ask user to enable GPS/network in settings
             gps.showSettingsAlert();
         }
-        
+
         Location tempLocal1 = new Location("ref1");
         Location tempLocal2 = new Location("ref2");
         tempLocal1.setLatitude(latitude);
         tempLocal1.setLongitude(longitude);
-        
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
     	StrictMode.setThreadPolicy(policy);
     	String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/store_locations.json";
@@ -73,7 +72,7 @@ public class MyMap extends ListActivity {
 	    		// looping through All Contacts
 	    		for (int i = 0; i < list.length(); i++) {
 	    			JSONObject c = list.getJSONObject(i);
-	    			
+
 	    			// Storing each json item in variable
 	    			values.add(c.getString("name")+","+c.getString("latitude")+","+c.getString("longitude"));
 	    		}
@@ -88,20 +87,20 @@ public class MyMap extends ListActivity {
 	                ind++;
 	             }
 	            Arrays.sort(dist, new ArrayComparator(1, true));
-	            //final String[] somthing=new String[values.size()];
+	            //final String[] something=new String[values.size()];
 	            String[] showval=new String[values.size()];
-	            
+
 	            ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
 	            for (int i=0;i<dist.length;i++)
-	            {somthing[i] = String.valueOf(dist[i][0])+";"+String.valueOf(dist[i][1]) ;
+	            {something[i] = String.valueOf(dist[i][0])+";"+String.valueOf(dist[i][1]) ;
 	             String[] brooo = String.valueOf(dist[i][0]).split(",");
 	             showval[i] = brooo[0];
 	             list.add(putData(brooo[0], "distance: "+String.valueOf(dist[i][1])+" meters"));
-	             System.out.println(somthing[i]);}
-	            
+	             System.out.println(something[i]);}
+
 	            String[] from = { "name", "purpose" };
 	            int[] to = { android.R.id.text1, android.R.id.text2 };
-	
+
 	            SimpleAdapter adapter = new SimpleAdapter(this, list,
 	                    android.R.layout.simple_list_item_2, from, to);
 	            setListAdapter(adapter);
@@ -118,12 +117,12 @@ public class MyMap extends ListActivity {
     public void onListItemClick(ListView l, View view, int position, long id) {
     	// ListView Clicked item index
         int itemPosition     = position;
-        
+
         // ListView Clicked item value
-        String itemValue = somthing[position];
+        String itemValue = something[position];
         //String  itemValue    = (String) listView.getItemAtPosition(position);
-        
-         // Show Alert 
+
+         // Show Alert
          Toast.makeText(getApplicationContext(),
            "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
            .show();

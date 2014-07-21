@@ -18,7 +18,6 @@ public class SignupPage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_page);
         progress = new ProgressDialog(this);
-        progress.hide();
         final Button my_Button2 = (Button) findViewById(R.id.button2);
         final LinearLayout my_Button3 = (LinearLayout) findViewById(R.id.button3);
         final LinearLayout my_Button5 = (LinearLayout) findViewById(R.id.button5);
@@ -43,10 +42,6 @@ public class SignupPage extends Activity {
         
         my_Button5.setOnClickListener(new Button.OnClickListener() {
         	public void onClick(View v){
-        		progress.setMessage("Loading");
-    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    	        progress.setIndeterminate(true);
-    	        progress.show();
         		Intent searchlib = new Intent(getApplicationContext(), MainActivity.class);
         		searchlib.putExtra("check","not_logged_in");
         		searchlib.putExtra(SEARCH_URL,"zxyabc");

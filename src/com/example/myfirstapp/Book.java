@@ -5,15 +5,28 @@ public class Book {
 	private String author;
 	private String publisher;
 	private String price;
-	private String imageUrl;
 	private String isbn;
 	private String category;
 	private String title_id;
 	private String rental_id;
 	private String times_rented;
 	private String avg_reading;
+	private String image_url;
+	private String summary;
 	
 
+	public String getImage_url() {
+		return image_url;
+	}
+	public void setImage_url(String image_url) {
+		this.image_url = image_url;
+	}
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
 	public String getTimes_rented() {
 		return times_rented;
 	}
@@ -55,12 +68,6 @@ public class Book {
 	}
 	public void setPrice(String price) {
 		this.price = price;
-	}
-	public String getImageUrl() {
-		return imageUrl;
-	}
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
 	}
 	public String getIsbn() {
 		return isbn;

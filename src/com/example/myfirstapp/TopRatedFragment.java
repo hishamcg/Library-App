@@ -18,17 +18,18 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TopRatedFragment extends ListFragment {
 	private ProgressDialog progress;
-	private static final String SERVER_BASE_URL = "staging.justbooksclc.com:8787";
 	//private static final String SERVER_BASE_URL = "192.168.2.113:4321";
 	// JSON Node names
 	private static final String TAG_WISHLIST = "wishlists";
 	private static final String TAG_AUTHOR = "author";
 	private static final String TAG_CATEGORY = "category";
 	private static final String TAG_PAGE = "no_of_pages";
-	private static final String TAG_IMAGE_URL = "image";
+	private static final String TAG_IMAGE_URL = "image_url";
+	private static final String SUMMARY = "summary";
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
 	private static final String TAG_ISBN = "isbn";
@@ -42,7 +43,6 @@ public class TopRatedFragment extends ListFragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     progress = new ProgressDialog(this.getActivity());
-	progress.hide();
 	new JSONParse().execute();
   }
 
@@ -59,13 +59,15 @@ public class TopRatedFragment extends ListFragment {
 				.getText().toString();
 		String title = ((TextView) view.findViewById(R.id.title))
 				.getText().toString();
-		String isbn = ((TextView) view.findViewById(R.id.isbn))
+		String image_url = ((TextView) view.findViewById(R.id.image_url))
+				.getText().toString();
+		String summary = ((TextView) view.findViewById(R.id.summary))
 				.getText().toString();
 		String title_id = ((TextView) view.findViewById(R.id.title_id))
 				.getText().toString();
 		String times_rented = ((TextView) view.findViewById(R.id.times_rented))
 				.getText().toString();
-		String avg_reading = ((TextView) view.findViewById(R.id.avg_reading_time))
+		String avg_reading = ((TextView) view.findViewById(R.id.avg_reading))
 				.getText().toString();
 		
 		// Starting new intent
@@ -75,7 +77,8 @@ public class TopRatedFragment extends ListFragment {
 		in.putExtra(TAG_TITLE, title);
 		in.putExtra(TAG_LANGUAGE, publisher);
 		in.putExtra(TAG_PAGE, price);
-		in.putExtra(TAG_IMAGE_URL, "http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
+		in.putExtra(TAG_IMAGE_URL, image_url);
+		in.putExtra(SUMMARY, summary);
 		in.putExtra(TAG_ID, title_id);
 		in.putExtra(TIMES_RENTED,times_rented);
 		in.putExtra(AVG_READING,avg_reading);
@@ -99,7 +102,7 @@ public class TopRatedFragment extends ListFragment {
 		  String numb = value.getString("NUMBER","");
 		
 		  System.out.println("score");
-		  String url = "http://"+SERVER_BASE_URL+"/api/v1/wishlists.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+		  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 		  JSONParser jp = new JSONParser();
 		  JSONObject json = jp.getJSONFromUrl(url);
 		  return json;
@@ -110,42 +113,54 @@ public class TopRatedFragment extends ListFragment {
 			try {
 				// Getting Array of data
 				list = json.getJSONArray(TAG_WISHLIST);
-	
-				// looping through All data
-				for (int i = 0; i < list.length(); i++) {
-					JSONObject c = list.getJSONObject(i);
-					
-					// Storing each json item in variable
-					String author = c.getString(TAG_AUTHOR);
-					String category = c.getString(TAG_CATEGORY);
-					String page = c.getString(TAG_PAGE);
-					String language = c.getString(TAG_LANGUAGE);
-					String title = c.getString(TAG_TITLE);
-					String isbn = c.getString(TAG_ISBN);
-					String title_id = c.getString(TAG_ID);
-			        String times_rented = c.getString(TIMES_RENTED);
-			        String avg_reading= c.getString(AVG_READING);
-	
-					Book book = new Book();
-					book.setTitle(title);
-					book.setAuthor(author);
-					book.setCategory(category);
-					book.setPrice(page);
-					book.setPublisher(language);
-					book.setImageUrl("http://cdn2.justbooksclc.com/medium/"+isbn+".jpg");
-					book.setIsbn(isbn);
-					book.setId(title_id);
-					book.setTimes_rented(times_rented);
-					book.setAvg_reading(avg_reading);
-					// adding HashList to ArrayList
-					bookList.add(book);
+				if(list.length() != 0){
+					// looping through All data
+					for (int i = 0; i < list.length(); i++) {
+						JSONObject c = list.getJSONObject(i);
+						
+						// Storing each json item in variable
+						String author = c.getString(TAG_AUTHOR);
+						String category = c.getString(TAG_CATEGORY);
+						String page = c.getString(TAG_PAGE);
+						String language = c.getString(TAG_LANGUAGE);
+						String title = c.getString(TAG_TITLE);
+						String image_url = c.getString(TAG_IMAGE_URL);
+						String summary = c.getString(SUMMARY);
+						String title_id = c.getString(TAG_ID);
+				        String times_rented = c.getString(TIMES_RENTED);
+				        String avg_reading= c.getString(AVG_READING);
+		
+						Book book = new Book();
+						book.setTitle(title);
+						book.setAuthor(author);
+						book.setCategory(category);
+						book.setPrice(page);
+						book.setPublisher(language);
+						book.setImage_url(image_url);
+						book.setSummary(summary);
+						book.setId(title_id);
+						book.setTimes_rented(times_rented);
+						book.setAvg_reading(avg_reading);
+						// adding HashList to ArrayList
+						bookList.add(book);
+					 }
+				}else{
+					try {
+						setEmptyText("No books in wishlist");
+					} catch (NullPointerException e) {
+						e.printStackTrace();
+					} catch (IllegalStateException e) {
+						e.printStackTrace();
+					}
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
+				setEmptyText("No books in wishlist");
+				Toast.makeText(getActivity().getApplicationContext(),"Error parsing json data",Toast.LENGTH_LONG).show();
 			}
 		}
 		else{
-			
+			setEmptyText("No books in wishlist");
 		}
 		Book[] bookAry = new Book[bookList.size()];
 		CustomAdapter adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));

@@ -64,7 +64,6 @@ public class MainPage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
         progress = new ProgressDialog(this);
-        progress.hide();
         
         TelephonyManager tm = (TelephonyManager)getSystemService(TELEPHONY_SERVICE); 
         String number = tm.getLine1Number();
@@ -73,8 +72,9 @@ public class MainPage extends Activity {
         final TextView no_connection = (TextView) findViewById(R.id.no_connection);
         final EditText my_numb = (EditText) findViewById(R.id.editText1);
         no_connection.setVisibility(View.GONE);
+        if (number != null){
         my_numb.setText(number.replace("+91", ""));
-        
+        }
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 		
@@ -101,55 +101,68 @@ public class MainPage extends Activity {
 	        		System.out.println("score here"+ phone_no);
 	        		// Creating JSON Parser instance
 	        		JSONParser jParser = new JSONParser();
-	        		
-	        		try { // getting JSON string from URL
-	      			  JSONObject json = jParser.getJSONFromUrl(url);
-	      			  SUCC = json.getString(SUCCESS);
-	      			  System.out.println(SUCC);
-	      			  
-	      			  if (SUCC.equals("true") ){
-	      				  String INFO = json.getString(USER_INFO);
-	      				  System.out.println(INFO);
-	      				  JSONObject DATA = json.getJSONObject("data");
-	      				  String auth_token = DATA.getString(AUTH_TOKEN);
-	      				  String membership_no = DATA.getString(MEMBERSHIP_NO);
-	      				  
-	      				  long datevalue = new Date().getTime();
-	      				  System.out.println("the date value is "+datevalue);
-	      			      String data_of_signup = String.valueOf(datevalue);
-	      			      
-	      			      SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-	      			      SharedPreferences.Editor   editor = preferences.edit();
-	      				  //SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-	      				  editor.putString("AUTH_TOKEN", auth_token);
-	      				  editor.putString("NUMBER", phone_no);
-	      				  editor.putString("MEMBERSHIP_NO", membership_no);
-	      				  editor.putString("DATE_OF_SIGNUP", data_of_signup);
-	      				  System.out.println("im commiting");
-	      				  editor.commit();
-	      			  }else{
-	      				  Toast toast = Toast.makeText(getApplicationContext(),"      Login Failed \nPlease Try Again Later",Toast.LENGTH_LONG);
-	      				  toast.setGravity(Gravity.TOP, 0, 170);
-	      				  toast.show();
-	      			  }
-	      				  
-	      				  
-		      		} catch (JSONException e) {
-		      			e.printStackTrace();
-		      		}
-	        		if (SUCC.equals("true")){
-	        			Intent checking_auth = new Intent(getApplicationContext(), SignInWaitingActivity.class);
-        	            checking_auth.putExtra("pas_rand", String.valueOf(pas));
-	        			startActivity(checking_auth);
-	        	      
+	      			JSONObject json = jParser.getJSONFromUrl(url);
+	        		if (json != null){
+		        		try { // getting JSON string from URL
+		      			  SUCC = json.getString(SUCCESS);
+		      			  System.out.println(SUCC);
+		      			  
+		      			  if (SUCC.equals("true") ){
+		      				  String INFO = json.getString(USER_INFO);
+		      				  System.out.println(INFO);
+		      				  JSONObject DATA = json.getJSONObject("data");
+		      				  String auth_token = DATA.getString(AUTH_TOKEN);
+		      				  String membership_no = DATA.getString(MEMBERSHIP_NO);
+		      				  
+		      				  long datevalue = new Date().getTime();
+		      				  System.out.println("the date value is "+datevalue);
+		      			      String data_of_signup = String.valueOf(datevalue);
+		      			      
+		      			      SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		      			      SharedPreferences.Editor   editor = preferences.edit();
+		      				  //SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+		      				  editor.putString("AUTH_TOKEN", auth_token);
+		      				  editor.putString("NUMBER", phone_no);
+		      				  editor.putString("MEMBERSHIP_NO", membership_no);
+		      				  editor.putString("DATE_OF_SIGNUP", data_of_signup);
+		      				  System.out.println("im commiting");
+		      				  editor.commit();
+		      				  //------------------------------
+		      				  //comment to bypass authentication via sms
+		      				  Intent checking_auth = new Intent(getApplicationContext(), FrontPage.class);
+			      			  //Intent checking_auth = new Intent(getApplicationContext(), SignInWaitingActivity.class);
+		        	          //checking_auth.putExtra("pas_rand", String.valueOf(pas));
+			        	      startActivity(checking_auth);
+		      			  }else{
+		      				  Toast toast = Toast.makeText(getApplicationContext(),"      Login Failed \nPlease Try Again Later",Toast.LENGTH_LONG);
+		      				  toast.setGravity(Gravity.TOP, 0, 170);
+		      				  toast.show();
+		      				  finish();
+		      			  }
+		      				  
+		      				  
+			      		} catch (JSONException e) {
+			      			e.printStackTrace();
+			      			Toast toast = Toast.makeText(getApplicationContext(),"      Login Failed \nPlease Try Again Later",Toast.LENGTH_LONG);
+		      				toast.setGravity(Gravity.TOP, 0, 170);
+		      				toast.show();
+		      				finish();
+			      		}
 	        		}else{
-	        			finish();
+	        			Toast toast = Toast.makeText(getApplicationContext(),"      Login Failed \nPlease Try Again Later",Toast.LENGTH_LONG);
+	      				toast.setGravity(Gravity.TOP, 0, 170);
+	      				toast.show();
+	      				finish();
 	        		}
+//	        		if (SUCC.equals("true")){
+//	        			Intent checking_auth = new Intent(getApplicationContext(), SignInWaitingActivity.class);
+//        	            checking_auth.putExtra("pas_rand", String.valueOf(pas));
+//	        			startActivity(checking_auth);
+//	        	      
+//	        		}else{
+//	        			finish();
+//	        		}
 	        		
-		        		
-	        		/*Intent signup = new Intent(getApplicationContext(), SignupActivity.class);
-	        		signup.putExtra(SEARCH_URL, phone_no);
-	        		startActivity(signup);*/
 	        	}
 	        });
         }

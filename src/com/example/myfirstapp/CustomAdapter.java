@@ -37,18 +37,19 @@ public class CustomAdapter extends ArrayAdapter<Book> {
 		TextView category = (TextView) rowView.findViewById(R.id.category);
 		TextView publisher = (TextView) rowView.findViewById(R.id.publisher);
 		TextView price = (TextView) rowView.findViewById(R.id.price);
-		TextView isbn = (TextView) rowView.findViewById(R.id.isbn);
+		TextView image_url = (TextView) rowView.findViewById(R.id.image_url);
 		TextView title_id = (TextView) rowView.findViewById(R.id.title_id);
 		TextView rental_id = (TextView) rowView.findViewById(R.id.rental_id);
 		TextView times_rented = (TextView) rowView.findViewById(R.id.times_rented);
 		TextView avg_reading = (TextView) rowView.findViewById(R.id.avg_reading);
+		TextView summary = (TextView) rowView.findViewById(R.id.summary);
 
 		Book book = bookArry[position];
 		ImageView image = (ImageView) rowView.findViewById(R.id.image);
         final ProgressBar progressBar= (ProgressBar) rowView.findViewById(R.id.progressBar1);
 		//--------------------------
 		Picasso.with(context)
-		.load(book.getImageUrl())
+		.load(book.getImage_url())
 		.error(R.drawable.ic_launcher)
 		.into(image, new EmptyCallback() {
             @Override public void onSuccess() {
@@ -65,11 +66,12 @@ public class CustomAdapter extends ArrayAdapter<Book> {
 		category.setText(book.getCategory());
 		publisher.setText(book.getPublisher());
   		price.setText(book.getPrice());
-  		isbn.setText(book.getIsbn());
+  		image_url.setText(book.getImage_url());
   		title_id.setText(book.getId());
   		rental_id.setText(book.getRental_id());
   		times_rented.setText(book.getTimes_rented());
   		avg_reading.setText(book.getAvg_reading());
+  		summary.setText(book.getSummary());
 
 		return rowView;
 	}

@@ -6,13 +6,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class PageZero extends Activity {
 	// JSON Node names
@@ -20,6 +29,7 @@ public class PageZero extends Activity {
 	String NUMBER;
 	private String SUCC = "false";
 	
+	@SuppressWarnings("deprecation")
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,14 +44,47 @@ public class PageZero extends Activity {
 		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		final String numb = value.getString("NUMBER", "");
 		
-		//here i'm checking if the user has already signed in or not
-		//data from shared pref (NUMBER,AUTH_TOKEN,MEMBERSHIP_NO,DATE_OF_SIGNUP)
-    	if (numb != null && numb != ""){
-    		new JSONParse().execute();
-		}
-		else{
-			Intent login = new Intent(getApplicationContext(), SignupPage.class);
-    		startActivity(login);
+		if (isNetworkAvailable()){
+			//here i'm checking if the user has already signed in or not
+			//data from shared pref (NUMBER,AUTH_TOKEN,MEMBERSHIP_NO,DATE_OF_SIGNUP)
+	    	if (numb != null && numb != ""){
+	    		new JSONParse().execute();
+			}
+			else{
+				Intent login = new Intent(getApplicationContext(), SignupPage.class);
+	    		startActivity(login);
+			}
+		}else{
+			TextView tv = (TextView) findViewById(R.id.no_connection);
+			tv.setVisibility(View.VISIBLE);
+			Button bt = (Button) findViewById(R.id.button1);
+			bt.setVisibility(View.VISIBLE);
+			
+			AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
+	        alert.setTitle("Internet Connection");
+	        alert.setMessage("Hi this application requires\ninternet connection");
+	        alert.setButton("OK", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int which) {
+	        	   Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+	   			   startActivity(intent);  
+	           }
+	        });
+	        alert.setButton2("BACK",new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int id) {
+	                dialog.cancel();
+	                
+	            }
+	        });
+	        // Set the Icon for the Dialog
+	        alert.setIcon(R.drawable.gcm_icon);
+	        alert.show();
+			
+			bt.setOnClickListener(new Button.OnClickListener(){
+				public void onClick(View view){
+					finish();
+				}
+			});
+			Toast.makeText(getApplicationContext(),"No Internet Connection" , Toast.LENGTH_LONG).show();
 		}
     }
 	private class JSONParse extends AsyncTask<String ,String , JSONObject>{
@@ -80,12 +123,12 @@ public class PageZero extends Activity {
 			long diff =saveddatevalue - date_last_signup;
 			
 			//-----uncomment to bypass authentication-----
-			//diff = 0;
+			diff = 0;
 			//SUCC = "true";
 			//--------------------------------------------
 			
 			//two condition
-			//1. does he still have justbooks membership
+			//1. does he still have justbooks membership ?
 			//2. 30 days since last log in (this can be removed later)
 		    if(SUCC.equals("false") || diff > 25920000){
 		    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
@@ -93,6 +136,7 @@ public class PageZero extends Activity {
 			    editor.putString("AUTH_TOKEN", "0");
 			    editor.putString("MEMBERSHIP_NO", "0");
 			    editor.putString("DATE_OF_SIGNUP", "0");
+			    editor.putString("NUMBER", "00000");
 			    editor.commit();
 			    System.out.println("am i supposed to be here");
 		        
@@ -105,6 +149,12 @@ public class PageZero extends Activity {
 		    }
 		    //progress.dismiss();
 		}
+	}
+	private boolean isNetworkAvailable() {
+	    ConnectivityManager connectivityManager 
+	          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 	@Override
 	public void onNewIntent(Intent newIntent) {

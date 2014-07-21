@@ -56,7 +56,7 @@ public class CallCustomerCare extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.call_customer_care);
         final Button my_button = (Button) findViewById(R.id.my_button);
         final EditText phoneNumber = (EditText) findViewById(R.id.phoneN);
     

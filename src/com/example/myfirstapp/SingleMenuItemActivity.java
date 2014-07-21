@@ -11,6 +11,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -40,9 +43,9 @@ import android.widget.Toast;
 import com.google.android.gms.plus.model.people.Person;
 
 public class SingleMenuItemActivity  extends Activity {
-	
-	Person person;	
+
 	private ProgressDialog progress;
+	Person person;
 	//private static final String SERVER_BASE_URL = "192.168.2.133:4321";
 	Drawable drawable_from_url(String url, String src_name)
 			throws java.net.MalformedURLException, java.io.IOException {
@@ -51,9 +54,10 @@ public class SingleMenuItemActivity  extends Activity {
 				src_name);}
 	// JSON node keys
 	private static final String USER_INFO = "info";
-	private static final String TAG_AUTHOR = "author_id";
+	private static final String TAG_AUTHOR = "author";
 	private static final String TAG_CATEGORY = "category";
-	private static final String TAG_IMAGE_URL = "image";
+	private static final String TAG_IMAGE_URL = "image_url";
+	private static final String SUMMARY = "summary";
 	private static final String TAG_PAGE = "no_of_pages";
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
@@ -62,7 +66,7 @@ public class SingleMenuItemActivity  extends Activity {
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String AVG_READING = "avg_reading_times";
 	String rental_id = "";
-	
+
 	@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
@@ -74,9 +78,9 @@ public class SingleMenuItemActivity  extends Activity {
 	  public boolean onOptionsItemSelected(MenuItem item) {
 		progress = new ProgressDialog(this);
 		progress.setMessage("Loading");
-	    progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-	    progress.setIndeterminate(true);
-	    progress.show();
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(true);
+        progress.show();
 		int itemId = item.getItemId();
 		if (itemId == R.id.action_back) {
 			// Single menu item is selected do something
@@ -108,15 +112,14 @@ public class SingleMenuItemActivity  extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_list_view2);
-        
+        progress = new ProgressDialog(this);
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
-		
-        progress = new ProgressDialog(this);
-        progress.hide();
+
         // getting intent data
         Intent in = getIntent();
-        
+
         // Get JSON values from previous intent
         String author = in.getStringExtra(TAG_AUTHOR);
         String category = in.getStringExtra(TAG_CATEGORY);
@@ -125,17 +128,21 @@ public class SingleMenuItemActivity  extends Activity {
         final String title = in.getStringExtra(TAG_TITLE);
         final String times_rented = in.getStringExtra(TIMES_RENTED);
         final String avg_reading = in.getStringExtra(AVG_READING);
-        String image = in.getStringExtra(TAG_IMAGE_URL);
-        
+        String image_url = in.getStringExtra(TAG_IMAGE_URL);
+        String summary = in.getStringExtra(SUMMARY);
+        if (summary.equals("null")){
+        	summary = "No summary available";
+        }
+
         String message = in.getStringExtra("message");
         String check_log = in.getStringExtra("check");
         final String title_id = in.getStringExtra(TAG_ID);
-        
+
         SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		final String auth_token = value.getString("AUTH_TOKEN","");
 		final String memb = value.getString("MEMBERSHIP_NO","");
 		final String numb = value.getString("NUMBER","");
-        
+
         // Displaying all values on the screen
         TextView lblAuthor = (TextView) findViewById(R.id.author_label);
         TextView lblCategory = (TextView) findViewById(R.id.category_label);
@@ -143,7 +150,8 @@ public class SingleMenuItemActivity  extends Activity {
         TextView lblPrice = (TextView) findViewById(R.id.price_label);
         TextView lblTitle = (TextView) findViewById(R.id.title_label);
         TextView lblTimesRented = (TextView) findViewById(R.id.times_rented);
-        TextView lblAvgReading = (TextView) findViewById(R.id.avg_reading_time);
+        TextView lblAvgReading = (TextView) findViewById(R.id.avg_reading);
+        TextView lblSummary = (TextView) findViewById(R.id.summary);
         ImageView lblimage = (ImageView) findViewById(R.id.image_label);
         final LinearLayout rental_btn = (LinearLayout) findViewById(R.id.button_rental);
         final LinearLayout remove = (LinearLayout) findViewById(R.id.remove);
@@ -151,7 +159,7 @@ public class SingleMenuItemActivity  extends Activity {
         final LinearLayout pick_up = (LinearLayout) findViewById(R.id.pick_up);
         final LinearLayout share = (LinearLayout) findViewById(R.id.share);
         pick_up.setVisibility(View.GONE);
-        
+
         final LinearLayout sign_in = (LinearLayout) findViewById(R.id.sign_in);
         final LinearLayout sign_up = (LinearLayout) findViewById(R.id.sign_up);
         final LinearLayout linearLayout2 = (LinearLayout) findViewById(R.id.linearLayout2);
@@ -161,7 +169,7 @@ public class SingleMenuItemActivity  extends Activity {
         	linearLayout3.setVisibility(View.GONE);
         	if (message.equals("create")){
         		remove.setVisibility(View.GONE);
-	        	
+
 	        }
         	else if(message.equals("current")){
         		rental_id = in.getStringExtra(RENTAL_ID);
@@ -181,58 +189,66 @@ public class SingleMenuItemActivity  extends Activity {
         lblPublisher.setText(publisher);
         lblPrice.setText(price);
         lblTitle.setText(title);
-        lblimage.setImageBitmap(getBitmapFromURL(image));
+        lblimage.setImageBitmap(getBitmapFromURL(image_url));
         lblTimesRented.setText(times_rented);
         lblAvgReading.setText(avg_reading);
-        
-        
+        lblSummary.setText(summary);
+
+
         rental_btn.setOnClickListener(new Button.OnClickListener() {
         	@SuppressWarnings("deprecation")
 			public void onClick(View v){
-    	        
-    	        
+
+
     	        AlertDialog alert = new AlertDialog.Builder(SingleMenuItemActivity.this).create();
     	        alert.setTitle(title);
     	        alert.setMessage("Are You Sure You want\n to rent this book");
-    	        alert.setButton("OK", new DialogInterface.OnClickListener() {
+    	        alert.setButton("Yes", new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int which) {
-    	        	   String url = "http://staging.justbooksclc.com:8787/api/v1/orders/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
-    	    			
+    	        	   String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/orders/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
+
     	    		   InputStream inputStream = null;
     	        	   try {
-    	        	    	 
+    	        		    HttpParams httpParameters = new BasicHttpParams();
+			        		// Set the timeout in milliseconds until a connection is established.
+			        		// The default value is zero, that means the timeout is not used.
+			        		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
+			        		// Set the default socket timeout (SO_TIMEOUT) 
+			        		// in milliseconds which is the timeout for waiting for data.
+			        		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
     	    	            // 1. create HttpClient
     	    	            HttpClient httpclient = new DefaultHttpClient();
-    	    	 
+
     	    	            // 2. make POST request to the given URL
     	    	            HttpPost httpPost = new HttpPost(url);
-    	    	 
+
     	    	            httpPost.setHeader("Content-type", "");
-    	    	 
+
     	    	            // 8. Execute POST request to the given URL
     	    	            HttpResponse httpResponse = httpclient.execute(httpPost);
-    	    	 
+
     	    	            // 9. receive response as inputStream
     	    	            inputStream = httpResponse.getEntity().getContent();
-    	    	            
+
     	    	            // 10. convert inputstream to string
     	    	            if(inputStream != null)
     	    	            {
     		    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
     		    	            StringBuilder responseStrBuilder = new StringBuilder();
-    		
+
     		    	            String inputStr;
     		    	            while ((inputStr = streamReader.readLine()) != null)
     		    	                responseStrBuilder.append(inputStr);
-    		
+
     		    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
     		    	            String INFO = jsonObject.getString(USER_INFO);
     		    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
     		    	            }
     	    	            else
-    	    	            	Toast.makeText(getApplicationContext(),"Sorry somthing went wrong",Toast.LENGTH_LONG).show();
+    	    	            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
     	    	        } catch (Exception e) {
     	    	            Log.d("InputStream", e.getLocalizedMessage());
+    	    	            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
     	    	        }
     	           }
     	        });
@@ -244,56 +260,63 @@ public class SingleMenuItemActivity  extends Activity {
     	        // Set the Icon for the Dialog
     	        alert.setIcon(R.drawable.book);
     	        alert.show();
-    	        
-    	        
+
+
         	}
         });
-        
+
         remove.setOnClickListener(new Button.OnClickListener() {
         	@SuppressWarnings("deprecation")
 			public void onClick(View v){
         		AlertDialog alert = new AlertDialog.Builder(SingleMenuItemActivity.this).create();
     	        alert.setTitle(title);
     	        alert.setMessage("Are You Sure You want to remove\n this book from wishlist");
-    	        alert.setButton("OK", new DialogInterface.OnClickListener() {
+    	        alert.setButton("Yes", new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int which) {
-    	        	   String url = "http://staging.justbooksclc.com:8787/api/v1/wishlists/destroy.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
+    	        	   String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists/destroy.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
 
     	    		   InputStream inputStream = null;
     	        	   try {
-    	        	    	 
+    	        		    HttpParams httpParameters = new BasicHttpParams();
+			        		// Set the timeout in milliseconds until a connection is established.
+			        		// The default value is zero, that means the timeout is not used.
+			        		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
+			        		// Set the default socket timeout (SO_TIMEOUT) 
+			        		// in milliseconds which is the timeout for waiting for data.
+			        		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
     	    	            // 1. create HttpClient
     	    	            HttpClient httpclient = new DefaultHttpClient();
-    	    	 
+
     	    	            // 2. make POST request to the given URL
     	    	            HttpPost httpPost = new HttpPost(url);
-    	    	 
+
     	    	            httpPost.setHeader("Content-type", "");
-    	    	 
+
     	    	            // 8. Execute POST request to the given URL
     	    	            HttpResponse httpResponse = httpclient.execute(httpPost);
-    	    	 
+
     	    	            // 9. receive response as inputStream
     	    	            inputStream = httpResponse.getEntity().getContent();
-    	    	            
+
     	    	            // 10. convert inputstream to string
     	    	            if(inputStream != null)
     	    	            {
     		    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
     		    	            StringBuilder responseStrBuilder = new StringBuilder();
-    		
+
     		    	            String inputStr;
     		    	            while ((inputStr = streamReader.readLine()) != null)
     		    	                responseStrBuilder.append(inputStr);
-    		
+
     		    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
     		    	            String INFO = jsonObject.getString(USER_INFO);
     		    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
     		    	            }
     	    	            else
-    	    	            	Toast.makeText(getApplicationContext(),"Sorry somthing went wrong",Toast.LENGTH_LONG).show();
+    	    	            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
     	    	        } catch (Exception e) {
     	    	            Log.d("InputStream", e.getLocalizedMessage());
+    	    	            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
     	    	        }
     	           }
     	        });
@@ -305,7 +328,7 @@ public class SingleMenuItemActivity  extends Activity {
     	        // Set the Icon for the Dialog
     	        alert.setIcon(R.drawable.book);
     	        alert.show();
-    	        
+
         	}
         });
         add_to_list.setOnClickListener(new Button.OnClickListener() {
@@ -314,45 +337,52 @@ public class SingleMenuItemActivity  extends Activity {
         		AlertDialog alert = new AlertDialog.Builder(SingleMenuItemActivity.this).create();
     	        alert.setTitle(title);
     	        alert.setMessage("Are You Sure You want to add\n this book to wishlist");
-    	        alert.setButton("OK", new DialogInterface.OnClickListener() {
+    	        alert.setButton("Yes", new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int which) {
-    	        	   String url = "http://staging.justbooksclc.com:8787/api/v1/wishlists/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
-    	    			
+    	        	   String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
+
     	    		   InputStream inputStream = null;
     	        	   try {
-    	        	    	 
+    	        		    HttpParams httpParameters = new BasicHttpParams();
+			        		// Set the timeout in milliseconds until a connection is established.
+			        		// The default value is zero, that means the timeout is not used.
+			        		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
+			        		// Set the default socket timeout (SO_TIMEOUT) 
+			        		// in milliseconds which is the timeout for waiting for data.
+			        		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
     	    	            // 1. create HttpClient
     	    	            HttpClient httpclient = new DefaultHttpClient();
-    	    	 
+
     	    	            // 2. make POST request to the given URL
     	    	            HttpPost httpPost = new HttpPost(url);
-    	    	 
+
     	    	            httpPost.setHeader("Content-type", "");
-    	    	 
+
     	    	            // 8. Execute POST request to the given URL
     	    	            HttpResponse httpResponse = httpclient.execute(httpPost);
-    	    	 
+
     	    	            // 9. receive response as inputStream
     	    	            inputStream = httpResponse.getEntity().getContent();
-    	    	            
+
     	    	            // 10. convert inputstream to string
     	    	            if(inputStream != null)
     	    	            {
     		    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
     		    	            StringBuilder responseStrBuilder = new StringBuilder();
-    		
+
     		    	            String inputStr;
     		    	            while ((inputStr = streamReader.readLine()) != null)
     		    	                responseStrBuilder.append(inputStr);
-    		
+
     		    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
     		    	            String INFO = jsonObject.getString(USER_INFO);
     		    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
     		    	            }
     	    	            else
-    	    	            	Toast.makeText(getApplicationContext(),"Sorry somthing went wrong",Toast.LENGTH_LONG).show();
+    	    	            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
     	    	        } catch (Exception e) {
     	    	            Log.d("InputStream", e.getLocalizedMessage());
+    	    	            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
     	    	        }
     	           }
     	        });
@@ -364,7 +394,7 @@ public class SingleMenuItemActivity  extends Activity {
     	        // Set the Icon for the Dialog
     	        alert.setIcon(R.drawable.book);
     	        alert.show();
-    	        
+
         	}
         });
         pick_up.setOnClickListener(new Button.OnClickListener() {
@@ -373,45 +403,52 @@ public class SingleMenuItemActivity  extends Activity {
         		AlertDialog alert = new AlertDialog.Builder(SingleMenuItemActivity.this).create();
     	        alert.setTitle(title);
     	        alert.setMessage("Are You Sure You want\n to pickup this book");
-    	        alert.setButton("OK", new DialogInterface.OnClickListener() {
+    	        alert.setButton("Yes", new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int which) {
-    	        	   String url = "http://staging.justbooksclc.com:8787/api/v1/orders/pickup.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&rental_id="+rental_id+"&membership_no="+memb;
-    	    			
+    	        	   String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/orders/pickup.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&rental_id="+rental_id+"&membership_no="+memb;
+
     	    		   InputStream inputStream = null;
     	        	   try {
-    	        	    	 
+    	        		    HttpParams httpParameters = new BasicHttpParams();
+			        		// Set the timeout in milliseconds until a connection is established.
+			        		// The default value is zero, that means the timeout is not used.
+			        		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
+			        		// Set the default socket timeout (SO_TIMEOUT) 
+			        		// in milliseconds which is the timeout for waiting for data.
+			        		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
     	    	            // 1. create HttpClient
     	    	            HttpClient httpclient = new DefaultHttpClient();
-    	    	 
+
     	    	            // 2. make POST request to the given URL
     	    	            HttpPost httpPost = new HttpPost(url);
-    	    	 
+
     	    	            httpPost.setHeader("Content-type", "");
-    	    	 
+
     	    	            // 8. Execute POST request to the given URL
     	    	            HttpResponse httpResponse = httpclient.execute(httpPost);
-    	    	 
+
     	    	            // 9. receive response as inputStream
     	    	            inputStream = httpResponse.getEntity().getContent();
-    	    	            
+
     	    	            // 10. convert inputstream to string
     	    	            if(inputStream != null)
     	    	            {
     		    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
     		    	            StringBuilder responseStrBuilder = new StringBuilder();
-    		
+
     		    	            String inputStr;
     		    	            while ((inputStr = streamReader.readLine()) != null)
     		    	                responseStrBuilder.append(inputStr);
-    		
+
     		    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
     		    	            String INFO = jsonObject.getString(USER_INFO);
     		    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
     		    	            }
     	    	            else
-    	    	            	Toast.makeText(getApplicationContext(),"Sorry somthing went wrong",Toast.LENGTH_LONG).show();
+    	    	            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
     	    	        } catch (Exception e) {
     	    	            Log.d("InputStream", e.getLocalizedMessage());
+    	    	            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
     	    	        }
     	           }
     	        });
@@ -434,33 +471,25 @@ public class SingleMenuItemActivity  extends Activity {
         		startActivity(Intent.createChooser(i,"Share via"));
         	}
         });
-        
+
         sign_in.setOnClickListener(new Button.OnClickListener() {
         	public void onClick(View v){
-        		progress.setMessage("Loading");
-    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    	        progress.setIndeterminate(true);
-    	        progress.show();
-    	        
+
     	        Intent searchlib = new Intent(getApplicationContext(), MainPage.class);
         		startActivity(searchlib);
         	}
         });
-        
+
         sign_up.setOnClickListener(new Button.OnClickListener() {
         	public void onClick(View v){
-        		progress.setMessage("Loading");
-    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    	        progress.setIndeterminate(true);
-    	        progress.show();
-    	        
-    	        Intent searchlib = new Intent(getApplicationContext(), CallCustomerCare.class);
-        		startActivity(searchlib);
+    	        //Intent sign_up_call = new Intent(getApplicationContext(), CallCustomerCare.class);
+        		Intent sign_up_call = new Intent(getApplicationContext(), HelpActivity.class);
+        		startActivity(sign_up_call);
         	}
         });
-       
+
     }
-	
+
 	public static Bitmap getBitmapFromURL(String src) {
 	    try {
 	        Log.e("src",src);

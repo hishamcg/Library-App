@@ -38,10 +38,13 @@
         android:textSize="12sp"
         android:textColor="#4e4e4e"/>
     <TextView
-        android:id="@+id/isbn"
+        android:id="@+id/image_url"
         android:layout_width="0dip"
         android:layout_height="0dip" />
-
+	<TextView 
+	    android:id="@+id/summary"
+	    android:layout_width="0dip"
+	    android:layout_height="0dip"/>
     <TextView
         android:id="@+id/author"
         android:layout_width="0dip"
@@ -59,17 +62,17 @@
         android:layout_width="0dip"
         android:layout_height="0dip" />
     <TextView
-	        android:id="@+id/price"
-	        android:layout_width="0dip"
-	        android:layout_height="0dip"/>
+        android:id="@+id/price"
+        android:layout_width="0dip"
+        android:layout_height="0dip"/>
     <TextView
-	        android:id="@+id/times_rented"
-	        android:layout_width="0dip"
-	        android:layout_height="0dip"/>
+        android:id="@+id/times_rented"
+        android:layout_width="0dip"
+        android:layout_height="0dip"/>
     <TextView
-	        android:id="@+id/avg_reading"
-	        android:layout_width="0dip"
-	        android:layout_height="0dip"/>
+        android:id="@+id/avg_reading"
+        android:layout_width="0dip"
+        android:layout_height="0dip"/>
 
     <ProgressBar
         android:id="@+id/progressBar1"

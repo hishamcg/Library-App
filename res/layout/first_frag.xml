@@ -1,137 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#fff">
-<ScrollView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">    
+    android:layout_height="wrap_content"
+    android:background="#fff"> 
 	<LinearLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:background="#fff"
 	    android:orientation="vertical"
-        android:paddingLeft="20dip" 
-        android:paddingRight="20dip">
+	    android:paddingLeft="0dip"
+	    android:paddingRight="0dip" >
+
 	    <TextView
-            android:id="@+id/title_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="TextView"
-            android:textColor="#333"
-            android:textSize="22sp"
-            android:ellipsize="end"
-    		android:singleLine="true" />
+	        android:id="@+id/title_label"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="15dp"
+	        android:layout_marginLeft="20dp"
+	        android:ellipsize="end"
+	        android:singleLine="true"
+	        android:text="TextView"
+	        android:textColor="#333"
+	        android:textSize="22sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" 
-            android:layout_marginBottom="10dp">
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="10dp"
+	        android:layout_marginLeft="20dp"
+	        android:orientation="horizontal" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="By "
-                android:textColor="#444"
-                android:textSize="13sp"
-                android:textStyle="italic" />
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="By "
+	            android:textColor="#444"
+	            android:textSize="13sp"
+	            android:textStyle="italic" />
 
-            <TextView
-                android:id="@+id/author_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Text View"
-                android:textColor="#444"
-                android:textSize="13sp" />
-        </LinearLayout>
-        <TextView
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:text="BOOK COVER"
-             android:textColor="#dcb667"
-             android:textSize="10sp" />
-        <View
-			android:layout_width="fill_parent"
-			android:layout_height="1dp"
-			android:background="#dcb667"/>
-		<LinearLayout
-		    android:id="@+id/click_image"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-	        android:clickable="true"
-		    android:gravity="center"
-	        android:background="@drawable/icon_click"
-		    android:orientation="horizontal"
-		    android:paddingLeft="20dip"
-		    android:paddingRight="20dip">
-		    <ImageView
-		        android:id="@+id/image_label"
-		        android:scaleType="fitXY"
-		        android:layout_width="180dip"
-		        android:background="@drawable/edit_border"
-		        android:layout_height="250dip"
-		        android:adjustViewBounds="true"
-		        android:layout_margin="10dip"
-		        android:contentDescription="TODO"
-		        android:src="@drawable/book" />
-		</LinearLayout>
-		<LinearLayout
+	        <TextView
+	            android:id="@+id/author_label"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="Text View"
+	            android:textColor="#444"
+	            android:textSize="13sp" />
+	    </LinearLayout>
+
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="BOOK COVER"
+	        android:textColor="#dcb667"
+	        android:textSize="10sp" />
+
+	    <View
+	        android:layout_width="fill_parent"
+	        android:layout_height="1dp"
+	        android:background="#dcb667" />
+
+	    <LinearLayout
+	        android:id="@+id/click_image"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
+	        android:layout_weight="5.73"
+	        android:background="@drawable/shelf4"
+	        android:clickable="true"
 	        android:gravity="center"
-	        android:layout_marginTop="5dp"
+	        android:orientation="horizontal"
+	        android:layout_marginBottom="10dip"
+	        android:paddingLeft="20dip"
+	        android:paddingRight="20dip" >
+
+	        <ImageView
+	            android:id="@+id/image_label"
+	            android:layout_width="140dip"
+	            android:layout_height="200dip"
+	            android:layout_margin="10dip"
+	            android:background="@drawable/edit_border"
+	            android:contentDescription="TODO"
+	            android:scaleType="fitXY"
+	            android:src="@drawable/book" />
+	    </LinearLayout>
+
+	    <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
 	        android:layout_marginBottom="5dp"
+	        android:layout_marginTop="5dp"
+	        android:gravity="center"
+	        android:visibility="gone"
 	        android:orientation="horizontal" >
-	
+
 	        <LinearLayout
-	         android:layout_width="wrap_content"
-	         android:layout_height="wrap_content"
-	         android:layout_marginRight="10dp"
-	         android:orientation="vertical" >
-	         <TextView
-	             android:id="@+id/times_rented"
-	             android:layout_width="fill_parent"
-	             android:layout_height="wrap_content"
-	             android:text="82"
-	             android:gravity="center"
-	             android:textColor="#008800"
-	             android:textSize="20sp"
-	             android:textStyle="italic" />
-	         <TextView
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:text="Times Rented : "
-	             android:textColor="#777777"
-	             android:textSize="12sp" />
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginRight="10dp"
+	            android:orientation="vertical" >
+
+	            <TextView
+	                android:id="@+id/times_rented"
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:gravity="center"
+	                android:text="82"
+	                android:textColor="#008800"
+	                android:textSize="20sp"
+	                android:textStyle="italic" />
+
+	            <TextView
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Times Rented : "
+	                android:textColor="#777777"
+	                android:textSize="12sp" />
 	        </LinearLayout>
+
 	        <LinearLayout
-	         android:layout_width="wrap_content"
-	         android:layout_height="wrap_content"
-	         android:layout_marginLeft="10dip"
-	         android:orientation="vertical" >
-	         <TextView
-	             android:id="@+id/avg_reading_time"
-	             android:layout_width="fill_parent"
-	             android:layout_height="wrap_content"
-	             android:gravity="center"
-	             android:text="4 d"
-	             android:textColor="#008800"
-	             android:textSize="20sp"
-	             android:textStyle="italic" />
-	         <TextView
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:text="Avg reading time : "
-	             android:textColor="#777777"
-	             android:textSize="12sp" />
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="10dip"
+	            android:orientation="vertical" >
+
+	            <LinearLayout
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:gravity="center"
+	                android:orientation="horizontal" >
+
+	                <TextView
+	                    android:id="@+id/avg_reading"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="4"
+	                    android:textColor="#008800"
+	                    android:textSize="20sp"
+	                    android:textStyle="italic" />
+
+	                <TextView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text=" days"
+	                    android:textColor="#008800"
+	                    android:textSize="16sp"
+	                    android:textStyle="italic" />
+	            </LinearLayout>
+
+	            <TextView
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Avg reading time : "
+	                android:textColor="#777777"
+	                android:textSize="12sp" />
 	        </LinearLayout>
 	    </LinearLayout>
-		<View
-		    android:layout_width="fill_parent"
-		    android:layout_height="1dp"
-		    android:background="#dcb667"/>
+
+	    <View
+	        android:layout_width="fill_parent"
+	        android:layout_height="1dp"
+	        android:background="#dcb667" 
+	        android:visibility="gone"/>
+
 	    <LinearLayout
 	        android:id="@+id/linearLayout2"
 	        android:layout_width="fill_parent"
@@ -139,8 +168,9 @@
 	        android:layout_margin="10dip"
 	        android:baselineAligned="false"
 	        android:orientation="horizontal"
-	        android:padding="5dp" >
-	
+	        android:padding="5dp" 
+	        android:visibility="gone">
+
 	        <LinearLayout
 	            android:id="@+id/button_rental"
 	            android:layout_width="0dp"
@@ -151,14 +181,14 @@
 	            android:gravity="center"
 	            android:orientation="vertical"
 	            android:paddingBottom="2dp" >
-	
+
 	            <ImageView
 	                android:layout_width="30dp"
 	                android:layout_height="30dp"
 	                android:layout_marginBottom="5dp"
 	                android:background="@drawable/ic_action_import_export"
 	                android:contentDescription="@string/hello" />
-	
+
 	            <TextView
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
@@ -167,7 +197,7 @@
 	                android:textSize="10sp"
 	                android:textStyle="bold" />
 	        </LinearLayout>
-	
+
 	        <LinearLayout
 	            android:id="@+id/click3"
 	            android:layout_width="0dp"
@@ -177,14 +207,14 @@
 	            android:clickable="true"
 	            android:gravity="center"
 	            android:orientation="vertical" >
-	
+
 	            <ImageView
 	                android:layout_width="30dp"
 	                android:layout_height="30dp"
 	                android:layout_marginBottom="5dp"
 	                android:background="@drawable/ic_action_new_attachment"
 	                android:contentDescription="@string/hello" />
-	
+
 	            <TextView
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
@@ -193,6 +223,7 @@
 	                android:textSize="10sp"
 	                android:textStyle="bold" />
 	        </LinearLayout>
+
 	        <LinearLayout
 	            android:id="@+id/share"
 	            android:layout_width="0dp"
@@ -203,14 +234,14 @@
 	            android:clickable="true"
 	            android:gravity="center"
 	            android:orientation="vertical" >
-	
+
 	            <ImageView
 	                android:layout_width="30dp"
 	                android:layout_height="30dp"
 	                android:layout_marginBottom="5dp"
 	                android:background="@drawable/ic_action_share"
 	                android:contentDescription="@string/hello" />
-	
+
 	            <TextView
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
@@ -221,7 +252,7 @@
 	        </LinearLayout>
 	    </LinearLayout>
 	</LinearLayout>
-</ScrollView>
+
 <ProgressBar
      android:id="@+id/loading"
      android:layout_width="wrap_content"

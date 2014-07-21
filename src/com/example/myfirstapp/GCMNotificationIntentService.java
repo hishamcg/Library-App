@@ -53,10 +53,10 @@ public class GCMNotificationIntentService extends IntentService {
 
 				}
 				Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
-
+				title_id = (String) extras.get("title_id");
 				sendNotification("Message Received Justbooksclc: "
 						+ extras.get(Config.MESSAGE_KEY));
-				title_id = (String) extras.get("title_id");
+				
 				Log.i(TAG, "Received: " + extras.toString());
 			}
 		}
@@ -68,7 +68,7 @@ public class GCMNotificationIntentService extends IntentService {
 		mNotificationManager = (NotificationManager) this
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		
-		Intent notificationIntent = new Intent(this, PageZero.class);
+		Intent notificationIntent = new Intent(this,PageZero.class);
 		notificationIntent.putExtra("title_id", title_id); // <-- HERE I PUT THE EXTRA VALUE
 		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,

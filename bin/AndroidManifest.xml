@@ -5,7 +5,7 @@
     android:versionCode="1"
     android:versionName="1.0" >
     
-    <uses-sdk android:minSdkVersion="10" 
+    <uses-sdk android:minSdkVersion="11" 
               android:targetSdkVersion="19"/>
     
     <uses-permission android:name="com.example.myfirstapp.permission.C2D_MESSAGE" />
@@ -49,7 +49,7 @@
         android:allowBackup="true"
         android:icon="@drawable/top_icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/MyTheme" >
         <!-- 
         @style/AppTheme
         android:label="@string/app_name"
@@ -62,6 +62,7 @@
         <activity
             android:name="com.example.myfirstapp.PageZero"
             android:label="@string/app_name" 
+            android:screenOrientation="portrait"
             android:noHistory="true"> 
             <intent-filter >
               <action android:name="android.intent.action.MAIN" />
@@ -72,6 +73,7 @@
         <activity
             android:name="com.example.myfirstapp.FrontPage"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:uiOptions="splitActionBarWhenNarrow"> 
             <meta-data android:name="android.support.UI_OPTIONS"
            		android:value="splitActionBarWhenNarrow" />
@@ -79,6 +81,7 @@
         <activity
             android:name="com.example.myfirstapp.SignupPage"
             android:label="sign in"
+            android:screenOrientation="portrait"
             android:uiOptions="splitActionBarWhenNarrow"> 
             <meta-data android:name="android.support.UI_OPTIONS"
            		android:value="splitActionBarWhenNarrow" />
@@ -88,6 +91,7 @@
             android:name="com.example.myfirstapp.MainPage"
             android:windowSoftInputMode="stateAlwaysVisible"
             android:noHistory="true"
+            android:screenOrientation="portrait"
             android:label="Sign in"
             android:uiOptions="splitActionBarWhenNarrow"> 
             <meta-data android:name="android.support.UI_OPTIONS"
@@ -95,16 +99,13 @@
         </activity>
         <activity
             android:name="com.example.myfirstapp.MapListView"
-            android:label="Store location">
-        </activity>
-        <activity
-            android:name="com.example.myfirstapp.SignupActivity"
-            android:noHistory="true"
-            android:label="Sing in" >
+            android:label="Store location"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.myfirstapp.SearchPage"
             android:label="Search Title/Author/ISBN"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"
             android:uiOptions="splitActionBarWhenNarrow"> 
             <meta-data android:name="android.support.UI_OPTIONS"
@@ -112,11 +113,12 @@
         </activity>
         <activity
             android:name="com.example.myfirstapp.HelpActivity"
-            android:label="About Justbooksclc" >
+            android:label="About Justbooksclc" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.myfirstapp.MainActivity"
-            
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:label="Search Title/Author/ISBN"
             android:uiOptions="splitActionBarWhenNarrow"> 
@@ -126,6 +128,7 @@
         <activity
             android:name="com.example.myfirstapp.AndroidTabLayoutActivity"
             android:label="My book list"
+            android:screenOrientation="portrait"
             android:uiOptions="splitActionBarWhenNarrow"> 
             <meta-data android:name="android.support.UI_OPTIONS"
            		android:value="splitActionBarWhenNarrow" />
@@ -139,34 +142,40 @@
         <activity
             android:name="com.example.myfirstapp.SingleMenuItemActivity"
             android:label="Book"
+            android:screenOrientation="portrait"
             android:uiOptions="splitActionBarWhenNarrow"> 
             <meta-data android:name="android.support.UI_OPTIONS"
            		android:value="splitActionBarWhenNarrow" />
         </activity>
         <activity
             android:name="com.example.myfirstapp.MyMap"
-            android:label="Stores" >
+            android:label="Stores" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.myfirstapp.SignInWaitingActivity"
             android:label="waiting for authentication" 
+            android:screenOrientation="portrait"
             android:noHistory="true">
         </activity>
 
 		<activity
             android:name=".RegisterActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="portrait">
 		</activity>
 		
 		CallCustomerCare
 		<activity
-	            android:name="com.example.myfirstapp.CallCustomerCare"
-	            android:label="@string/app_name" >
+	        android:name="com.example.myfirstapp.CallCustomerCare"
+	        android:label="@string/app_name" 
+            android:screenOrientation="portrait">
 		</activity>
 		<activity
-	            android:name="com.example.myfirstapp.GCMMainActivity"
-	            android:configChanges="orientation|keyboardHidden"
-	            android:label="@string/app_name" >
+	        android:name="com.example.myfirstapp.GCMMainActivity"
+	        android:configChanges="orientation|keyboardHidden"
+	        android:label="@string/app_name" 
+            android:screenOrientation="portrait">
 	    </activity>
 	
 	    <receiver

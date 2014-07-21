@@ -1,11 +1,13 @@
 package com.example.myfirstapp;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.app.ProgressDialog;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -13,17 +15,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.myfirstapp.TabsPagerAdapter;
 
-
-@SuppressLint("NewApi")
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AndroidTabLayoutActivity extends FragmentActivity implements ActionBar.TabListener {
 	private ProgressDialog progress;
 	private ViewPager viewPager;
 	private TabsPagerAdapter mAdapter;
 	private ActionBar actionBar;
 	// Tab titles
-	private String[] tabs = { "Wish list", "Top Rental", "New Arrival","Currently Reading"};
+	private String[] tabs = { "My Wish list", "Top Rental", "New Arrival","Currently Reading"};
 	
 	@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,8 +68,6 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		progress = new ProgressDialog(this);
-        progress.hide();
-		
 		// Initialization
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		actionBar = getActionBar();
@@ -125,7 +123,7 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	@Override
 	public void onResume(){
 		super.onResume();
-		progress.hide();
+	    progress.hide();
 	}
 
 }

@@ -1,48 +1,35 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollview"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:fillViewport="true">
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingLeft="10dip" 
-    android:paddingRight="10dip"
-    android:background="#fff">
-
-<!--     <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/hello"
-	    android:layout_centerHorizontal="true"
-        android:src="@drawable/jb_logo2" />
-    <LinearLayout
+    android:background="#ddd"
+    android:padding="10dip">
+	<android.support.v4.view.ViewPager
+	    android:id="@+id/viewpager"
+	    android:layout_width="fill_parent"
+	    android:layout_height="340dip"
+	    android:layout_marginBottom="5dip"
+        android:background="@drawable/curved_border"/>
+	<LinearLayout
 	    android:id="@+id/layout1"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_centerHorizontal="true"
 	    android:layout_marginBottom="10dp"
-	    android:orientation="horizontal" >
-	
-	    <TextView
+	    android:orientation="horizontal" 
+	    android:background="@drawable/curved_border">
+	    
+		<ImageView
+	        android:id="@+id/imageView1"
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Welcome "
-	        android:textColor="#ffffff"
-	        android:textSize="16sp" />
-	
-	    <TextView
-	        android:id="@+id/textView1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginBottom="15dp"
-	        android:text="Hisham"
-	        android:textColor="#ffffff"
-	        android:textSize="16sp" />
-	</LinearLayout> -->
-    
-	<android.support.v4.view.ViewPager
-	    android:id="@+id/viewpager"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"/>
-
-</RelativeLayout>
+	        android:layout_height="fill_parent"
+	        android:contentDescription="@string/hello"
+	        android:src="@drawable/offer" />
+	</LinearLayout>
+</LinearLayout>
+</ScrollView>

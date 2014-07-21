@@ -57,17 +57,12 @@ public class SearchPage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_page);
         progress = new ProgressDialog(this);
-        progress.hide();
         final Button my_Button = (Button) findViewById(R.id.button1);
 //        final EditText my_Text = (EditText) findViewById(R.id.editText1);
 //        final String fin = my_Text.getText().toString();
         
         my_Button.setOnClickListener(new Button.OnClickListener() {
         	public void onClick(View v){
-        		progress.setMessage("Loading...");
-    	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    	        progress.setIndeterminate(true);
-    	        progress.show();
         		String searchText = ((EditText) findViewById(R.id.editText1)).getText().toString();
         		Log.i("searchTExt", searchText);
         		Intent signup = new Intent(getApplicationContext(), MainActivity.class);
