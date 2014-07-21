@@ -31,21 +31,30 @@ public class CurrentlyReadingFragment extends ListFragment {
   private static final String TAG_IMAGE_URL = "image_url";
   private static final String TAG_LANGUAGE = "language";
   private static final String TAG_TITLE = "title";
-  private static final String TAG_ISBN = "isbn";
   private static final String TAG_ID = "id";
   private static final String TAG_ID_call = "title_id";
   private static final String RENTAL_ID = "rental_id";
   private static final String TIMES_RENTED = "no_of_times_rented";
   private static final String AVG_READING = "avg_reading_times";
   private static final String SUMMARY = "summary";
-
+  private JSONParse json_parse = new JSONParse();
+  String auth_token;
+  String memb;
+  String numb;
   // contacts JSONArray
   JSONArray list = null;
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     progress = new ProgressDialog(this.getActivity());
-    new JSONParse1().execute();
+    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    StrictMode.setThreadPolicy(policy);
+  	
+    SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
+    auth_token = value.getString("AUTH_TOKEN","");
+    memb = value.getString("MEMBERSHIP_NO","");
+    numb = value.getString("NUMBER","");
+    json_parse.execute();
   }
 
 
@@ -92,19 +101,11 @@ public class CurrentlyReadingFragment extends ListFragment {
     
     startActivity(in);
   }
-  private class JSONParse1 extends AsyncTask<String,String,JSONObject>{
+  private class JSONParse extends AsyncTask<String,String,JSONObject>{
     protected void onPreExecute(){
       
     }
     protected JSONObject doInBackground(String... args){
-      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-      StrictMode.setThreadPolicy(policy);
-      
-      SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
-      String auth_token = value.getString("AUTH_TOKEN","");
-      String memb = value.getString("MEMBERSHIP_NO","");
-      String numb = value.getString("NUMBER","");
-    
       System.out.println("score");
       String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/books_at_home.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
       JSONParser jp = new JSONParser();
@@ -113,7 +114,7 @@ public class CurrentlyReadingFragment extends ListFragment {
     }
     protected void onPostExecute(JSONObject json){
 	    List<Book> bookList = new ArrayList<Book>();
-	    if (json != null){
+	    if (json != null && !isCancelled()){
 	      try {
 	        // Getting Array of data
 	        list = json.getJSONArray(TAG_WISHLIST);
@@ -180,5 +181,9 @@ public class CurrentlyReadingFragment extends ListFragment {
   public void onResume(){
     super.onResume();
 	progress.hide();
+  }
+  public void onDestroy(){
+	  super.onDestroy();
+	 json_parse.cancel(true);
   }
 } 

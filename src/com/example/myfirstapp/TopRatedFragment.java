@@ -32,10 +32,13 @@ public class TopRatedFragment extends ListFragment {
 	private static final String SUMMARY = "summary";
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
-	private static final String TAG_ISBN = "isbn";
 	private static final String TAG_ID = "title_id";
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String AVG_READING = "avg_reading_times";
+	private JSONParse json_parse = new JSONParse();
+	String auth_token;
+	String memb;
+	String numb;
 
 	// contacts JSONArray
 	JSONArray list = null;
@@ -43,7 +46,15 @@ public class TopRatedFragment extends ListFragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     progress = new ProgressDialog(this.getActivity());
-	new JSONParse().execute();
+    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+	StrictMode.setThreadPolicy(policy);
+		
+	SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
+	auth_token = value.getString("AUTH_TOKEN","");
+	memb = value.getString("MEMBERSHIP_NO","");
+	numb = value.getString("NUMBER","");
+	
+	json_parse.execute();
   }
 
 
@@ -93,14 +104,7 @@ public class TopRatedFragment extends ListFragment {
 		  
 	  }
 	  protected JSONObject doInBackground(String... args){
-		  StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		  StrictMode.setThreadPolicy(policy);
-			
-		  SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
-		  String auth_token = value.getString("AUTH_TOKEN","");
-		  String memb = value.getString("MEMBERSHIP_NO","");
-		  String numb = value.getString("NUMBER","");
-		
+		  
 		  System.out.println("score");
 		  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 		  JSONParser jp = new JSONParser();
@@ -109,7 +113,7 @@ public class TopRatedFragment extends ListFragment {
 	  }
 	  protected void onPostExecute(JSONObject json){
 		List<Book> bookList = new ArrayList<Book>();
-		if (json != null){
+		if (json != null && !isCancelled()){
 			try {
 				// Getting Array of data
 				list = json.getJSONArray(TAG_WISHLIST);
@@ -173,4 +177,8 @@ public class TopRatedFragment extends ListFragment {
 		super.onResume();
 		progress.hide();
 	}
+  public void onDestroy(){
+	  super.onDestroy();
+	 json_parse.cancel(true);
+  }
 } 

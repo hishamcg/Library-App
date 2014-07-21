@@ -145,6 +145,7 @@ public class PageZero extends Activity {
 			    }
 		    else{
 		    	Intent in = new Intent(getApplicationContext(), FrontPage.class);
+		    	//Intent in = new Intent(getApplicationContext(), DrawerActivity.class);
         		startActivity(in);
 		    }
 		    //progress.dismiss();
