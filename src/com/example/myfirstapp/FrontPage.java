@@ -9,11 +9,13 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -31,6 +33,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.myfirstapp.adapter.NavDrawerListAdapter;
 import com.example.myfirstapp.model.NavDrawerItem;
@@ -69,66 +73,36 @@ public class FrontPage extends FragmentActivity {
 
   @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.front_page, menu);
-        menuInflater.inflate(R.menu.activity_main_actions, menu);
-        //return true;
-        return super.onCreateOptionsMenu(menu);
+	  MenuInflater menuInflater = getMenuInflater();
+      menuInflater.inflate(R.menu.front_page, menu);
+      
+      SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+      SearchView searchView =
+                 (SearchView) menu.findItem(R.id.action_search).getActionView();
+      searchView.setSearchableInfo(
+                 searchManager.getSearchableInfo(getComponentName()));
+      //searchView.setOnQueryTextListener(this);
+      //return true;
+      int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+      TextView textView = (TextView) searchView.findViewById(id);
+      textView.setHintTextColor(0x88ffffff);
+      return super.onCreateOptionsMenu(menu);
     }
-  @SuppressLint("InlinedApi")
   @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    if (mDrawerToggle.onOptionsItemSelected(item)) {
-		return true;
-	}
-    int itemId = item.getItemId();
-    if (itemId == R.id.action_back) {
-      // Single menu item is selected do something
-            // Ex: launching new activity/screen or show alert message
-            finish();
-      return true;
-    } else if (itemId == R.id.action_search) {
-        Intent searchlib = new Intent(getApplicationContext(), SearchPage.class);
-        startActivity(searchlib);
-      return true;
-    } else if (itemId == R.id.action_storage) {
-        Intent searchlib = new Intent(getApplicationContext(), AndroidTabLayoutActivity.class);
-        startActivity(searchlib);
-      return true;
-    } else if (itemId == R.id.action_place) {
-    	progress = new ProgressDialog(this);
-        progress.setMessage("Loading");
-        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setIndeterminate(true);
-        progress.show();
-      Intent searchlib = new Intent(getApplicationContext(), MyMap.class);
-        startActivity(searchlib);
-      return true;
-    } else if (itemId == R.id.action_help) {
-      Intent about = new Intent(getApplicationContext(), HelpActivity.class);
-        startActivity(about);
-      return true;
-    } else if (itemId == R.id.menu_gcm) {
-      Intent gcm = new Intent(getApplicationContext(), RegisterActivity.class);
-        startActivity(gcm);
-      return true;
-    } else if (itemId == R.id.logout) {
-      SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-        SharedPreferences.Editor   editor = preferences.edit();
-        editor.putString("AUTH_TOKEN", "0");
-        editor.putString("MEMBERSHIP_NO", "0");
-        editor.putString("DATE_OF_SIGNUP", "0");
-        editor.putString("NUMBER", "00000");
-        editor.commit();
-          
-        Intent login = new Intent(getApplicationContext(), SignupPage.class);
-        login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(login);
-      return true;
-    }else {
-      return super.onOptionsItemSelected(item);
-    }
+	    if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+	    int itemId = item.getItemId();
+	    if (itemId == R.id.action_search) {
+	        /*Intent searchlib = new Intent(getApplicationContext(), SearchPage.class);
+	        startActivity(searchlib);*/
+	      return true;
+	    } 
+	    else {
+	      return super.onOptionsItemSelected(item);
+	      }
     }
   	@SuppressLint("NewApi")
 	@Override

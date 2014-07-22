@@ -17,12 +17,17 @@
           android:icon="@drawable/book_icon_black"
           android:textSize="12sp" 
           android:title="Subscription holidays"/>  -->
-    <item android:id="@+id/menu_gcm"
+    <item android:id="@+id/action_search"
+          android:title="search"
+          android:icon="@drawable/ic_action_search_m"
+          android:showAsAction="collapseActionView|ifRoom"
+          android:actionViewClass="android.widget.SearchView" />
+    <!-- <item android:id="@+id/menu_gcm"
           android:icon="@drawable/book_icon_black"
           android:textSize="12sp"
           android:title="GCM notification"/>
     <item android:id="@+id/logout"
           android:icon="@drawable/book_icon_black"
           android:textSize="12sp" 
-          android:title="logout"/>
+          android:title="logout"/> -->
 </menu>

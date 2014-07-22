@@ -10,25 +10,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,12 +60,19 @@ public class MainActivity extends Activity {
 	// contacts JSONArray
 	JSONArray list = null;
 	
-	@Override
+	/*@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
-	    menuInflater.inflate(R.menu.search_page_menu, menu);
-	    //return true;
-	    return super.onCreateOptionsMenu(menu);
+        menuInflater.inflate(R.menu.front_page, menu);
+        menuInflater.inflate(R.menu.activity_main_actions, menu);
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+         SearchView searchView =
+                 (SearchView) menu.findItem(R.id.action_search).getActionView();
+         searchView.setSearchableInfo(
+                 searchManager.getSearchableInfo(getComponentName()));
+        //return true;
+        return super.onCreateOptionsMenu(menu);
 	  }
 	@Override
 	  public boolean onOptionsItemSelected(MenuItem item) {
@@ -91,47 +98,65 @@ public class MainActivity extends Activity {
 			}else {
 				return super.onOptionsItemSelected(item);
 			}
-	  } 
+	  } */
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		// get action bar   
+        ActionBar actionBar = getActionBar();
+        // Enabling Up / Back navigation
+        actionBar.setDisplayHomeAsUpEnabled(true);
 		progress = new ProgressDialog(this);
-		final Button my_Button = (Button) findViewById(R.id.button1);
-       
-        my_Button.setOnClickListener(new Button.OnClickListener() {
-    	   public void onClick(View v){
-   	        searchText = ((EditText) findViewById(R.id.editText1)).getText().toString();
-       		Log.i("searchTExt", searchText);
-       		where_to = false;
-       		new JSONParse().execute();
-       		
-//	       		Intent moresearch = new Intent(getApplicationContext(), MainActivity.class);
-//	       		moresearch.putExtra(SEARCH_URL, searchText);
-//	       		moresearch.putExtra("check",check_log);
-//	       		startActivity(moresearch);
-    	   }
-        });
-        new JSONParse().execute();
+//		final Button my_Button = (Button) findViewById(R.id.button1);
+		handleIntent(getIntent());
+//        my_Button.setOnClickListener(new Button.OnClickListener() {
+//    	   public void onClick(View v){
+//   	        searchText = ((EditText) findViewById(R.id.editText1)).getText().toString();
+//       		Log.i("searchTExt", searchText);
+//       		where_to = false;
+//       		new JSONParse().execute();
+//       		
+////	       		Intent moresearch = new Intent(getApplicationContext(), MainActivity.class);
+////	       		moresearch.putExtra(SEARCH_URL, searchText);
+////	       		moresearch.putExtra("check",check_log);
+////	       		startActivity(moresearch);
+//    	   }
+//        });
+//        new JSONParse().execute();
 	}
+	@Override
+    protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+		handleIntent(intent);
+    }
+	private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        	searchText = intent.getStringExtra(SearchManager.QUERY);
+            new JSONParse().execute();
+        }
+    }
+	
 	private class JSONParse extends AsyncTask<String,String,JSONObject>{
 		protected void onPreExecute(){
 			final ProgressBar progress_bar = (ProgressBar) findViewById(R.id.progress_bar);
 			progress_bar.setVisibility(View.VISIBLE);
 		}
 		protected JSONObject doInBackground(String... args){
-			String fin;
-			if (where_to){
-				Intent search_val = getIntent();
-				fin = search_val.getStringExtra(SEARCH_URL);
-				check_log = search_val.getStringExtra("check");
-			}
-			else{
-				fin = searchText;
-			}
+			String fin = searchText;
+//			if (where_to){
+//				Intent search_val = getIntent();
+//				fin = search_val.getStringExtra(SEARCH_URL);
+//				check_log = search_val.getStringExtra("check");
+//			}
+//			else{
+//				fin = searchText;
+//			}
 			try {
-				fin = URLEncoder.encode(fin, "UTF-8");
+				//fin = URLEncoder.encode(fin, "UTF-8");
+				fin = URLEncoder.encode(searchText, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
