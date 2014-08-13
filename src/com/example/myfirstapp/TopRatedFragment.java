@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -29,6 +30,7 @@ public class TopRatedFragment extends ListFragment {
 	private static final String TAG_CATEGORY = "category";
 	private static final String TAG_PAGE = "no_of_pages";
 	private static final String TAG_IMAGE_URL = "image_url";
+	private static final String RENTAL_ID = "rental_id";
 	private static final String SUMMARY = "summary";
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
@@ -46,6 +48,11 @@ public class TopRatedFragment extends ListFragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     progress = new ProgressDialog(this.getActivity());
+    
+    ColorDrawable gray = new ColorDrawable(this.getResources().getColor(R.color.gray));
+	getListView().setDivider(gray);
+	getListView().setDividerHeight(1);
+	
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 	StrictMode.setThreadPolicy(policy);
 		
@@ -89,6 +96,7 @@ public class TopRatedFragment extends ListFragment {
 		in.putExtra(TAG_LANGUAGE, publisher);
 		in.putExtra(TAG_PAGE, price);
 		in.putExtra(TAG_IMAGE_URL, image_url);
+		in.putExtra(RENTAL_ID,"");
 		in.putExtra(SUMMARY, summary);
 		in.putExtra(TAG_ID, title_id);
 		in.putExtra(TIMES_RENTED,times_rented);

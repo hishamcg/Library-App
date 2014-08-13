@@ -28,6 +28,7 @@ public class PageZero extends Activity {
 	private static final String SUCCESS = "success";
 	String NUMBER;
 	private String SUCC = "false";
+	private JSONParse json_parse = new JSONParse();
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -48,7 +49,7 @@ public class PageZero extends Activity {
 			//here i'm checking if the user has already signed in or not
 			//data from shared pref (NUMBER,AUTH_TOKEN,MEMBERSHIP_NO,DATE_OF_SIGNUP)
 	    	if (numb != null && numb != ""){
-	    		new JSONParse().execute();
+	    		json_parse.execute();
 			}
 			else{
 				Intent login = new Intent(getApplicationContext(), SignupPage.class);
@@ -123,14 +124,14 @@ public class PageZero extends Activity {
 			long diff =saveddatevalue - date_last_signup;
 			
 			//-----uncomment to bypass authentication-----
-			diff = 0;
+			//diff = 0;
 			//SUCC = "true";
 			//--------------------------------------------
 			
 			//two condition
 			//1. does he still have justbooks membership ?
 			//2. 30 days since last log in (this can be removed later)
-		    if(SUCC.equals("false") || diff > 25920000){
+		    if(SUCC.equals("false") || diff > 2592000000L){
 		    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 			    SharedPreferences.Editor   editor = preferences.edit();
 			    editor.putString("AUTH_TOKEN", "0");
@@ -148,7 +149,6 @@ public class PageZero extends Activity {
 		    	//Intent in = new Intent(getApplicationContext(), DrawerActivity.class);
         		startActivity(in);
 		    }
-		    //progress.dismiss();
 		}
 	}
 	private boolean isNetworkAvailable() {
@@ -166,5 +166,9 @@ public class PageZero extends Activity {
             Log.i( "dd","-----------Extra:" + extras.getString("title_id") );
         }
 	    // Now getIntent() returns the updated Intent        
+	}
+	public void onDestroy(){
+		  super.onDestroy();
+		 json_parse.cancel(true);
 	}
 }

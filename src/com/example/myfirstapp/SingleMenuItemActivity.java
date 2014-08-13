@@ -20,23 +20,28 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,11 +52,11 @@ public class SingleMenuItemActivity  extends Activity {
 	private ProgressDialog progress;
 	Person person;
 	//private static final String SERVER_BASE_URL = "192.168.2.133:4321";
-	Drawable drawable_from_url(String url, String src_name)
+	/*Drawable drawable_from_url(String url, String src_name)
 			throws java.net.MalformedURLException, java.io.IOException {
 		return Drawable.createFromStream(
 				((java.io.InputStream) new java.net.URL(url).getContent()),
-				src_name);}
+				src_name);}*/
 	// JSON node keys
 	private static final String USER_INFO = "info";
 	private static final String TAG_AUTHOR = "author";
@@ -64,17 +69,42 @@ public class SingleMenuItemActivity  extends Activity {
 	private static final String TAG_ID = "title_id";
 	private static final String RENTAL_ID = "rental_id";
 	private static final String TIMES_RENTED = "no_of_times_rented";
+	private static final String PICKUP_ORDER = "pickup_order_id";
 	private static final String AVG_READING = "avg_reading_times";
-	String rental_id = "";
 
 	@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
-      menuInflater.inflate(R.menu.activity_main_actions, menu);
-      //return true;
-      return super.onCreateOptionsMenu(menu);
+        menuInflater.inflate(R.menu.front_page, menu);
+        SearchManager searchManager =
+              (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	    SearchView searchView =
+	               (SearchView) menu.findItem(R.id.action_search).getActionView();
+	    searchView.setSearchableInfo(
+	               searchManager.getSearchableInfo(getComponentName()));
+	    //searchView.setOnQueryTextListener(this);
+	    //return true;
+	    int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+	    TextView textView = (TextView) searchView.findViewById(id);
+	    textView.setHintTextColor(0x88ffffff);
+	    textView.setTextColor(0xffffffff);
+	    return super.onCreateOptionsMenu(menu);
 	  }
 	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	    int itemId = item.getItemId();
+	    if (itemId == R.id.action_search) {
+	        /*Intent searchlib = new Intent(getApplicationContext(), SearchPage.class);
+	        startActivity(searchlib);*/
+	      return true;
+	    }else if (itemId == android.R.id.home){
+			finish();
+			return true;
+		} else {
+	      return super.onOptionsItemSelected(item);
+	      }
+    }
+	/*@Override
 	  public boolean onOptionsItemSelected(MenuItem item) {
 		progress = new ProgressDialog(this);
 		progress.setMessage("Loading");
@@ -103,16 +133,21 @@ public class SingleMenuItemActivity  extends Activity {
 			Intent about = new Intent(getApplicationContext(), HelpActivity.class);
   		startActivity(about);
 			return true;
-		}else {
+		} else if (itemId == android.R.id.home){
+			finish();
+			return true;
+		} else {
 			return super.onOptionsItemSelected(item);
 		}
-	  }
+	  }*/
 	@SuppressLint("NewApi")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_list_view2);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         progress = new ProgressDialog(this);
+        setWindowContentOverlayCompat();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
@@ -129,7 +164,9 @@ public class SingleMenuItemActivity  extends Activity {
         final String times_rented = in.getStringExtra(TIMES_RENTED);
         final String avg_reading = in.getStringExtra(AVG_READING);
         String image_url = in.getStringExtra(TAG_IMAGE_URL);
+        final String pickup_order = in.getStringExtra(PICKUP_ORDER);
         String summary = in.getStringExtra(SUMMARY);
+        final String rental_id = in.getStringExtra(RENTAL_ID);
         if (summary.equals("null")){
         	summary = "No summary available";
         }
@@ -157,8 +194,13 @@ public class SingleMenuItemActivity  extends Activity {
         final LinearLayout remove = (LinearLayout) findViewById(R.id.remove);
         final LinearLayout add_to_list = (LinearLayout) findViewById(R.id.add_to_list);
         final LinearLayout pick_up = (LinearLayout) findViewById(R.id.pick_up);
+        final RelativeLayout lblpickup_order = (RelativeLayout) findViewById(R.id.relativeLayout_pickup);
+        final RelativeLayout action_view = (RelativeLayout) findViewById(R.id.relativeLayout_inside);
         final LinearLayout share = (LinearLayout) findViewById(R.id.share);
-        pick_up.setVisibility(View.GONE);
+        if (pickup_order != null && pickup_order != "null"){
+        	lblpickup_order.setVisibility(View.VISIBLE);
+        	action_view.setVisibility(View.GONE);
+        }
 
         final LinearLayout sign_in = (LinearLayout) findViewById(R.id.sign_in);
         final LinearLayout sign_up = (LinearLayout) findViewById(R.id.sign_up);
@@ -172,7 +214,6 @@ public class SingleMenuItemActivity  extends Activity {
 
 	        }
         	else if(message.equals("current")){
-        		rental_id = in.getStringExtra(RENTAL_ID);
         		pick_up.setVisibility(View.VISIBLE);
         		remove.setVisibility(View.GONE);
         		add_to_list.setVisibility(View.GONE);
@@ -489,7 +530,30 @@ public class SingleMenuItemActivity  extends Activity {
         });
 
     }
+	//this was supposed to drop a shadow on actionbar
+	private void setWindowContentOverlayCompat() {
+	    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR2) {
+	        // Get the content view
+	        View contentView = findViewById(android.R.id.content);
 
+	        // Make sure it's a valid instance of a FrameLayout
+	        if (contentView instanceof FrameLayout) {
+	            TypedValue tv = new TypedValue();
+
+	            // Get the windowContentOverlay value of the current theme
+	            if (getTheme().resolveAttribute(
+	                    android.R.attr.windowContentOverlay, tv, true)) {
+
+	                // If it's a valid resource, set it as the foreground drawable
+	                // for the content view
+	                if (tv.resourceId != 0) {
+	                    ((FrameLayout) contentView).setForeground(
+	                            getResources().getDrawable(tv.resourceId));
+	                }
+	            }
+	        }
+	    }
+	}
 	public static Bitmap getBitmapFromURL(String src) {
 	    try {
 	        Log.e("src",src);

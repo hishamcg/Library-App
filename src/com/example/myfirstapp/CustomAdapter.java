@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -43,6 +44,8 @@ public class CustomAdapter extends ArrayAdapter<Book> {
 		TextView times_rented = (TextView) rowView.findViewById(R.id.times_rented);
 		TextView avg_reading = (TextView) rowView.findViewById(R.id.avg_reading);
 		TextView summary = (TextView) rowView.findViewById(R.id.summary);
+		TextView pickup_order = (TextView) rowView.findViewById(R.id.pickup_order);
+		LinearLayout detail_mini = (LinearLayout) rowView.findViewById(R.id.detail_mini);
 
 		Book book = bookArry[position];
 		ImageView image = (ImageView) rowView.findViewById(R.id.image);
@@ -72,6 +75,10 @@ public class CustomAdapter extends ArrayAdapter<Book> {
   		times_rented.setText(book.getTimes_rented());
   		avg_reading.setText(book.getAvg_reading());
   		summary.setText(book.getSummary());
+  		if (book.getPickup_order() != null && book.getPickup_order() != "null"){
+  			pickup_order.setVisibility(View.VISIBLE);
+  			detail_mini.setVisibility(View.GONE);
+  		}
 
 		return rowView;
 	}

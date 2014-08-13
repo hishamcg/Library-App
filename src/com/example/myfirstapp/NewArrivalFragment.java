@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -32,6 +33,7 @@ public class NewArrivalFragment extends ListFragment {
   private static final String TAG_IMAGE_URL = "image_url";
   private static final String SUMMARY = "summary";
   private static final String TAG_LANGUAGE = "language";
+  private static final String RENTAL_ID = "rental_id";
   private static final String TAG_TITLE = "title";
   private static final String TAG_ID = "id";
   private static final String TAG_ID_call = "title_id";
@@ -48,6 +50,11 @@ public class NewArrivalFragment extends ListFragment {
 public void onActivityCreated(Bundle savedInstanceState) {
   super.onActivityCreated(savedInstanceState);
   progress = new ProgressDialog(this.getActivity());
+  
+  	ColorDrawable gray = new ColorDrawable(this.getResources().getColor(R.color.gray));
+	getListView().setDivider(gray);
+	getListView().setDividerHeight(1);
+	
   StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
   StrictMode.setThreadPolicy(policy);
 	
@@ -98,6 +105,7 @@ public void onListItemClick(ListView l, View view, int position, long id) {
 		in.putExtra(SUMMARY, summary);
 		in.putExtra(TAG_ID_call, title_id);
 		in.putExtra(TIMES_RENTED,times_rented);
+		in.putExtra(RENTAL_ID,"");
 		in.putExtra(AVG_READING,avg_reading);
 		in.putExtra("message", "create");
 		in.putExtra("check","logged_in");

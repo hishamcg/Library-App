@@ -8,6 +8,7 @@ public interface Config {
 	static final String GOOGLE_PROJECT_ID = "959617453751";
 	static final String MESSAGE_KEY = "message";
 	static final String NOTIFICATION_ID = "notification_id";
-	//static final String SERVER_BASE_URL = "staging.justbooksclc.com:8787";
-	static final String SERVER_BASE_URL = "mapi.justbooksclc.com";
+	static final String SERVER_BASE_URL = "staging.justbooksclc.com:8787";
+	//static final String SERVER_BASE_URL = "192.168.2.125:4321";
+	//static final String SERVER_BASE_URL = "mapi.justbooksclc.com";
 }

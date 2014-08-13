@@ -1,42 +1,122 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:background="#ffffff"
-    android:padding="3dip">
-
+    android:layout_height="wrap_content"
+    android:background="#f5f5f5">
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp" 
+    android:layout_marginTop="10dp"
+    android:padding="5dip"
+    android:background="@drawable/edit_border">
     <ImageView
         android:id="@+id/image"
-        android:layout_width="100dip"
-        android:layout_height="150dip"
+        android:layout_width="80dip"
+        android:layout_height="110dip"
         android:layout_marginRight="2dip"
+        android:padding="5dip"
         android:gravity= "left"
+        android:scaleType="fitXY"
         android:contentDescription="TODO"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/book" />
     <TextView
         android:id="@+id/title"
-        android:text="TEXT"
+        android:text="God father"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dip"
+        android:layout_marginTop="5dip"
         android:layout_alignTop="@+id/image"
         android:layout_toRightOf="@+id/image"
         android:textSize="14sp"
-        android:textColor="#3b5998"
+        android:textColor="#a000"
         android:ellipsize="end"
-        android:singleLine="true" />
+        android:singleLine="true"/>
     <TextView
-        android:id="@+id/publisher"
-        android:text="TEXT"
+        android:id="@+id/author"
+        android:text="mario puzo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_marginTop="2dip"
         android:layout_below="@+id/title"
         android:layout_toRightOf="@+id/image"
         android:textSize="12sp"
-        android:textColor="#4e4e4e"/>
+        android:textColor="#a444"/>
+    <LinearLayout
+           android:id="@+id/detail_mini"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"
+           android:layout_toRightOf="@+id/image"
+           android:layout_below="@id/author"
+           android:layout_marginLeft="20dp"
+           android:layout_marginTop="5dp">
+           <LinearLayout
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal" >
+             <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="Times rented : "
+                 android:textColor="#dfa569"
+                 android:textSize="12sp" 
+                 android:textStyle="italic"/>
+             <TextView
+                 android:id="@+id/times_rented"
+                 android:layout_width="fill_parent"
+                 android:layout_height="wrap_content"
+                 android:text="82"
+                 android:textColor="#a444"
+                 android:textSize="14sp" />
+           </LinearLayout>
+           <View
+     		android:layout_width="fill_parent"
+     		android:layout_height="1dp"
+             android:layout_marginTop="3dp"
+             android:layout_marginBottom="3dp"
+     		android:background="#dfa569"/>
+           <LinearLayout
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal" >
+             <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="Reading time : "
+                 android:textColor="#dfa569"
+                 android:textSize="12sp" 
+                 android:textStyle="italic"/>
+             <TextView
+                 android:id="@+id/avg_reading"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="4"
+                 android:textColor="#a444"
+                 android:textSize="14sp"/>
+             <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text=" days"
+                 android:textColor="#a444"
+                 android:textSize="12sp"/>
+           </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/pickup_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:textColor="#F54747"
+        android:text="pick on processs..."
+        android:layout_toRightOf="@+id/image"
+        android:layout_below="@id/author"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/image_url"
         android:layout_width="0dip"
@@ -46,7 +126,7 @@
 	    android:layout_width="0dip"
 	    android:layout_height="0dip"/>
     <TextView
-        android:id="@+id/author"
+        android:id="@+id/publisher"
         android:layout_width="0dip"
         android:layout_height="0dip" />
     <TextView
@@ -65,15 +145,6 @@
         android:id="@+id/price"
         android:layout_width="0dip"
         android:layout_height="0dip"/>
-    <TextView
-        android:id="@+id/times_rented"
-        android:layout_width="0dip"
-        android:layout_height="0dip"/>
-    <TextView
-        android:id="@+id/avg_reading"
-        android:layout_width="0dip"
-        android:layout_height="0dip"/>
-
     <ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleSmall"
@@ -84,3 +155,4 @@
         android:layout_marginRight="40dp" />
    
 </RelativeLayout>
+</LinearLayout>

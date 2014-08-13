@@ -13,8 +13,15 @@ public class Book {
 	private String avg_reading;
 	private String image_url;
 	private String summary;
+	private String pickup_order;
 	
 
+	public String getPickup_order() {
+		return pickup_order;
+	}
+	public void setPickup_order(String pickup_order) {
+		this.pickup_order = pickup_order;
+	}
 	public String getImage_url() {
 		return image_url;
 	}

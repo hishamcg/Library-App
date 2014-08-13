@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -30,6 +31,7 @@ public class TopRentalFragment extends ListFragment {
 	private static final String TAG_PAGE = "no_of_pages";
 	private static final String TAG_IMAGE_URL = "image_url";
 	private static final String SUMMARY = "summary";
+	private static final String RENTAL_ID = "rental_id";
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
 	private static final String TAG_ID = "id";
@@ -46,6 +48,11 @@ public class TopRentalFragment extends ListFragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     progress = new ProgressDialog(this.getActivity());
+    
+    ColorDrawable gray = new ColorDrawable(this.getResources().getColor(R.color.gray));
+	getListView().setDivider(gray);
+	getListView().setDividerHeight(1);
+	
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 	StrictMode.setThreadPolicy(policy);
 		
@@ -90,6 +97,7 @@ public class TopRentalFragment extends ListFragment {
 		in.putExtra(TAG_PAGE, price);
 		in.putExtra(TAG_IMAGE_URL, image_url);
 		in.putExtra(SUMMARY, summary);
+		in.putExtra(RENTAL_ID, "");
 		in.putExtra(TAG_ID_call, title_id);
 		in.putExtra(TIMES_RENTED,times_rented);
 		in.putExtra(AVG_READING,avg_reading);
@@ -105,7 +113,6 @@ public class TopRentalFragment extends ListFragment {
 	  }
 	  protected JSONObject doInBackground(String... args){
 		  
-		  System.out.println("score");
 		  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 		  JSONParser jp = new JSONParser();
 		  JSONObject json = jp.getJSONFromUrl(url);
@@ -150,14 +157,7 @@ public class TopRentalFragment extends ListFragment {
 						bookList.add(book);
 					}
 				}else{
-					//try {
-					//}
-							setEmptyText("NO data available in top rentals");
-					/*} catch (NullPointerException e) {
-						e.printStackTrace();
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-					}*/
+					setEmptyText("NO data available in top rentals");
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();

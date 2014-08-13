@@ -60,11 +60,11 @@ public class MainActivity extends Activity {
 	// contacts JSONArray
 	JSONArray list = null;
 	
-	/*@Override
+	@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.front_page, menu);
-        menuInflater.inflate(R.menu.activity_main_actions, menu);
+        //menuInflater.inflate(R.menu.activity_main_actions, menu);
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
          SearchView searchView =
@@ -76,7 +76,18 @@ public class MainActivity extends Activity {
 	  }
 	@Override
 	  public boolean onOptionsItemSelected(MenuItem item) {
-			progress = new ProgressDialog(this);
+	    int itemId = item.getItemId();
+	    if (itemId == R.id.action_search) {
+	        /*Intent searchlib = new Intent(getApplicationContext(), SearchPage.class);
+	        startActivity(searchlib);*/
+	    	return true;
+	    }else if (itemId == android.R.id.home){
+	    	finish();
+	    	return true;
+	    }else {
+	    	return super.onOptionsItemSelected(item);
+	    }
+			/*progress = new ProgressDialog(this);
 			progress.setMessage("Loading");
 	        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	        progress.setIndeterminate(true);
@@ -97,8 +108,8 @@ public class MainActivity extends Activity {
 				return true;
 			}else {
 				return super.onOptionsItemSelected(item);
-			}
-	  } */
+			}*/
+	  }
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

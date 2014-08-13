@@ -4,8 +4,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-public class TabsPagerAdapter extends FragmentPagerAdapter {
 
+public class TabsPagerAdapter extends FragmentPagerAdapter {
+//	public TabsPagerAdapter(android.support.v4.app.Fragment fragment){
+//	    super(fragment.getChildFragmentManager());
+//	}
 	public TabsPagerAdapter(FragmentManager fm) {
 		super(fm);
 	}
@@ -19,13 +22,13 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 			return new TopRatedFragment();
 		case 1:
 			// Games fragment activity
-			return new TopRentalFragment();
+			return new CurrentlyReadingFragment();
 		case 2:
 			// Movies fragment activity
 			return new NewArrivalFragment();
 		case 3:
 			// Movies fragment activity
-			return new CurrentlyReadingFragment();
+			return new TopRentalFragment();
 		}
 
 		return null;

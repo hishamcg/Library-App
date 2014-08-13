@@ -3,23 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#2e3681">
-
-    <Button
-        android:id="@+id/btnGCMRegister"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="10dip"
-        android:text="Register for notification" />
-
+    android:background="#ffffff">
     <ImageView
+        android:id="@+id/gcm_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="51dp"
-        android:src="@drawable/jb_logo2" />
+        android:src="@drawable/gcm_logo" />
+    <Button
+        android:id="@+id/btnGCMRegister"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+		android:layout_below="@id/gcm_image"
+        android:background="@drawable/gcm_reg_button"
+        android:layout_margin="10dip"
+        android:text="Register for notification" />
 
 </RelativeLayout>

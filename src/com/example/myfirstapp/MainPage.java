@@ -97,7 +97,6 @@ public class MainPage extends Activity {
         	        int pas = r.nextInt(10000 - 1000) + 1000;
 	        		
 	        		String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/sessions.json?phone=" + phone_no+"&otp="+String.valueOf(pas);
-	        		//String url = "http://192.168.2.125:3000/api/v1/sessions.json?phone="+phone_no+"&otp="+pas;
 	        		System.out.println("score here"+ phone_no);
 	        		// Creating JSON Parser instance
 	        		JSONParser jParser = new JSONParser();
@@ -131,7 +130,7 @@ public class MainPage extends Activity {
 		      				  //comment to bypass authentication via sms
 		      				  Intent checking_auth = new Intent(getApplicationContext(), FrontPage.class);
 			      			  //Intent checking_auth = new Intent(getApplicationContext(), SignInWaitingActivity.class);
-		        	          //checking_auth.putExtra("pas_rand", String.valueOf(pas));
+		        	          checking_auth.putExtra("pas_rand", String.valueOf(pas));
 			        	      startActivity(checking_auth);
 		      			  }else{
 		      				  Toast toast = Toast.makeText(getApplicationContext(),"      Login Failed \nPlease Try Again Later",Toast.LENGTH_LONG);
@@ -187,10 +186,5 @@ public class MainPage extends Activity {
 	public void onDestroy() {
 	    super.onDestroy();
 	}
-//	public void onBackPressed() {
-//	    // your code.
-//		Intent back = new Intent(getApplicationContext(), FrontPage.class);
-//		startActivity(back);
-//	}
     
 }

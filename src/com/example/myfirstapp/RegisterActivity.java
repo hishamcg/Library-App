@@ -2,6 +2,7 @@ package com.example.myfirstapp;
 
 import java.io.IOException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -31,12 +33,23 @@ public class RegisterActivity extends Activity {
 	private static final String APP_VERSION = "appVersion";
 
 	static final String TAG = "Register Activity";
-
+	
+	@Override
+	  public boolean onOptionsItemSelected(MenuItem item) {
+	    int itemId = item.getItemId();
+	    if (itemId == android.R.id.home){
+	    	finish();
+	    	return true;
+	    }else {
+	    	return super.onOptionsItemSelected(item);
+	    }
+	  }
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gcm_activity_register);
-
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		context = getApplicationContext();
 
 		btnGCMRegister = (Button) findViewById(R.id.btnGCMRegister);
@@ -57,8 +70,6 @@ public class RegisterActivity extends Activity {
 							Toast.LENGTH_LONG).show();
 				} else {
 					appUtil = new ShareExternalServer();
-
-					regId = getIntent().getStringExtra("regId");
 					Log.d("GCMMainActivity", "regId: " + regId);
 
 					shareRegidTask = new AsyncTask<Void, Void, String>() {

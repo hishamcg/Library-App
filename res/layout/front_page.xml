@@ -10,34 +10,129 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:fillViewport="true">
-	<LinearLayout 
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:background="#ddd"
-	    android:padding="10dip">
-		<android.support.v4.view.ViewPager
-		    android:id="@+id/viewpager"
-		    android:layout_width="fill_parent"
-		    android:layout_height="340dip"
-		    android:layout_marginBottom="5dip"
-	        android:background="@drawable/curved_border"/>
-		<LinearLayout
-		    android:id="@+id/layout1"
+		<LinearLayout 
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_marginBottom="10dp"
-		    android:orientation="horizontal" 
-		    android:background="@drawable/curved_border">
-		    
-			<ImageView
-		        android:id="@+id/imageView1"
-		        android:layout_width="wrap_content"
-		        android:layout_height="fill_parent"
-		        android:contentDescription="@string/hello"
-		        android:src="@drawable/offer" />
+		    android:orientation="vertical">
+		    <RelativeLayout 
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical">
+				<android.support.v4.view.ViewPager
+				    android:id="@+id/viewpager"
+				    android:layout_width="fill_parent"
+				    android:layout_height="185dip"
+				    android:background="@drawable/book_shelf6"/>
+				<ProgressBar
+			        android:id="@+id/viewpager_progress"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_centerHorizontal="true"
+			        android:layout_centerVertical="true"
+			        android:visibility="visible" />
+				<LinearLayout
+				    android:layout_width="wrap_content"
+				    android:layout_height="fill_parent"
+				    android:layout_alignParentTop="true"
+				    android:layout_centerHorizontal="true"
+				    android:orientation="vertical">
+				 	<TextView
+				 	    android:layout_width="wrap_content"
+				 	    android:layout_height="wrap_content"
+				 	    android:textStyle="bold"
+				 	    android:textColor="#fff"
+				 	    android:text="Your next read?"
+				 	    android:background="@drawable/front_page_cover"/>
+				</LinearLayout>
+				<ImageView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_alignParentRight="true"
+				    android:layout_centerVertical="true"
+				    android:paddingRight="16dp"
+				    android:src="@drawable/swipe_left" />
+			</RelativeLayout>
+			<RelativeLayout 
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical">
+				<android.support.v4.view.ViewPager
+				    android:id="@+id/viewpager1"
+				    android:layout_width="fill_parent"
+				    android:layout_height="185dip"
+				    android:background="@drawable/book_shelf6"/>
+				<ProgressBar
+			        android:id="@+id/viewpager_progress1"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_centerHorizontal="true"
+			        android:layout_centerVertical="true"
+			        android:visibility="visible" />
+				<LinearLayout
+				    android:layout_width="wrap_content"
+				    android:layout_height="fill_parent"
+				    android:layout_alignParentTop="true"
+				    android:layout_centerHorizontal="true"
+				    android:orientation="vertical">
+				 	<TextView
+				 	    android:layout_width="wrap_content"
+				 	    android:layout_height="wrap_content"
+				 	    android:layout_marginLeft="5dip"
+				 	    android:layout_marginRight="5dip"
+				 	    android:textStyle="bold"
+				 	    android:textColor="#fff"
+				 	    android:text="New arrivals"
+				 	    android:background="@drawable/front_page_cover"/>
+				</LinearLayout>
+				<ImageView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_alignParentRight="true"
+				    android:layout_centerVertical="true"
+				    android:paddingRight="16dp"
+				    android:src="@drawable/swipe_left" />
+			</RelativeLayout>
+			<RelativeLayout 
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical">
+				<android.support.v4.view.ViewPager
+				    android:id="@+id/viewpager2"
+				    android:layout_width="fill_parent"
+				    android:layout_height="185dip"
+				    android:background="@drawable/book_shelf6"/>
+				<ProgressBar
+			        android:id="@+id/viewpager_progress2"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_centerHorizontal="true"
+			        android:layout_centerVertical="true"
+			        android:visibility="visible" />
+				<LinearLayout
+				    android:layout_width="wrap_content"
+				    android:layout_height="fill_parent"
+				    android:layout_alignParentTop="true"
+				    android:layout_centerHorizontal="true"
+				    android:orientation="vertical">
+				 	<TextView
+				 	    android:layout_width="wrap_content"
+				 	    android:layout_height="wrap_content"
+				 	    android:layout_marginLeft="5dip"
+				 	    android:layout_marginRight="5dip"
+				 	    android:textStyle="bold"
+				 	    android:textColor="#fff"
+				 	    android:text="Top rentals"
+				 	    android:background="@drawable/front_page_cover"/>
+				</LinearLayout>
+				<ImageView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_alignParentRight="true"
+				    android:layout_centerVertical="true"
+				    android:paddingRight="16dp"
+				    android:src="@drawable/swipe_left" />
+			</RelativeLayout>
 		</LinearLayout>
-	</LinearLayout>
 	</ScrollView>
 	<FrameLayout
         android:id="@+id/frame_container"

@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -36,6 +37,7 @@ public class CurrentlyReadingFragment extends ListFragment {
   private static final String RENTAL_ID = "rental_id";
   private static final String TIMES_RENTED = "no_of_times_rented";
   private static final String AVG_READING = "avg_reading_times";
+  private static final String PICKUP_ORDER = "pickup_order_id";
   private static final String SUMMARY = "summary";
   private JSONParse json_parse = new JSONParse();
   String auth_token;
@@ -47,6 +49,11 @@ public class CurrentlyReadingFragment extends ListFragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     progress = new ProgressDialog(this.getActivity());
+    
+    ColorDrawable gray = new ColorDrawable(this.getResources().getColor(R.color.gray));
+	getListView().setDivider(gray);
+	getListView().setDividerHeight(1);
+	
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
     StrictMode.setThreadPolicy(policy);
   	
@@ -82,6 +89,8 @@ public class CurrentlyReadingFragment extends ListFragment {
 			.getText().toString();
 	String summary = ((TextView) view.findViewById(R.id.summary))
 			.getText().toString();
+	String pickup_order = ((TextView) view.findViewById(R.id.pickup_order))
+			.getText().toString();
     
     // Starting new intent
     Intent in = new Intent(this.getActivity().getApplicationContext(),SingleMenuItemActivity.class);
@@ -96,6 +105,7 @@ public class CurrentlyReadingFragment extends ListFragment {
 	in.putExtra(TIMES_RENTED,times_rented);
 	in.putExtra(AVG_READING,avg_reading);
 	in.putExtra(SUMMARY,summary);
+	in.putExtra(PICKUP_ORDER,pickup_order);
     in.putExtra("message", "current");
     in.putExtra("check","logged_in");
     
@@ -131,10 +141,12 @@ public class CurrentlyReadingFragment extends ListFragment {
 		          String language = c.getString(TAG_LANGUAGE);
 		          String title = c.getString(TAG_TITLE);
 		          String summary = c.getString(SUMMARY);
+		          String rental_id = c.getString(RENTAL_ID);
 		          String image_url = c.getString(TAG_IMAGE_URL);
 		          String title_id = c.getString(TAG_ID);
 			      String times_rented = c.getString(TIMES_RENTED);
 			      String avg_reading= c.getString(AVG_READING);
+			      String pickup_order = c.getString(PICKUP_ORDER);
 		          
 		          System.out.println("########id#######"+title_id);
 		  
@@ -147,8 +159,10 @@ public class CurrentlyReadingFragment extends ListFragment {
 		          book.setImage_url(image_url);
 		          book.setSummary(summary);
 		          book.setId(title_id);
+		          book.setRental_id(rental_id);
 		          book.setTimes_rented(times_rented);
 		          book.setAvg_reading(avg_reading);
+		          book.setPickup_order(pickup_order);
 		          // adding HashList to ArrayList
 		          bookList.add(book);
 		        }

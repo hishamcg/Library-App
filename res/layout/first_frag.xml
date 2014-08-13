@@ -1,88 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="#fff"> 
+    android:layout_height="wrap_content"> 
 	<LinearLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:background="#fff"
-	    android:orientation="vertical"
-	    android:paddingLeft="0dip"
-	    android:paddingRight="0dip" >
-
-	    <TextView
-	        android:id="@+id/title_label"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="15dp"
-	        android:layout_marginLeft="20dp"
-	        android:ellipsize="end"
-	        android:singleLine="true"
-	        android:text="TextView"
-	        android:textColor="#333"
-	        android:textSize="22sp" />
-
-	    <LinearLayout
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginBottom="10dp"
-	        android:layout_marginLeft="20dp"
-	        android:orientation="horizontal" >
-
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="By "
-	            android:textColor="#444"
-	            android:textSize="13sp"
-	            android:textStyle="italic" />
-
-	        <TextView
-	            android:id="@+id/author_label"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Text View"
-	            android:textColor="#444"
-	            android:textSize="13sp" />
-	    </LinearLayout>
-
-	    <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="BOOK COVER"
-	        android:textColor="#dcb667"
-	        android:textSize="10sp" />
-
-	    <View
-	        android:layout_width="fill_parent"
-	        android:layout_height="1dp"
-	        android:background="#dcb667" />
-
+	    android:orientation="vertical">
 	    <LinearLayout
 	        android:id="@+id/click_image"
 	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="5.73"
-	        android:background="@drawable/shelf4"
+	        android:layout_height="185dip"
+	        android:background="@drawable/book_shelf6"
 	        android:clickable="true"
-	        android:gravity="center"
-	        android:orientation="horizontal"
-	        android:layout_marginBottom="10dip"
+	        android:paddingBottom="15dip"
 	        android:paddingLeft="20dip"
-	        android:paddingRight="20dip" >
+	        android:gravity="bottom"
+          	android:paddingTop="10dip"
+	        android:orientation="horizontal" >
+	        <RelativeLayout
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content" >
+			    <ImageView
+			        android:id="@+id/image_cover"
+			        android:layout_width="99dp"
+			        android:layout_height="130dip"
+			        android:contentDescription="TODO"
+			        android:scaleType="fitXY"
+			        android:src="@drawable/book_cover1" />
+			    <ImageView
+		            android:id="@+id/image_label"
+		            android:layout_width="89dip"
+		            android:layout_height="127dip"
+		            android:layout_marginTop="2dp"
+		            android:layout_marginLeft="7dp"
+		            android:contentDescription="TODO"
+		            android:padding="1dp"
+		            android:scaleType="fitXY"
+		            android:src="@drawable/book" />
 
-	        <ImageView
-	            android:id="@+id/image_label"
-	            android:layout_width="140dip"
-	            android:layout_height="200dip"
-	            android:layout_margin="10dip"
-	            android:background="@drawable/edit_border"
-	            android:contentDescription="TODO"
-	            android:scaleType="fitXY"
-	            android:src="@drawable/book" />
+			    <ProgressBar
+			        android:id="@+id/loading"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_centerHorizontal="true"
+			        android:layout_centerVertical="true"
+			        android:visibility="visible" />
+
+			</RelativeLayout>
+			<LinearLayout
+			    android:layout_width="fill_parent"
+			    android:layout_height="fill_parent"
+			    android:orientation="vertical">
+		        <TextView
+			        android:id="@+id/title_label"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="27dp"
+			        android:layout_marginLeft="10dp"
+			        android:textColor="#ffffff"
+			        android:textSize="16sp"
+			        android:textStyle="bold"
+			        style="@style/drawer_text"
+			        android:ellipsize="end"
+			        android:singleLine="true"
+			        android:text="TextView"/>
+		
+			    <LinearLayout
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginBottom="10dp"
+			        android:layout_marginLeft="10dp"
+			        android:orientation="horizontal" >
+		
+			        <TextView
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            style="@style/drawer_text_author"
+			            android:text="By "
+			            android:textColor="#eee"
+			            android:textSize="13sp"/>
+		
+			        <TextView
+			            android:id="@+id/author_label"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            style="@style/drawer_text_author"
+			            android:text="Text View"
+				        android:ellipsize="end"
+				        android:singleLine="true"
+			            android:textColor="#eee"
+			            android:textSize="13sp" />
+			    </LinearLayout>
+			 </LinearLayout>
 	    </LinearLayout>
-
 	    <LinearLayout
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
@@ -252,11 +263,4 @@
 	        </LinearLayout>
 	    </LinearLayout>
 	</LinearLayout>
-
-<ProgressBar
-     android:id="@+id/loading"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:visibility="visible" 
-     android:layout_gravity="center"/>
 </FrameLayout>
