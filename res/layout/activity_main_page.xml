@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#eee"
+    android:background="#a000"
     tools:context=".MainActivity" >
     
     <!-- <ImageView
@@ -23,8 +23,8 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:textColor="#ffffff"
-        android:text="Sign In"
-        style="@style/button_text" />
+        android:text="Sign In"/>
+        <!-- style="@style/button_text" -->
 
     <EditText
         android:id="@+id/editText1"

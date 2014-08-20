@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--xmlns:strata="http://schemae.android.com/apk/res-auto"-->
+	
+    <item android:id="@+id/action_search"
+          android:title="search"
+          android:icon="@drawable/ic_action_search_m"
+    	  android:showAsAction="collapseActionView|ifRoom"
+          android:actionViewClass="android.widget.SearchView"/>
+    <!--  strata:showAsAction="collapseActionView|ifRoom"/> -->
+    <item android:id="@+id/shelf_view"
+          android:icon="@drawable/ic_action_grid"
+          android:textSize="12sp"
+          android:title="shelf view"
+          android:showAsAction="ifRoom"/>
+</menu>

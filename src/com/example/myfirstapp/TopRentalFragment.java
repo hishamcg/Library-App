@@ -162,7 +162,7 @@ public class TopRentalFragment extends ListFragment {
 			} catch (JSONException e) {
 				e.printStackTrace();
 				//setEmptyText("NO data available in top rentals");
-				Toast.makeText(getActivity().getApplicationContext(),"Error parsing json data",Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity().getApplicationContext(),"NO data available in top rentals",Toast.LENGTH_LONG).show();
 			}
 		}
 		else{

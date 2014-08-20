@@ -19,15 +19,12 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 		switch (index) {
 		case 0:
 			// Top Rated fragment activity
-			return new TopRatedFragment();
+			return new YourNextReadFragment();
 		case 1:
 			// Games fragment activity
-			return new CurrentlyReadingFragment();
-		case 2:
-			// Movies fragment activity
 			return new NewArrivalFragment();
-		case 3:
-			// Movies fragment activity
+		case 2:
+			// Games fragment activity
 			return new TopRentalFragment();
 		}
 
@@ -37,7 +34,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public int getCount() {
 		// get item count - equal to number of tabs
-		return 4;
+		return 3;
 	}
 
 }

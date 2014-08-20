@@ -50,8 +50,9 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
     private TypedArray navMenuIcons;
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
+    private String numb;
 	// Tab titles
-	private String[] tabs = { "My Wish list","Currently Reading", "Top Rental", "New Arrival"};
+	private String[] tabs = {"Your Next Read", "Top Rental", "New Arrival"};
 	
 	/*@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,7 +97,7 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 	  MenuInflater menuInflater = getMenuInflater();
-      menuInflater.inflate(R.menu.front_page, menu);
+      menuInflater.inflate(R.menu.list_view, menu);
       
       SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -117,12 +118,18 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	    if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
+	    mDrawerLayout.closeDrawer(mDrawerList);
 	    int itemId = item.getItemId();
 	    if (itemId == R.id.action_search) {
 	        /*Intent searchlib = new Intent(getApplicationContext(), SearchPage.class);
 	        startActivity(searchlib);*/
 	      return true;
-	    } 
+	    }else if (itemId == R.id.shelf_view){
+	    	Intent in = new Intent(getApplicationContext(), FrontPage.class);
+			in.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+	        startActivity(in);
+	    	return true;
+	    }
 	    else {
 	      return super.onOptionsItemSelected(item);
 	    }
@@ -133,12 +140,21 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		progress = new ProgressDialog(this);
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		numb = value.getString("NUMBER","");
 		//drawer
 		mTitle = mDrawerTitle = getTitle();
-		// load slide menu items
-		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-		// nav drawer icons from resources
-		navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+		if (numb != null && numb != ""){
+			// load slide menu items
+			navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+			// nav drawer icons from resources
+			navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+		}else{
+			// load slide menu items
+			navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items_non_user);
+			// nav drawer icons from resources
+			navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons_non_user);
+		}
 		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_tab);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -214,14 +230,12 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 			public void onPageScrollStateChanged(int arg0) {
 			}
 		});
-		Intent in = getIntent();
+		/*Intent in = getIntent();
 		String pos = null;
 		pos = in.getStringExtra("list_view_active");
-		// on tab selected
-		// show respected fragment view
 		if (pos!=null){
 			viewPager.setCurrentItem(2);
-		}
+		}*/
 	}
 
 	@Override
@@ -231,7 +245,7 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		viewPager.setCurrentItem(tab.getPosition());
-		viewPager.setOffscreenPageLimit(4);
+		viewPager.setOffscreenPageLimit(2);
 	}
 	
 	@Override
@@ -242,7 +256,11 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			// display view for selected nav drawer item
-			displayView(position);
+  			if (numb != null && numb != ""){
+  				displayView(position);
+  			}else{
+  				displayViewNonUser(position);
+  			}
 		}
   	}
   	private void displayView(int position) {
@@ -250,20 +268,28 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		//Fragment fragment = null;
 		switch (position) {
 		case 0:
-			finish();
-	        mDrawerLayout.closeDrawer(mDrawerList);
+			//fragment = new HomeFragment();
+			mDrawerLayout.closeDrawer(mDrawerList);
 			break;
 		case 1:
 			//fragment = new AndroidTabLayoutFragment();
-			mDrawerLayout.closeDrawer(mDrawerList);
-			//fragment = new HomeFragment();
+			Intent searchlib = new Intent(getApplicationContext(), AndroidTabMyListActivity.class);
+	        startActivity(searchlib);
+			
+	        mDrawerLayout.closeDrawer(mDrawerList);
 			break;
 		case 2:
 			Intent location = new Intent(getApplicationContext(), MyMap.class);
-			location.putExtra("from","tab_layout");
+			location.putExtra("from", "front_page");
 	  		startActivity(location);
 	  		mDrawerLayout.closeDrawer(mDrawerList);
 	  		break;
+		/*case 3:
+			//fragment = new RegisterFragment();
+	  		Intent gcm = new Intent(getApplicationContext(),RegisterActivity.class);
+	  		startActivity(gcm);
+	  		mDrawerLayout.closeDrawer(mDrawerList);
+			break;*/
 		case 3:
 			//fragment = new AboutFragment();
 			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
@@ -273,13 +299,13 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		case 4:
 			SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = pref.edit();
-			editor.putString("AUTH_TOKEN", "0");
-		    editor.putString("MEMBERSHIP_NO", "0");
-		    editor.putString("DATE_OF_SIGNUP", "0");
-		    editor.putString("NUMBER", "00000");
+			editor.putString("AUTH_TOKEN", "");
+		    editor.putString("MEMBERSHIP_NO", "");
+		    editor.putString("DATE_OF_SIGNUP", "");
+		    editor.putString("NUMBER", "");
 		    editor.commit();
 		    
-		    Intent logout = new Intent(getApplicationContext(),SignupPage.class);
+		    Intent logout = new Intent(getApplicationContext(),PageZero.class);
 		    startActivity(logout);
 		    mDrawerLayout.closeDrawer(mDrawerList);
 			break;
@@ -287,20 +313,38 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		default:
 			break;
 		}
-//-----------------------
-// used to display fragment
-//-----------------------
-/*		if (fragment != null) {
-			android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction()
-					.replace(R.id.frame_container, fragment).commit();
 
-			// update selected item and title, then close the drawer
-			mDrawerList.setItemChecked(position, true);
-			mDrawerList.setSelection(position);
-			setTitle(navMenuTitles[position]);
+	}
+  	private void displayViewNonUser(int position) {
+		switch (position) {
+		case 0:
 			mDrawerLayout.closeDrawer(mDrawerList);
-		}*/
+			break;
+		case 1:
+			Intent location = new Intent(getApplicationContext(), MyMap.class);
+			location.putExtra("from", "front_page");
+	  		startActivity(location);
+	  		mDrawerLayout.closeDrawer(mDrawerList);
+	  		break;
+		case 2:
+			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
+			startActivity(help);
+			mDrawerLayout.closeDrawer(mDrawerList);
+			break;
+		case 3:
+			Intent searchlib = new Intent(getApplicationContext(), MainPage.class);
+    		startActivity(searchlib);
+			mDrawerLayout.closeDrawer(mDrawerList);
+			break;
+		case 4:
+			Intent sign_up_call = new Intent(getApplicationContext(), HelpActivity.class);
+    		startActivity(sign_up_call);
+		    mDrawerLayout.closeDrawer(mDrawerList);
+			break;
+
+		default:
+			break;
+		}
 	}
   	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {

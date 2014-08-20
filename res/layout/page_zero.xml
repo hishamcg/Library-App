@@ -3,15 +3,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="#2e3681">
+    android:background="#eee">
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/hello"
-        android:src="@drawable/jb_logo2" />
+        android:src="@drawable/jb_logo" />
 
     <TextView
         android:id="@+id/no_connection"

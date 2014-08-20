@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal"
-    android:background="#2e3681">
+    android:background="#eee">
 
     <Button
         android:background="@drawable/red_button"
@@ -39,7 +39,7 @@
 	          android:layout_width="wrap_content"
 	          android:layout_height="wrap_content"
 	          android:text="Locate Store"
-	          android:textColor="#ffffff"
+	          android:textColor="#a444"
 	          android:textSize="10sp" />
 	  </LinearLayout>
 
@@ -67,7 +67,7 @@
 	          android:layout_width="wrap_content"
 	          android:layout_height="wrap_content"
 	          android:text="Search Books"
-	          android:textColor="#ffffff"
+	          android:textColor="#a444"
 	          android:textSize="10sp" />
 	  </LinearLayout>
  

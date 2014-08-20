@@ -128,7 +128,7 @@ public class MainPage extends Activity {
 		      				  editor.commit();
 		      				  //------------------------------
 		      				  //comment to bypass authentication via sms
-		      				  Intent checking_auth = new Intent(getApplicationContext(), FrontPage.class);
+		      				  Intent checking_auth = new Intent(getApplicationContext(), PageZero.class);
 			      			  //Intent checking_auth = new Intent(getApplicationContext(), SignInWaitingActivity.class);
 		        	          checking_auth.putExtra("pas_rand", String.valueOf(pas));
 			        	      startActivity(checking_auth);

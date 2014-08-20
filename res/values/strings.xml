@@ -21,7 +21,15 @@
         <item >My List</item>
         <item >Location</item>
         <item >About</item>
-        <item >Log out</item>
+        <item >Logout</item>
+    </string-array>
+    
+    <string-array name="nav_drawer_items_non_user">
+        <item >Home</item>
+        <item >Location</item>
+        <item >About</item>
+        <item >Signin</item>
+        <item >Signup</item>
     </string-array>
     
     <!-- Nav Drawer List Item Icons -->
@@ -31,8 +39,15 @@
         <item>@drawable/ic_people</item>
         <item>@drawable/ic_location</item>
         <item>@drawable/ic_communities</item>
-        <item>@drawable/ic_pages</item>
         <item>@drawable/ic_logout</item>
+    </array>
+    
+    <array name="nav_drawer_icons_non_user">
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_location</item>
+        <item>@drawable/ic_communities</item>
+        <item>@drawable/sign_in_1</item>
+        <item>@drawable/sign_up</item>
     </array>
     
     <!-- Content Description -->

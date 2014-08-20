@@ -41,7 +41,7 @@
 				 	    android:layout_height="wrap_content"
 				 	    android:textStyle="bold"
 				 	    android:textColor="#fff"
-				 	    android:text="Your next read?"
+				 	    android:text="Your Next Read?"
 				 	    android:background="@drawable/front_page_cover"/>
 				</LinearLayout>
 				<ImageView
@@ -50,7 +50,7 @@
 				    android:layout_alignParentRight="true"
 				    android:layout_centerVertical="true"
 				    android:paddingRight="16dp"
-				    android:src="@drawable/swipe_left" />
+				    android:src="@drawable/swipe_left3" />
 			</RelativeLayout>
 			<RelativeLayout 
 			    android:layout_width="fill_parent"
@@ -81,7 +81,7 @@
 				 	    android:layout_marginRight="5dip"
 				 	    android:textStyle="bold"
 				 	    android:textColor="#fff"
-				 	    android:text="New arrivals"
+				 	    android:text="New Arrivals"
 				 	    android:background="@drawable/front_page_cover"/>
 				</LinearLayout>
 				<ImageView
@@ -90,7 +90,7 @@
 				    android:layout_alignParentRight="true"
 				    android:layout_centerVertical="true"
 				    android:paddingRight="16dp"
-				    android:src="@drawable/swipe_left" />
+				    android:src="@drawable/swipe_left3" />
 			</RelativeLayout>
 			<RelativeLayout 
 			    android:layout_width="fill_parent"
@@ -121,7 +121,7 @@
 				 	    android:layout_marginRight="5dip"
 				 	    android:textStyle="bold"
 				 	    android:textColor="#fff"
-				 	    android:text="Top rentals"
+				 	    android:text="Top Rentals"
 				 	    android:background="@drawable/front_page_cover"/>
 				</LinearLayout>
 				<ImageView
@@ -130,7 +130,7 @@
 				    android:layout_alignParentRight="true"
 				    android:layout_centerVertical="true"
 				    android:paddingRight="16dp"
-				    android:src="@drawable/swipe_left" />
+				    android:src="@drawable/swipe_left3" />
 			</RelativeLayout>
 		</LinearLayout>
 	</ScrollView>

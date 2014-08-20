@@ -2,6 +2,7 @@ package com.example.myfirstapp;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +15,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -39,7 +42,7 @@ import android.widget.Toast;
 import com.example.myfirstapp.adapter.NavDrawerListAdapter;
 import com.example.myfirstapp.model.NavDrawerItem;
 
-public class FrontPage extends FragmentActivity {
+public class FrontPage extends FragmentActivity{
 	
   //private ProgressDialog progress;
   //for drawer
@@ -68,10 +71,15 @@ public class FrontPage extends FragmentActivity {
   private static final String AVG_READING = "avg_reading_times";
   private static final String IMAGE_URL = "image_url";
   private static final String SUMMARY = "summary";
+  private static final String REG_ID = "regId";
   private JSONParse json_parse = new JSONParse();
   private JSONParse json_parse1 = new JSONParse();
   private JSONParse json_parse2 = new JSONParse();
   //String[][] myarray = new String[50][10];
+  //shake detection
+  private SensorManager mSensorManager;
+  private ShakeEventListener mSensorListener;
+  
   ViewPager pager;
   ViewPager pager1;
   ViewPager pager2;
@@ -79,6 +87,11 @@ public class FrontPage extends FragmentActivity {
   String auth_token;
   String memb;
   String numb;
+  
+  int position_of_viewpager=0;
+  int position_of_viewpager1=0;
+  int position_of_viewpager2=0;
+  boolean shake_ready = false;
   
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,15 +117,16 @@ public class FrontPage extends FragmentActivity {
 	    if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
+	    mDrawerLayout.closeDrawer(mDrawerList);
 	    int itemId = item.getItemId();
 	    if (itemId == R.id.action_search) {
 	        /*Intent searchlib = new Intent(getApplicationContext(), SearchPage.class);
 	        startActivity(searchlib);*/
 	      return true;
 	    }else if (itemId == R.id.list_view){
-	    	Intent list = new Intent(getApplicationContext(),AndroidTabLayoutActivity.class);
-	    	list.putExtra("list_view_active", "true");
-	    	startActivity(list);
+	    	Intent searchlib = new Intent(getApplicationContext(), AndroidTabLayoutActivity.class);
+			searchlib.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+	        startActivity(searchlib);
 	    	return true;
 	    }
 	    else {
@@ -127,12 +141,42 @@ public class FrontPage extends FragmentActivity {
 		//progress = new ProgressDialog(this);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
-//---------------------for the drawer		
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		auth_token = value.getString("AUTH_TOKEN","");
+		memb = value.getString("MEMBERSHIP_NO","");
+		numb = value.getString("NUMBER","");
+		
+		//-----for shake----
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+	    mSensorListener = new ShakeEventListener();   
+
+	    mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+
+	      public void onShake() {
+	    	  if(shake_ready){
+		    	int randInt = new Random().nextInt(position_of_viewpager);
+		    	pager.setCurrentItem(randInt);
+		    	randInt = new Random().nextInt(position_of_viewpager1);
+		    	pager1.setCurrentItem(randInt);
+		    	randInt = new Random().nextInt(position_of_viewpager2);
+		    	pager2.setCurrentItem(randInt);
+	    	  }
+	      }
+	    });
+//---------------------for the drawer------------------------------------------------------		
 		mTitle = mDrawerTitle = getTitle();
-		// load slide menu items
-		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-		// nav drawer icons from resources
-		navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+		
+		if (numb != null && numb != ""){
+			// load slide menu items
+			navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+			// nav drawer icons from resources
+			navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+		}else{
+			// load slide menu items
+			navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items_non_user);
+			// nav drawer icons from resources
+			navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons_non_user);
+		}
 		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -172,21 +216,28 @@ public class FrontPage extends FragmentActivity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-//-----------------------------	
-		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-		auth_token = value.getString("AUTH_TOKEN","");
-		memb = value.getString("MEMBERSHIP_NO","");
-		numb = value.getString("NUMBER","");
-		
-		pager = (ViewPager) findViewById(R.id.viewpager);
-		String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
-		json_parse.execute(url,"0");
-		pager1 = (ViewPager) findViewById(R.id.viewpager1);
-		url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;		
-		json_parse1.execute(url,"1");
-		pager2 = (ViewPager) findViewById(R.id.viewpager2);
-		url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
-		json_parse2.execute(url,"2");
+//-----------------------------end----------------------------------------------------------
+		if (numb != null && numb != ""){
+			pager = (ViewPager) findViewById(R.id.viewpager);
+			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/your_next_read.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+			json_parse.execute(url,"0");
+			pager1 = (ViewPager) findViewById(R.id.viewpager1);
+			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;		
+			json_parse1.execute(url,"1");
+			pager2 = (ViewPager) findViewById(R.id.viewpager2);
+			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+			json_parse2.execute(url,"2");
+		}else{
+			pager = (ViewPager) findViewById(R.id.viewpager);
+			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/your_next_read.json";
+			json_parse.execute(url,"0");
+			pager1 = (ViewPager) findViewById(R.id.viewpager1);
+			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json";		
+			json_parse1.execute(url,"1");
+			pager2 = (ViewPager) findViewById(R.id.viewpager2);
+			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json";
+			json_parse2.execute(url,"2");
+		}
 		
 		pager.setOnTouchListener(new View.OnTouchListener() {
 		    @Override
@@ -205,8 +256,8 @@ public class FrontPage extends FragmentActivity {
 		pager2.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-					pager2.getParent().requestDisallowInterceptTouchEvent(true);
-					return false;
+				pager2.getParent().requestDisallowInterceptTouchEvent(true);
+				return false;
 			}
 		});
     }
@@ -264,34 +315,52 @@ public class FrontPage extends FragmentActivity {
 			          myarray_temp[i][9] = c.getString(SUMMARY);
 			        }
 				} catch (JSONException e) {
+					try {
+						list = url_value.getJson().getJSONArray(TAG_WISHLIST);
+					} catch (JSONException e1) {
+						e1.printStackTrace();
+					}
 				    e.printStackTrace();
 				}
 				if(url_value.getThread_value().equals("0")){
+					position_of_viewpager = list.length()-1;
 					ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress);
 					vp.setVisibility(View.GONE);
 					MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
 					my_pager_adapter.setArray(myarray_temp);
-					my_pager_adapter.setCount(list.length()-1);
+					my_pager_adapter.setCount(position_of_viewpager);
 					pager.setAdapter(my_pager_adapter);
 					//myarray = myarray_temp;
 				}else if(url_value.getThread_value().equals("1")){
+					position_of_viewpager1 = list.length()-1;
 					ProgressBar vp1 = (ProgressBar) findViewById(R.id.viewpager_progress1);
 					vp1.setVisibility(View.GONE);
 					MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
 					my_pager_adapter.setArray(myarray_temp);
-					my_pager_adapter.setCount(list.length()-1);
+					my_pager_adapter.setCount(position_of_viewpager1);
 					pager1.setAdapter(my_pager_adapter);
 					//myarray = myarray_temp;
 					//pager1.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 				}else if(url_value.getThread_value().equals("2")){
+					position_of_viewpager2 = list.length()-1;
 					ProgressBar vp2 = (ProgressBar) findViewById(R.id.viewpager_progress2);
 					vp2.setVisibility(View.GONE);
 					MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
 					my_pager_adapter.setArray(myarray_temp);
-					my_pager_adapter.setCount(list.length()-1);
+					my_pager_adapter.setCount(position_of_viewpager2);
 					pager2.setAdapter(my_pager_adapter);
 					//myarray = myarray_temp;
 					//pager2.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+			        SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+					final String login_status = value.getString("LOGIN_STATUS", "");
+					if (login_status.equals("non_user")){
+						Intent mainp = new Intent(getApplicationContext(),MainPage.class);
+						startActivity(mainp);
+					}else if (login_status.equals("exp_user")){
+						Intent exp = new Intent(getApplicationContext(),ExpiredPage.class);
+						startActivity(exp);
+					}
+					shake_ready = true;
 				}else{
 					Toast.makeText(getApplicationContext(), "something went wrong.", Toast.LENGTH_LONG).show();
 				}
@@ -303,7 +372,11 @@ public class FrontPage extends FragmentActivity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			// display view for selected nav drawer item
-			displayView(position);
+  			if (numb != null && numb != ""){
+  				displayView(position);
+  			}else{
+  				displayViewNonUser(position);
+  			}
 		}
   	}
   	private void displayView(int position) {
@@ -316,8 +389,9 @@ public class FrontPage extends FragmentActivity {
 			break;
 		case 1:
 			//fragment = new AndroidTabLayoutFragment();
-			Intent searchlib = new Intent(getApplicationContext(), AndroidTabLayoutActivity.class);
+			Intent searchlib = new Intent(getApplicationContext(), AndroidTabMyListActivity.class);
 	        startActivity(searchlib);
+			
 	        mDrawerLayout.closeDrawer(mDrawerList);
 			break;
 		case 2:
@@ -326,12 +400,6 @@ public class FrontPage extends FragmentActivity {
 	  		startActivity(location);
 	  		mDrawerLayout.closeDrawer(mDrawerList);
 	  		break;
-		/*case 3:
-			//fragment = new RegisterFragment();
-	  		Intent gcm = new Intent(getApplicationContext(),RegisterActivity.class);
-	  		startActivity(gcm);
-	  		mDrawerLayout.closeDrawer(mDrawerList);
-			break;*/
 		case 3:
 			//fragment = new AboutFragment();
 			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
@@ -341,13 +409,14 @@ public class FrontPage extends FragmentActivity {
 		case 4:
 			SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = pref.edit();
-			editor.putString("AUTH_TOKEN", "0");
-		    editor.putString("MEMBERSHIP_NO", "0");
-		    editor.putString("DATE_OF_SIGNUP", "0");
-		    editor.putString("NUMBER", "00000");
+			editor.putString("AUTH_TOKEN", "");
+		    editor.putString("MEMBERSHIP_NO", "");
+		    editor.putString("DATE_OF_SIGNUP", "");
+		    editor.putString("NUMBER", "");
+		    editor.putString(REG_ID, "");
 		    editor.commit();
 		    
-		    Intent logout = new Intent(getApplicationContext(),SignupPage.class);
+		    Intent logout = new Intent(getApplicationContext(),PageZero.class);
 		    startActivity(logout);
 		    mDrawerLayout.closeDrawer(mDrawerList);
 			break;
@@ -373,6 +442,39 @@ public class FrontPage extends FragmentActivity {
 			Log.e("MainActivity", "Error in creating fragment");
 		}*/
 	}
+  	
+  	private void displayViewNonUser(int position) {
+		switch (position) {
+		case 0:
+			mDrawerLayout.closeDrawer(mDrawerList);
+			break;
+		case 1:
+			Intent location = new Intent(getApplicationContext(), MyMap.class);
+			location.putExtra("from", "front_page");
+	  		startActivity(location);
+	  		mDrawerLayout.closeDrawer(mDrawerList);
+	  		break;
+		case 2:
+			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
+			startActivity(help);
+			mDrawerLayout.closeDrawer(mDrawerList);
+			break;
+		case 3:
+			Intent searchlib = new Intent(getApplicationContext(), MainPage.class);
+    		startActivity(searchlib);
+			mDrawerLayout.closeDrawer(mDrawerList);
+			break;
+		case 4:
+			Intent sign_up_call = new Intent(getApplicationContext(), HelpActivity.class);
+    		startActivity(sign_up_call);
+		    mDrawerLayout.closeDrawer(mDrawerList);
+			break;
+
+		default:
+			break;
+		}
+	}
+  	
   	private class MyPagerAdapter extends FragmentPagerAdapter {
   		private int count;
   		private String[][] myarray = new String[50][10];
@@ -410,20 +512,27 @@ public class FrontPage extends FragmentActivity {
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
-
-  @Override
-  public void onResume(){
-    super.onResume();
-    //progress.hide();
-  }
-  @Override
-  public void onBackPressed()
-  {
-    finish();
-  }
-  public void onDestroy(){
+	
+    @Override
+    public void onResume(){
+      super.onResume();
+      mSensorManager.registerListener(mSensorListener,
+        mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+        SensorManager.SENSOR_DELAY_UI);
+    }
+    @Override
+    protected void onPause() {
+      mSensorManager.unregisterListener(mSensorListener);
+      super.onPause();
+    }
+    @Override
+    public void onBackPressed()
+    {
+      finish();
+    }
+    public void onDestroy(){
 	  super.onDestroy();
-	 json_parse.cancel(true);
-  }
+	  json_parse.cancel(true);
+    }
 
 }

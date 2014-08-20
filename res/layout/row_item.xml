@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?> 
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -7,7 +7,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginRight="10dp"
-    android:layout_marginLeft="10dp" 
+    android:layout_marginLeft="10dp"
     android:layout_marginTop="10dp"
     android:padding="5dip"
     android:background="@drawable/edit_border">
@@ -62,7 +62,7 @@
                  android:layout_height="wrap_content"
                  android:text="Times rented : "
                  android:textColor="#dfa569"
-                 android:textSize="12sp" 
+                 android:textSize="12sp"
                  android:textStyle="italic"/>
              <TextView
                  android:id="@+id/times_rented"
@@ -87,7 +87,7 @@
                  android:layout_height="wrap_content"
                  android:text="Reading time : "
                  android:textColor="#dfa569"
-                 android:textSize="12sp" 
+                 android:textSize="12sp"
                  android:textStyle="italic"/>
              <TextView
                  android:id="@+id/avg_reading"
@@ -111,7 +111,7 @@
         android:textSize="12sp"
         android:textStyle="italic"
         android:textColor="#F54747"
-        android:text="pick on processs..."
+        android:text="pickup on process..."
         android:layout_toRightOf="@+id/image"
         android:layout_below="@id/author"
         android:layout_marginLeft="20dp"
@@ -121,7 +121,7 @@
         android:id="@+id/image_url"
         android:layout_width="0dip"
         android:layout_height="0dip" />
-	<TextView 
+	<TextView
 	    android:id="@+id/summary"
 	    android:layout_width="0dip"
 	    android:layout_height="0dip"/>
@@ -153,6 +153,17 @@
         android:layout_alignRight="@+id/image"
         android:layout_centerVertical="true"
         android:layout_marginRight="40dp" />
-   
+
+    <!-- <ImageView
+        android:id="@+id/drop_down"
+        android:layout_width="6dip"
+        android:layout_height="25dip"
+        android:layout_alignBottom="@+id/image"
+        android:layout_alignRight="@+id/title"
+        android:layout_marginBottom="5dip"
+        android:layout_marginRight="5dip"
+        android:background="@drawable/dropdown_icon2"
+        android:contentDescription="@string/hello" /> -->
+
 </RelativeLayout>
 </LinearLayout>

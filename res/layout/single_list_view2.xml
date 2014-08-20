@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:background="#eee"
     android:orientation="vertical">
-<ScrollView  
+<ScrollView
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 <RelativeLayout
@@ -81,7 +81,7 @@
                       android:layout_height="wrap_content"
                       android:text="Times rented : "
                       android:textColor="#a444"
-                      android:textSize="14sp" 
+                      android:textSize="14sp"
                       android:textStyle="italic"/>
                   <TextView
                       android:id="@+id/times_rented"
@@ -106,7 +106,7 @@
                       android:layout_height="wrap_content"
                       android:text="Reading time : "
                       android:textColor="#a444"
-                      android:textSize="14sp" 
+                      android:textSize="14sp"
                       android:textStyle="italic"/>
                   <TextView
                       android:id="@+id/avg_reading"
@@ -116,6 +116,7 @@
                       android:textColor="#dfa569"
                       android:textSize="15sp"/>
                   <TextView
+                      android:id="@+id/days_plain_text"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text=" days"
@@ -129,12 +130,12 @@
                      android:layout_height="wrap_content"
                      android:text="ACTIONS"
                      android:textColor="#dfa569"
-                     android:textSize="12sp" 
+                     android:textSize="12sp"
                      android:textStyle="bold"/>
                 <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:background="#dfa569"/> 
+            android:background="#dfa569"/>
     </LinearLayout>
 <!-- ######################################################################################## -->
    <RelativeLayout
@@ -153,7 +154,7 @@
 		          android:layout_margin="10dp"
 		          android:baselineAligned="false"
 		          android:orientation="horizontal" >
-		  
+
 		          <LinearLayout
 		              android:id="@+id/button_rental"
 		              android:layout_width="0dp"
@@ -163,14 +164,14 @@
 		              android:clickable="true"
 		              android:gravity="center"
 		              android:orientation="vertical" >
-		  
+
 		              <ImageView
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
 		                  android:background="@drawable/ic_action_import_export"
 		                  android:contentDescription="@string/hello" />
-		  
+
 		              <TextView
 		                  android:layout_width="wrap_content"
 		                  android:layout_height="wrap_content"
@@ -179,7 +180,7 @@
 		                  android:textSize="10sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
-		  
+
 		          <LinearLayout
 		              android:id="@+id/remove"
 		              android:layout_width="0dp"
@@ -189,14 +190,14 @@
 		              android:clickable="true"
 		              android:gravity="center"
 		              android:orientation="vertical" >
-		  
+
 		              <ImageView
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
 		                  android:background="@drawable/ic_action_remove"
 		                  android:contentDescription="@string/hello" />
-		  
+
 		              <TextView
 		                  android:layout_width="wrap_content"
 		                  android:layout_height="wrap_content"
@@ -205,7 +206,7 @@
 		                  android:textSize="10sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
-		  
+
 		          <LinearLayout
 		              android:id="@+id/add_to_list"
 		              android:layout_width="0dp"
@@ -215,14 +216,14 @@
 		              android:clickable="true"
 		              android:gravity="center"
 		              android:orientation="vertical" >
-		  
+
 		              <ImageView
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
 		                  android:background="@drawable/ic_action_new_attachment"
 		                  android:contentDescription="@string/hello" />
-		  
+
 		              <TextView
 		                  android:layout_width="wrap_content"
 		                  android:layout_height="wrap_content"
@@ -231,7 +232,7 @@
 		                  android:textSize="10sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
-		  
+
 		          <LinearLayout
 		              android:id="@+id/pick_up"
 		              android:visibility="gone"
@@ -242,14 +243,14 @@
 		              android:clickable="true"
 		              android:gravity="center"
 		              android:orientation="vertical" >
-		  
+
 		              <ImageView
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
 		                  android:background="@drawable/pick_up"
 		                  android:contentDescription="@string/hello" />
-		  
+
 		              <TextView
 		                  android:layout_width="wrap_content"
 		                  android:layout_height="wrap_content"
@@ -267,14 +268,14 @@
 		              android:clickable="true"
 		              android:gravity="center"
 		              android:orientation="vertical" >
-		  
+
 		              <ImageView
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
 		                  android:background="@drawable/ic_action_share"
 		                  android:contentDescription="@string/hello" />
-		  
+
 		              <TextView
 		                  android:layout_width="wrap_content"
 		                  android:layout_height="wrap_content"
@@ -292,7 +293,7 @@
 		          android:layout_margin="10dp"
 		          android:baselineAligned="false"
 		          android:orientation="horizontal" >
-		  
+
 		          <LinearLayout
 		              android:id="@+id/sign_in"
 		              android:layout_width="0dp"
@@ -302,14 +303,14 @@
 		              android:clickable="true"
 		              android:gravity="center"
 		              android:orientation="vertical" >
-		  
+
 		              <ImageView
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
 		                  android:background="@drawable/sign_in_1"
 		                  android:contentDescription="@string/hello" />
-		  
+
 		              <TextView
 		                  android:layout_width="wrap_content"
 		                  android:layout_height="wrap_content"
@@ -318,7 +319,7 @@
 		                  android:textSize="10sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
-		  
+
 		          <LinearLayout
 		              android:id="@+id/sign_up"
 		              android:layout_width="0dp"
@@ -328,14 +329,14 @@
 		              android:clickable="true"
 		              android:gravity="center"
 		              android:orientation="vertical" >
-		  
+
 		              <ImageView
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
 		                  android:background="@drawable/sign_up"
 		                  android:contentDescription="@string/hello" />
-		  
+
 		              <TextView
 		                  android:layout_width="wrap_content"
 		                  android:layout_height="wrap_content"
@@ -359,12 +360,12 @@
 		        android:textSize="14sp"
 		        android:textStyle="italic"
 		        android:textColor="#F54747"
-		        android:text="pick on processs..."
+		        android:text="text"
 		        android:layout_marginBottom="5dip"/>
 		  </RelativeLayout>
 	  </RelativeLayout>
 <!-- ######################################################################################## -->
-  
+
     <LinearLayout
         android:id="@+id/DetailLayout"
         android:layout_width="fill_parent"
@@ -382,12 +383,12 @@
       <View
           android:layout_width="fill_parent"
           android:layout_height="1dp"
-          android:background="#dfa569" 
+          android:background="#dfa569"
           android:textStyle="bold"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" 
+            android:orientation="horizontal"
           	android:layout_marginTop="10dp"
             android:paddingLeft="5dp" >
 
@@ -410,7 +411,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" 
+            android:orientation="horizontal"
             android:paddingLeft="5dp" >
 
             <TextView
@@ -470,7 +471,7 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:background="#dfa569" 
+            android:background="#dfa569"
             android:textStyle="bold"/>
         <TextView
           android:id="@+id/summary"

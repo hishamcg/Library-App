@@ -104,42 +104,7 @@ public class SingleMenuItemActivity  extends Activity {
 	      return super.onOptionsItemSelected(item);
 	      }
     }
-	/*@Override
-	  public boolean onOptionsItemSelected(MenuItem item) {
-		progress = new ProgressDialog(this);
-		progress.setMessage("Loading");
-        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setIndeterminate(true);
-        progress.show();
-		int itemId = item.getItemId();
-		if (itemId == R.id.action_back) {
-			// Single menu item is selected do something
-          // Ex: launching new activity/screen or show alert message
-          finish();
-			return true;
-		} else if (itemId == R.id.action_search) {
-			Intent searchlib = new Intent(getApplicationContext(), SearchPage.class);
-  		startActivity(searchlib);
-			return true;
-		} else if (itemId == R.id.action_storage) {
-			Intent searchlib = new Intent(getApplicationContext(), AndroidTabLayoutActivity.class);
-  		startActivity(searchlib);
-			return true;
-		} else if (itemId == R.id.action_place) {
-			Intent searchlib = new Intent(getApplicationContext(), MyMap.class);
-  		startActivity(searchlib);
-			return true;
-		} else if (itemId == R.id.action_help) {
-			Intent about = new Intent(getApplicationContext(), HelpActivity.class);
-  		startActivity(about);
-			return true;
-		} else if (itemId == android.R.id.home){
-			finish();
-			return true;
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
-	  }*/
+	
 	@SuppressLint("NewApi")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,13 +137,13 @@ public class SingleMenuItemActivity  extends Activity {
         }
 
         String message = in.getStringExtra("message");
-        String check_log = in.getStringExtra("check");
         final String title_id = in.getStringExtra(TAG_ID);
 
         SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		final String auth_token = value.getString("AUTH_TOKEN","");
 		final String memb = value.getString("MEMBERSHIP_NO","");
 		final String numb = value.getString("NUMBER","");
+		final String login_status = value.getString("LOGIN_STATUS","");
 
         // Displaying all values on the screen
         TextView lblAuthor = (TextView) findViewById(R.id.author_label);
@@ -189,16 +154,18 @@ public class SingleMenuItemActivity  extends Activity {
         TextView lblTimesRented = (TextView) findViewById(R.id.times_rented);
         TextView lblAvgReading = (TextView) findViewById(R.id.avg_reading);
         TextView lblSummary = (TextView) findViewById(R.id.summary);
+        TextView lblpickup_order = (TextView) findViewById(R.id.pickup_order);
         ImageView lblimage = (ImageView) findViewById(R.id.image_label);
         final LinearLayout rental_btn = (LinearLayout) findViewById(R.id.button_rental);
         final LinearLayout remove = (LinearLayout) findViewById(R.id.remove);
         final LinearLayout add_to_list = (LinearLayout) findViewById(R.id.add_to_list);
         final LinearLayout pick_up = (LinearLayout) findViewById(R.id.pick_up);
-        final RelativeLayout lblpickup_order = (RelativeLayout) findViewById(R.id.relativeLayout_pickup);
+        final RelativeLayout pickup_layout = (RelativeLayout) findViewById(R.id.relativeLayout_pickup);
         final RelativeLayout action_view = (RelativeLayout) findViewById(R.id.relativeLayout_inside);
         final LinearLayout share = (LinearLayout) findViewById(R.id.share);
         if (pickup_order != null && pickup_order != "null"){
-        	lblpickup_order.setVisibility(View.VISIBLE);
+        	lblpickup_order.setText("pickup in process...");
+        	pickup_layout.setVisibility(View.VISIBLE);
         	action_view.setVisibility(View.GONE);
         }
 
@@ -207,7 +174,7 @@ public class SingleMenuItemActivity  extends Activity {
         final LinearLayout linearLayout2 = (LinearLayout) findViewById(R.id.linearLayout2);
         final LinearLayout linearLayout3 = (LinearLayout) findViewById(R.id.linearLayout3);
         System.out.println("thi value = "+message);
-        if (check_log.equals("logged_in")){
+        if (login_status.equals("user") || login_status.equals("exp_user")){
         	linearLayout3.setVisibility(View.GONE);
         	if (message.equals("create")){
         		remove.setVisibility(View.GONE);
@@ -218,8 +185,11 @@ public class SingleMenuItemActivity  extends Activity {
         		remove.setVisibility(View.GONE);
         		add_to_list.setVisibility(View.GONE);
         		rental_btn.setVisibility(View.GONE);
-        	}
-	        else{
+        	}else if (message.equals("delivery")){
+        		lblpickup_order.setText("rental order in process...");
+            	pickup_layout.setVisibility(View.VISIBLE);
+            	action_view.setVisibility(View.GONE);
+        	}else{
 	        	add_to_list.setVisibility(View.GONE);
 	        }
         }else{
@@ -232,9 +202,12 @@ public class SingleMenuItemActivity  extends Activity {
         lblTitle.setText(title);
         lblimage.setImageBitmap(getBitmapFromURL(image_url));
         lblTimesRented.setText(times_rented);
-        lblAvgReading.setText(avg_reading);
         lblSummary.setText(summary);
-
+        lblAvgReading.setText(avg_reading);
+        if (avg_reading.equals("NA")){
+        	TextView lbldays_plain_text = (TextView) findViewById(R.id.days_plain_text);
+        	lbldays_plain_text.setVisibility(View.GONE);
+        }
 
         rental_btn.setOnClickListener(new Button.OnClickListener() {
         	@SuppressWarnings("deprecation")
@@ -299,7 +272,7 @@ public class SingleMenuItemActivity  extends Activity {
     	            }
     	        });
     	        // Set the Icon for the Dialog
-    	        alert.setIcon(R.drawable.book);
+    	        alert.setIcon(R.drawable.gcm_icon);
     	        alert.show();
 
 
@@ -367,7 +340,7 @@ public class SingleMenuItemActivity  extends Activity {
     	            }
     	        });
     	        // Set the Icon for the Dialog
-    	        alert.setIcon(R.drawable.book);
+    	        alert.setIcon(R.drawable.gcm_icon);
     	        alert.show();
 
         	}
@@ -433,7 +406,7 @@ public class SingleMenuItemActivity  extends Activity {
     	            }
     	        });
     	        // Set the Icon for the Dialog
-    	        alert.setIcon(R.drawable.book);
+    	        alert.setIcon(R.drawable.gcm_icon);
     	        alert.show();
 
         	}
@@ -499,7 +472,7 @@ public class SingleMenuItemActivity  extends Activity {
     	            }
     	        });
     	        // Set the Icon for the Dialog
-    	        alert.setIcon(R.drawable.book);
+    	        alert.setIcon(R.drawable.gcm_icon);
     	        alert.show();
         	}
         });

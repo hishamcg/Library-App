@@ -49,6 +49,7 @@ public class MyMap extends ListActivity {
 	  private TypedArray navMenuIcons;
 	  private ArrayList<NavDrawerItem> navDrawerItems;
 	  private NavDrawerListAdapter adapter;
+	  String numb;
     // Google Map
     //ListView listView ;
 	private JSONParse json_parse = new JSONParse();
@@ -58,33 +59,36 @@ public class MyMap extends ListActivity {
     JSONArray list = null;
     double latitude=0;
     double longitude=0;
-    
+
     @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-    	if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-	    int itemId = item.getItemId();
-//	    if (itemId == android.R.id.home){
-//			finish();
-//			return true;
-//		}else {
-//	      return super.onOptionsItemSelected(item);
-//	    }
-	    return super.onOptionsItemSelected(item);
-	}
+      public boolean onOptionsItemSelected(MenuItem item) {
+  	    if (mDrawerToggle.onOptionsItemSelected(item)) {
+  			return true;
+  		}
+  	    return super.onOptionsItemSelected(item);
+      }
+    
     @SuppressLint("NewApi")
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-       // setContentView(R.layout.fragment_pages);
+        setContentView(R.layout.fragment_pages);
+        SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		numb = value.getString("NUMBER","");
       //---------------------for the drawer		
   		mTitle = mDrawerTitle = getTitle();
-  		// load slide menu items
-  		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-  		// nav drawer icons from resources
-  		navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+  		if (numb != null && numb != ""){
+			// load slide menu items
+			navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+			// nav drawer icons from resources
+			navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+		}else{
+			// load slide menu items
+			navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items_non_user);
+			// nav drawer icons from resources
+			navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons_non_user);
+		}
   		
   		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
   		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -259,7 +263,11 @@ public class MyMap extends ListActivity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			// display view for selected nav drawer item
-			displayView(position);
+  			if (numb != null && numb != ""){
+  				displayView(position);
+  			}else{
+  				displayViewNonUser(position);
+  			}
 		}
   	}
   	private void displayView(int position) {
@@ -303,7 +311,7 @@ public class MyMap extends ListActivity {
 		    editor.putString("NUMBER", "00000");
 		    editor.commit();
 		    
-		    Intent logout = new Intent(getApplicationContext(),SignupPage.class);
+		    Intent logout = new Intent(getApplicationContext(),PageZero.class);
 		    startActivity(logout);
 		    mDrawerLayout.closeDrawer(mDrawerList);
 			break;
@@ -311,23 +319,38 @@ public class MyMap extends ListActivity {
 		default:
 			break;
 		}
-//-----------------------
-// used to display fragment
-//-----------------------
-		/*if (fragment != null) {
-			android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction()
-					.replace(R.id.frame_container, fragment).commit();
-
-			// update selected item and title, then close the drawer
-			mDrawerList.setItemChecked(position, true);
-			mDrawerList.setSelection(position);
-			setTitle(navMenuTitles[position]);
+	}
+  	private void displayViewNonUser(int position) {
+		switch (position) {
+		case 0:
+			Intent intent = new Intent(getApplicationContext(), FrontPage.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(intent);
+			finish();
 			mDrawerLayout.closeDrawer(mDrawerList);
-		} else {
-			// error in creating fragment
-			Log.e("MainActivity", "Error in creating fragment");
-		}*/
+			break;
+		case 1:
+	  		mDrawerLayout.closeDrawer(mDrawerList);
+	  		break;
+		case 2:
+			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
+			startActivity(help);
+			mDrawerLayout.closeDrawer(mDrawerList);
+			break;
+		case 3:
+			Intent searchlib = new Intent(getApplicationContext(), MainPage.class);
+    		startActivity(searchlib);
+			mDrawerLayout.closeDrawer(mDrawerList);
+			break;
+		case 4:
+			Intent sign_up_call = new Intent(getApplicationContext(), HelpActivity.class);
+    		startActivity(sign_up_call);
+		    mDrawerLayout.closeDrawer(mDrawerList);
+			break;
+
+		default:
+			break;
+		}
 	}
 }
 class ArrayComparator implements Comparator<String[]> {
