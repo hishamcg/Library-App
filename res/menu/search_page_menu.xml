@@ -6,10 +6,4 @@
           android:icon="@drawable/ic_action_search_m"
           android:showAsAction="collapseActionView|ifRoom"
           android:actionViewClass="android.widget.SearchView" />
-     
-    <!-- Help -->
-    <item android:id="@+id/action_help"
-          android:icon="@drawable/ic_action_help"
-          android:title="help"
-          android:showAsAction="ifRoom"/>
 </menu>

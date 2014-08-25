@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myfirstapp"
+    package="com.strata.justbooksclc"
     
     android:versionCode="1"
     android:versionName="1.0" >
@@ -8,11 +8,11 @@
     <uses-sdk android:minSdkVersion="11" 
               android:targetSdkVersion="19"/>
     
-    <uses-permission android:name="com.example.myfirstapp.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.strata.justbooksclc.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.SHAKE" />
-    <uses-permission android:name="com.example.myfirstapp.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.strata.justbooksclc.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -35,10 +35,10 @@
     </uses-feature>
 
     <permission
-        android:name="com.example.myfirstapp.permission.C2D_MESSAGE"
+        android:name="com.strata.justbooksclc.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <permission
-        android:name="com.example.myfirstapp.permission.MAPS_RECEIVE"
+        android:name="com.strata.justbooksclc.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
  
     <!-- Required OpenGL ES 2.0. for Maps V2 -->
@@ -50,7 +50,8 @@
         android:allowBackup="true"
         android:icon="@drawable/gcm_icon"
         android:label="@string/app_name"
-        android:theme="@style/MyTheme" >
+        android:theme="@style/MyTheme" 
+        android:name="com.strata.justbooksclc.MyApplication">
         <!-- 
         @style/AppTheme
         android:label="@string/app_name"
@@ -61,7 +62,7 @@
 		
 		
         <activity
-            android:name="com.example.myfirstapp.PageZero"
+            android:name="com.strata.justbooksclc.PageZero"
             android:label="@string/app_name" 
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
@@ -74,24 +75,16 @@
             
         </activity>
         <activity
-            android:name="com.example.myfirstapp.FrontPage"
+            android:name="com.strata.justbooksclc.FrontPage"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             
             <meta-data android:name="android.app.default_searchable"
-                android:value="com.example.myfirstapp.MainActivity" />
-        </activity>
-        <activity
-            android:name="com.example.myfirstapp.SignupPage"
-            android:label="sign in"
-            android:screenOrientation="portrait"
-            android:uiOptions="splitActionBarWhenNarrow"> 
-            <meta-data android:name="android.support.UI_OPTIONS"
-           		android:value="splitActionBarWhenNarrow" />
+                android:value="com.strata.justbooksclc.MainActivity" />
         </activity>
         
         <activity
-            android:name="com.example.myfirstapp.MainPage"
+            android:name="com.strata.justbooksclc.MainPage"
             android:windowSoftInputMode="stateAlwaysVisible"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"
@@ -101,41 +94,27 @@
            		android:value="splitActionBarWhenNarrow" />
         </activity>
         <activity
-            android:name="com.example.myfirstapp.ExpiredPage"
+            android:name="com.strata.justbooksclc.ExpiredPage"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"
-            android:label="account expired"
+            android:label="Account Expired"
             android:uiOptions="splitActionBarWhenNarrow"> 
             <meta-data android:name="android.support.UI_OPTIONS"
            		android:value="splitActionBarWhenNarrow" />
         </activity>
         
         <activity
-            android:name="com.example.myfirstapp.MapListView"
-            android:label="Store location"
+            android:name="com.strata.justbooksclc.MapListView"
+            android:label="Store Location"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.example.myfirstapp.SearchPage"
-            android:label="Search Title/Author/ISBN"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysVisible"
-            android:uiOptions="splitActionBarWhenNarrow"> 
-            <meta-data android:name="android.support.UI_OPTIONS"
-           		android:value="splitActionBarWhenNarrow" />
-        </activity>
-        <activity
-            android:name="com.example.myfirstapp.HelpActivity"
-            android:label="About Justbooksclc" 
+            android:name="com.strata.justbooksclc.HelpActivity"
+            android:label="About JustBooks" 
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.example.myfirstapp.DrawerActivity"
-            android:label="Justbooksclc" 
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="com.example.myfirstapp.MainActivity"
+            android:name="com.strata.justbooksclc.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"> 
             <meta-data android:name="android.app.searchable"
@@ -144,100 +123,90 @@
 		        <action android:name="android.intent.action.SEARCH" />
 		    </intent-filter>
         </activity>
-       	<!-- android:parentActivityName="com.example.myfirstapp.FrontPage" -->
-        <!-- <activity
-            android:name="com.example.myfirstapp.MainActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:label="Search Title/Author/ISBN"> 
-            <meta-data android:name="android.app.searchable"
-            	android:resource="@drawable/searchable" />
-            <intent-filter>
-		        <action android:name="android.intent.action.SEARCH" />
-		    </intent-filter>
-        </activity> -->
         <activity
-            android:name="com.example.myfirstapp.AndroidTabLayoutActivity"
-            android:label="My book list"
+            android:name="com.strata.justbooksclc.AndroidTabLayoutActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"> 
             <meta-data android:name="android.app.default_searchable"
-                android:value="com.example.myfirstapp.MainActivity" />
+                android:value="com.strata.justbooksclc.MainActivity" />
         </activity>
         <activity
-            android:name="com.example.myfirstapp.AndroidTabMyListActivity"
-            android:label="My book list"
+            android:name="com.strata.justbooksclc.AndroidTabMyListActivity"
+            android:label="My List"
             android:screenOrientation="portrait"> 
             <meta-data android:name="android.app.default_searchable"
-                android:value="com.example.myfirstapp.MainActivity" />
+                android:value="com.strata.justbooksclc.MainActivity" />
         </activity>
         <!-- <activity
-            android:name="com.example.myfirstapp.JSONParser"
+            android:name="com.strata.justbooksclc.JSONParser"
             android:label="@string/title_json_parser">
         </activity> -->
-        <activity android:name=".BestsellerList" />
-        <activity android:name=".LatestList" />
+        <activity android:name="com.strata.justbooksclc.BestsellerList" />
+        <activity android:name="com.strata.justbooksclc.LatestList" />
         <activity
-            android:name="com.example.myfirstapp.SingleMenuItemActivity"
+            android:name="com.strata.justbooksclc.SingleMenuItemActivity"
             android:label="Book"
             android:screenOrientation="portrait"> 
             <meta-data android:name="android.app.default_searchable"
-                android:value="com.example.myfirstapp.MainActivity" />
+                android:value="com.strata.justbooksclc.MainActivity" />
         </activity>
         <activity
-            android:name="com.example.myfirstapp.MyMap"
+            android:name="com.strata.justbooksclc.MyMap"
             android:label="Stores" 
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.example.myfirstapp.SignInWaitingActivity"
-            android:label="waiting for authentication" 
+            android:name="com.strata.justbooksclc.SignInWaitingActivity"
+            android:label="Authentication" 
             android:screenOrientation="portrait"
             android:noHistory="true">
         </activity>
 
 		<activity
-            android:name="com.example.myfirstapp.RegisterActivity"
+            android:name="com.strata.justbooksclc.RegisterActivity"
             android:label="@string/app_name" 
             android:screenOrientation="portrait">
 		</activity>
 		
 		CallCustomerCare
 		<activity
-	        android:name="com.example.myfirstapp.CallCustomerCare"
+	        android:name="com.strata.justbooksclc.CallCustomerCare"
 	        android:label="@string/app_name" 
             android:screenOrientation="portrait">
 		</activity>
 		<activity
-	        android:name="com.example.myfirstapp.GCMMainActivity"
+	        android:name="com.strata.justbooksclc.GCMMainActivity"
 	        android:configChanges="orientation|keyboardHidden"
 	        android:label="@string/app_name" 
             android:screenOrientation="portrait">
 	    </activity>
 	
 	    <receiver
-	        android:name=".GcmBroadcastReceiver"
+	        android:name="com.strata.justbooksclc.GcmBroadcastReceiver"
 	        android:permission="com.google.android.c2dm.permission.SEND" >
 	        <intent-filter>
 	            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-	            <action android:name="com.example.myfirstapp.c2dm.intent.REGISTRATION" />
+	            <action android:name="com.strata.justbooksclc.c2dm.intent.REGISTRATION" />
 	
-	            <category android:name="com.example.myfirstapp" />
+	            <category android:name="com.strata.justbooksclc" />
 	        </intent-filter>
 	    </receiver>
-        <receiver android:name="com.example.myfirstapp.SmsReceiver" >
+        <receiver android:name="com.strata.justbooksclc.SmsReceiver" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-	    <service android:name=".GCMNotificationIntentService" />
+	    <service android:name="com.strata.justbooksclc.GCMNotificationIntentService" />
 	    
 		<uses-library android:name="com.google.android.maps"/>
 		
 	    <meta-data android:name="com.google.android.gms.version"
            		   android:value="@integer/google_play_services_version" />
 	    <meta-data android:name="com.google.android.maps.v2.API_KEY"
-	   			   android:value="AIzaSyAv46DeUEmgEflCebkck8pIPnsTYgbJccI" />  
+	   			   android:value="AIzaSyAv46DeUEmgEflCebkck8pIPnsTYgbJccI" /> 
+	    <!-- Google Analytics Version v4 needs this value for easy tracking -->
+		<meta-data android:name="com.google.android.gms.analytics.globalConfigResource"
+				   android:resource="@xml/global_tracker" /> 
 	   		  
     </application>
 

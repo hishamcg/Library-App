@@ -11,7 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/hello"
-        android:src="@drawable/jb_logo" />
+        android:src="@drawable/jb_logo_front" />
 
     <TextView
         android:id="@+id/no_connection"
