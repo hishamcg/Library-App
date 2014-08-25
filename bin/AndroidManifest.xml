@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.strata.justbooksclc"
     
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="2"
+    android:versionName="1.1" >
     
     <uses-sdk android:minSdkVersion="11" 
               android:targetSdkVersion="19"/>
@@ -203,7 +203,7 @@
 	    <meta-data android:name="com.google.android.gms.version"
            		   android:value="@integer/google_play_services_version" />
 	    <meta-data android:name="com.google.android.maps.v2.API_KEY"
-	   			   android:value="AIzaSyAv46DeUEmgEflCebkck8pIPnsTYgbJccI" /> 
+	   			   android:value="AIzaSyAfr3GxUazbZb-xcC71VUCvQMOvkAunfUI" /> 
 	    <!-- Google Analytics Version v4 needs this value for easy tracking -->
 		<meta-data android:name="com.google.android.gms.analytics.globalConfigResource"
 				   android:resource="@xml/global_tracker" /> 

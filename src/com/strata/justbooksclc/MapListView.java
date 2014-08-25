@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -41,6 +42,11 @@ public class MapListView extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_layout);
+        
+		//Get a Tracker (should auto-report)
+		//GoogleAnalytics.getInstance(this).getLogger().setLogLevel(LogLevel.VERBOSE);
+		((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.GLOBAL_TRACKER);
+        
         double latitude=0;
         double longitude=0;
         
@@ -62,7 +68,7 @@ public class MapListView extends FragmentActivity {
             latitude = gps.getLatitude();
             longitude = gps.getLongitude(); 
             // \n is for new line
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();    
+            //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();    
         }else{
             // can't get location
             // GPS or Network is not enabled
@@ -320,6 +326,16 @@ public class MapListView extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         initilizeMap();
+    }
+    public void onStart(){
+    	super.onStart();
+    	//Get an Analytics tracker to report app starts &amp; uncaught exceptions etc.
+    	GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+    public void onStop(){
+    	super.onStop();
+    	//Stop the analytics tracking
+    	GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
  
 }

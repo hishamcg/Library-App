@@ -46,14 +46,19 @@ public class SignInWaitingActivity extends Activity {
 				timerTv.setText("Seconds Remaining : " + millisUntilFinished
 						/ 1000);
 			}
+
+			@Override
 			public void onFinish() {
+				if (timeOut){
 				Toast.makeText(getApplicationContext(),
 						"Authentication Failed. Please make sure that you have DND de-activated and try again.", Toast.LENGTH_LONG).show();
-				timerTv.setText("Time Over");
+				timerTv.setText("Time Over");}
+				// TODO Auto-generated method stub
 				SignInWaitingActivity.this.finish();
 			}
+			
 		}.start();
-
+		
 	}
 
 	@Override
@@ -77,7 +82,7 @@ public class SignInWaitingActivity extends Activity {
 				// checking body content for verification code 
 
 				if (body.equalsIgnoreCase("Dear Member, your access token to Justbooksclc app is: "+pas_auth)) {
-
+					timeOut = false;
 					Toast.makeText(getApplicationContext(),
 							"Authentication Success.", Toast.LENGTH_SHORT).show();
 					mobNoVeryfyTv.setText("Authentication Success.");

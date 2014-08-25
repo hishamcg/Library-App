@@ -32,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.strata.justbooksclc.R;
 import com.strata.justbooksclc.adapter.NavDrawerListAdapter;
 import com.strata.justbooksclc.model.NavDrawerItem;
@@ -73,8 +74,12 @@ public class MyMap extends ListActivity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         setContentView(R.layout.fragment_pages);
+        
+		//Get a Tracker (should auto-report)
+		//GoogleAnalytics.getInstance(this).getLogger().setLogLevel(LogLevel.VERBOSE);
+		((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.GLOBAL_TRACKER);
+        
         SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		numb = value.getString("NUMBER","");
       //---------------------for the drawer		
@@ -140,7 +145,7 @@ public class MyMap extends ListActivity {
         if(gps.canGetLocation()){
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
         }else{
             // can't get location
             // GPS or Network is not enabled
@@ -246,9 +251,7 @@ public class MyMap extends ListActivity {
         //String  itemValue    = (String) listView.getItemAtPosition(position);
 
          // Show Alert
-         Toast.makeText(getApplicationContext(),
-           "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
-           .show();
+//         Toast.makeText(getApplicationContext(),"Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG).show();
         Intent signup = new Intent(getApplicationContext(), MapListView.class);
  		 signup.putExtra("click_val", itemValue);
  		 startActivity(signup);
@@ -353,6 +356,20 @@ public class MyMap extends ListActivity {
 			break;
 		}
 	}
+  	public void onDestroy(){
+  	  super.onDestroy();
+  	  json_parse.cancel(true);
+    }
+  	public void onStart(){
+    	super.onStart();
+    	//Get an Analytics tracker to report app starts &amp; uncaught exceptions etc.
+    	GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+    public void onStop(){
+    	super.onStop();
+    	//Stop the analytics tracking
+    	GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
 }
 class ArrayComparator implements Comparator<String[]> {
     private final int columnToSort;

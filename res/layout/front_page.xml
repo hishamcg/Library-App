@@ -8,8 +8,7 @@
 	<ScrollView
 	    android:id="@+id/scrollview"
 	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:fillViewport="true">
+	    android:layout_height="fill_parent">
 		<LinearLayout 
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
@@ -90,7 +89,7 @@
 				    android:layout_alignParentRight="true"
 				    android:layout_centerVertical="true"
 				    android:paddingRight="16dp"
-				    android:src="@drawable/swipe_left3" />
+				    android:src="@drawable/swipe_left3" /> 
 			</RelativeLayout>
 			<RelativeLayout 
 			    android:layout_width="fill_parent"

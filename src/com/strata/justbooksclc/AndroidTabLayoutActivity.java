@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.strata.justbooksclc.R;
 import com.strata.justbooksclc.adapter.NavDrawerListAdapter;
 import com.strata.justbooksclc.model.NavDrawerItem;
@@ -98,6 +99,11 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		progress = new ProgressDialog(this);
+		
+		//Get a Tracker (should auto-report)
+		//GoogleAnalytics.getInstance(this).getLogger().setLogLevel(LogLevel.VERBOSE);
+		((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.GLOBAL_TRACKER);
+		
 		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		numb = value.getString("NUMBER","");
 		//drawer
@@ -313,5 +319,15 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		super.onResume();
 	    progress.hide();
 	}
+	public void onStart(){
+    	super.onStart();
+    	//Get an Analytics tracker to report app starts &amp; uncaught exceptions etc.
+    	GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+    public void onStop(){
+    	super.onStop();
+    	//Stop the analytics tracking
+    	GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
 
 }

@@ -40,7 +40,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Logger.LogLevel;
 import com.strata.justbooksclc.adapter.NavDrawerListAdapter;
 import com.strata.justbooksclc.model.NavDrawerItem;
 
@@ -514,6 +513,8 @@ public class FrontPage extends FragmentActivity{
     public void onDestroy(){
 	  super.onDestroy();
 	  json_parse.cancel(true);
+	  json_parse1.cancel(true);
+	  json_parse2.cancel(true);
     }
     public void onStart(){
     	super.onStart();
