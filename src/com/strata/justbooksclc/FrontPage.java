@@ -94,6 +94,8 @@ public class FrontPage extends FragmentActivity{
   int position_of_viewpager2=0;
   boolean shake_ready = false;
   
+  DBHelper mydb;
+  
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
 	  MenuInflater menuInflater = getMenuInflater();
@@ -137,7 +139,7 @@ public class FrontPage extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.front_page);
-		
+		mydb = new DBHelper(this);
 		//Get a Tracker (should auto-report)
 		//GoogleAnalytics.getInstance(this).getLogger().setLogLevel(LogLevel.VERBOSE);
 		((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.GLOBAL_TRACKER);
@@ -224,12 +226,59 @@ public class FrontPage extends FragmentActivity{
 //-----------------------------end----------------------------------------------------------
 		if (numb != null && numb != ""){
 			pager = (ViewPager) findViewById(R.id.viewpager);
+			String[] list = mydb.getAllContacts(0);
+			if (list!=null && list.length!=0){
+				//String[] ma_array = list.toArray(new String[list.size()]);
+				position_of_viewpager = list.length-1;
+				ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress);
+				vp.setVisibility(View.GONE);
+				MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
+				String[][] mera_array = new String[50][10] ;
+				for (int i = 0; i < list.length; i++) {
+			          mera_array[i] = convertStringToArray(list[i]);
+			        }
+				my_pager_adapter.setArray(mera_array);
+				my_pager_adapter.setCount(position_of_viewpager);
+				pager.setAdapter(my_pager_adapter);
+			}
 			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/your_next_read.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 			json_parse.execute(url,"0");
+			
 			pager1 = (ViewPager) findViewById(R.id.viewpager1);
+			list = mydb.getAllContacts(1);
+			if (list!=null && list.length!=0){
+				//String[] ma_array = list.toArray(new String[list.size()]);
+				position_of_viewpager1 = list.length-1;
+				ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress1);
+				vp.setVisibility(View.GONE);
+				MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
+				String[][] mera_array1 = new String[50][10] ;
+				for (int i = 0; i < list.length; i++) {
+			          mera_array1[i] = convertStringToArray(list[i]);
+			        }
+				my_pager_adapter.setArray(mera_array1);
+				my_pager_adapter.setCount(position_of_viewpager1);
+				pager1.setAdapter(my_pager_adapter);
+			}
 			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;		
 			json_parse1.execute(url,"1");
+			
 			pager2 = (ViewPager) findViewById(R.id.viewpager2);
+			list = mydb.getAllContacts(2);
+			if (list!=null && list.length!=0){
+				//String[] ma_array = list.toArray(new String[list.size()]);
+				position_of_viewpager2 = list.length-1;
+				ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress2);
+				vp.setVisibility(View.GONE);
+				MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
+				String[][] mera_array2 = new String[50][10] ;
+				for (int i = 0; i < list.length; i++) {
+			          mera_array2[i] = convertStringToArray(list[i]);
+			        }
+				my_pager_adapter.setArray(mera_array2);
+				my_pager_adapter.setCount(position_of_viewpager2);
+				pager2.setAdapter(my_pager_adapter);
+			}
 			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 			json_parse2.execute(url,"2");
 		}else{
@@ -267,14 +316,19 @@ public class FrontPage extends FragmentActivity{
 		});
     }
   	public class UrlValue {
-  		private String thread_value;
+  		private int thread_value;
   		private JSONObject json;
   		
-  		public String getThread_value() {
+  		public int getThread_value() {
 			return thread_value;
 		}
 		public void setThread_value(String thread_value) {
-			this.thread_value = thread_value;
+
+			try {
+				this.thread_value = Integer.parseInt(thread_value.toString());
+			} catch(NumberFormatException nfe) {
+			   System.out.println("Could not parse " + nfe);
+			} 
 		}
 		public JSONObject getJson() {
 			return json;
@@ -300,6 +354,7 @@ public class FrontPage extends FragmentActivity{
 		protected void onPostExecute(UrlValue url_value){
 			String[][] myarray_temp = new String[50][10];
 			JSONArray list = null;
+			mydb.deleteAll(url_value.getThread_value());
 			if (url_value.getJson() != null && !isCancelled()){
 				try {
 			        // Getting Array of Contacts
@@ -318,7 +373,10 @@ public class FrontPage extends FragmentActivity{
 			          myarray_temp[i][7] = c.getString(TAG_PAGE);
 			          myarray_temp[i][8] = c.getString(TAG_LANGUAGE);
 			          myarray_temp[i][9] = c.getString(SUMMARY);
+			          
+			          mydb.insertData(convertArrayToString(myarray_temp[i]),url_value.getThread_value());
 			        }
+			        
 				} catch (JSONException e) {
 					try {
 						list = url_value.getJson().getJSONArray(TAG_WISHLIST);
@@ -327,7 +385,7 @@ public class FrontPage extends FragmentActivity{
 					}
 				    e.printStackTrace();
 				}
-				if(url_value.getThread_value().equals("0")){
+				if(url_value.getThread_value()==0){
 					position_of_viewpager = list.length()-1;
 					ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress);
 					vp.setVisibility(View.GONE);
@@ -336,7 +394,7 @@ public class FrontPage extends FragmentActivity{
 					my_pager_adapter.setCount(position_of_viewpager);
 					pager.setAdapter(my_pager_adapter);
 					//myarray = myarray_temp;
-				}else if(url_value.getThread_value().equals("1")){
+				}else if(url_value.getThread_value()==1){
 					position_of_viewpager1 = list.length()-1;
 					ProgressBar vp1 = (ProgressBar) findViewById(R.id.viewpager_progress1);
 					vp1.setVisibility(View.GONE);
@@ -346,7 +404,7 @@ public class FrontPage extends FragmentActivity{
 					pager1.setAdapter(my_pager_adapter);
 					//myarray = myarray_temp;
 					//pager1.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-				}else if(url_value.getThread_value().equals("2")){
+				}else if(url_value.getThread_value()==2){
 					position_of_viewpager2 = list.length()-1;
 					ProgressBar vp2 = (ProgressBar) findViewById(R.id.viewpager_progress2);
 					vp2.setVisibility(View.GONE);
@@ -497,6 +555,23 @@ public class FrontPage extends FragmentActivity{
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
+	
+	public static String strSeparator = "__,__";
+    public static String convertArrayToString(String[] array){
+      String str = "";
+      for (int i = 0;i<array.length; i++) {
+          str = str+array[i];
+          // Do not append comma at the end of last element
+          if(i<array.length-1){
+              str = str+strSeparator;
+          }
+      }
+      return str;
+    }
+    public static String[] convertStringToArray(String str){
+      String[] arr = str.split(strSeparator);
+      return arr;
+    }
 	
     @Override
     public void onResume(){
