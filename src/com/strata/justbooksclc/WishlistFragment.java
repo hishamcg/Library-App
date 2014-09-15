@@ -31,12 +31,14 @@ public class WishlistFragment extends ListFragment {
 	private static final String TAG_IMAGE_URL = "image_url";
 	private static final String RENTAL_ID = "rental_id";
 	private static final String SUMMARY = "summary";
-	private static final String TAG_LANGUAGE = "language";
+	private static final String TAG_LANGUAGE = "language"; 
 	private static final String TAG_TITLE = "title";
 	private static final String TAG_ID = "title_id";
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String AVG_READING = "avg_reading_times";
-	private JSONParse json_parse = new JSONParse();
+	//private JSONParse json_parse = new JSONParse();
+	private JSONParse json_parse;
+	
 	String auth_token;
 	String memb;
 	String numb;
@@ -59,7 +61,7 @@ public class WishlistFragment extends ListFragment {
 	auth_token = value.getString("AUTH_TOKEN","");
 	memb = value.getString("MEMBERSHIP_NO","");
 	numb = value.getString("NUMBER","");
-	
+	json_parse = new JSONParse();
 	json_parse.execute();
   }
 
@@ -116,11 +118,14 @@ public class WishlistFragment extends ListFragment {
 		  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 		  JSONParser jp = new JSONParser();
 		  JSONObject json = jp.getJSONFromUrl(url);
-		  return json;
+		  if (isCancelled()){
+          	  return null;}
+          else
+			return json;
 	  }
 	  protected void onPostExecute(JSONObject json){
-		List<Book> bookList = new ArrayList<Book>();
 		if (json != null && !isCancelled()){
+			List<Book> bookList = new ArrayList<Book>();
 			try {
 				// Getting Array of data
 				list = json.getJSONArray(TAG_WISHLIST);
@@ -156,38 +161,32 @@ public class WishlistFragment extends ListFragment {
 						bookList.add(book);
 					 }
 				}else{
-					try {
-						setEmptyText("No books in wishlist");
-					} catch (NullPointerException e) {
-						e.printStackTrace();
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-					}
+					setEmptyText("No books in wishlist");
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 				setEmptyText("No books in wishlist");
 				Toast.makeText(getActivity().getApplicationContext(),"Error parsing json data",Toast.LENGTH_LONG).show();
 			}
+
+			Book[] bookAry = new Book[bookList.size()];
+			adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
+			// selecting single ListView item
+		    setListAdapter(adapter);
 		}
-		else{
-			setEmptyText("No books in wishlist");
-		}
-		Book[] bookAry = new Book[bookList.size()];
-		adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
-		// selecting single ListView item
-	    setListAdapter(adapter);
 	  }
   }
   public void onResume(){
-		super.onResume();// reload the items from database
+		super.onResume();
 		if (adapter != null){
-			JSONParse json_parse2 = new JSONParse();
-			json_parse2.execute();
-			adapter.notifyDataSetChanged();}
+			json_parse = new JSONParse();
+			json_parse.execute();}
   }
   public void onDestroy(){
 	  super.onDestroy();
-	 json_parse.cancel(true);
+	  json_parse.cancel(true);
+  }
+  public void onBackPressed(){
+	  json_parse.cancel(true);
   }
 } 

@@ -15,6 +15,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -24,7 +25,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.strata.justbooksclc.R;
 
 public class PageZero extends Activity {
 	// JSON Node names
@@ -35,6 +35,7 @@ public class PageZero extends Activity {
 	private static final String APP_VERSION = "appVersion";
 	private JSONParse json_parse = new JSONParse();
 	RegisterActivity register_activity = new RegisterActivity();
+	String memb;
 	@SuppressWarnings("deprecation")
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +48,13 @@ public class PageZero extends Activity {
             Log.i( "dd","-----------Extra:" + extras.getString("title_id") );
         }        
 		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-		final String numb = value.getString("NUMBER", "");
+		memb = value.getString("MEMBERSHIP_NO", "");
 		
 		if (isNetworkAvailable()){
 			//here i'm checking if the user has already signed in or not
 			//data from shared pref (NUMBER,AUTH_TOKEN,MEMBERSHIP_NO,DATE_OF_SIGNUP)
 			
-	    	if (numb != null && numb != ""){
+	    	if (memb != null && memb != ""){
 	    		//for now commenting to check new layout
 	    		final SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
 	    		String registrationId = pref.getString(REG_ID, "");
@@ -114,17 +115,17 @@ public class PageZero extends Activity {
 			//here i'm verifying if the user profile exists in memp
 	        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
-			
-			SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-			final String numb = value.getString("NUMBER", "");
 	        
-			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/sessions.json?phone=" + numb;
+			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/sessions.json?membership_no=" + memb;
 			JSONParser jp = new JSONParser();
 			JSONObject json = jp.getJSONFromUrl(url);
 			return json;
 		}
+		@SuppressWarnings("deprecation")
 		protected void onPostExecute(JSONObject json){
 			String expiry_date = null;
+			int my_version = 0;
+			int new_version = 0;
 			//SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 			//final String dateOfSignup = value.getString("DATE_OF_SIGNUP","");
 			//final long saveddatevalue = new Date().getTime();
@@ -134,11 +135,14 @@ public class PageZero extends Activity {
 					SUCC = json.getString(SUCCESS);
 					JSONObject DATA = json.getJSONObject("data");
 					expiry_date = DATA.getString("expiry_date"); 
+					new_version = Integer.parseInt(DATA.getString("version"));
+					my_version = Integer.parseInt(getPackageManager().getPackageInfo(getPackageName(), 0).versionName.split("\\.")[0]);
 				} catch (JSONException e) {
+					e.printStackTrace();
+				} catch (NameNotFoundException e) {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("############"+SUCC);
 	        //long date_last_signup = Long.parseLong(dateOfSignup);
 			//long diff =saveddatevalue - date_last_signup;
 			
@@ -146,48 +150,72 @@ public class PageZero extends Activity {
 			//diff = 0;
 			//SUCC = "true";
 			//--------------------------------------------
-			
-		    if(SUCC.equals("true")){
-		    	Calendar c = Calendar.getInstance(); 
-		    	int day = c.get(Calendar.DAY_OF_MONTH);
-		    	int month = c.get(Calendar.MONTH);
-		    	int year = c.get(Calendar.YEAR);
-		    	
-		        String[] date = expiry_date.split("-");
-		        
-		        try {
-		            int y1 = Integer.parseInt(date[0]);
-		            int m1 = Integer.parseInt(date[1]);
-		            int d1 = Integer.parseInt(date[2]);
-		            String user = "exp_user";
-		            if (y1 > year){
-		            	user = "user";
-		            }else if (y1 == year && m1 >= month){
-		            	if (m1 > month){
-		            		user = "user";
-		            	}else if (m1 == month && d1 >= day){
-		            		user = "user";
-		            	}
-		            }
-		            SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+			if (new_version > my_version){
+				AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
+    	        alert.setTitle("Alert!");
+    	        alert.setMessage("This version of the app has been depricated. Update is required.");
+    	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int which) {
+    	        	   try {
+    	        		   startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.strata.justbooksclc")));
+		    	       }catch(Exception e) {
+		    	            Toast.makeText(getApplicationContext(),"Unable to Connect Try Again...",Toast.LENGTH_LONG).show();
+		    	            e.printStackTrace();
+		    	       }
+    	           }
+    	        });
+    	        alert.setButton2("Exit",new DialogInterface.OnClickListener() {
+    	            public void onClick(DialogInterface dialog, int id) {
+    	                finish();
+    	            }
+    	        });
+    	        // Set the Icon for the Dialog
+    	        alert.setIcon(R.drawable.gcm_cloud);
+    	        alert.setCancelable(false);
+    	        alert.show();
+			}else{
+			    if(SUCC.equals("true")){
+			    	Calendar c = Calendar.getInstance(); 
+			    	int day = c.get(Calendar.DAY_OF_MONTH);
+			    	int month = c.get(Calendar.MONTH);
+			    	int year = c.get(Calendar.YEAR);
+			    	
+			        String[] date = expiry_date.split("-");
+			        
+			        try {
+			            int y1 = Integer.parseInt(date[0]);
+			            int m1 = Integer.parseInt(date[1]);
+			            int d1 = Integer.parseInt(date[2]);
+			            String user = "exp_user";
+			            if (y1 > year){
+			            	user = "user";
+			            }else if (y1 == year && m1 >= month){
+			            	if (m1 > month){
+			            		user = "user";
+			            	}else if (m1 == month && d1 >= day){
+			            		user = "user";
+			            	}
+			            }
+			            SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+					    SharedPreferences.Editor   editor = preferences.edit();
+					    editor.putString("LOGIN_STATUS", user);
+					    editor.commit();
+			            
+			        } catch(NumberFormatException nfe) {
+			        	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+					    SharedPreferences.Editor   editor = preferences.edit();
+					    editor.putString("LOGIN_STATUS", "exp_user");
+					    editor.commit();
+			        }
+			    }else{
+			    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 				    SharedPreferences.Editor   editor = preferences.edit();
-				    editor.putString("LOGIN_STATUS", user);
+				    editor.putString("LOGIN_STATUS", "non_user");
 				    editor.commit();
-		            
-		        } catch(NumberFormatException nfe) {
-		        	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-				    SharedPreferences.Editor   editor = preferences.edit();
-				    editor.putString("LOGIN_STATUS", "exp_user");
-				    editor.commit();
-		        }
-		    }else{
-		    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-			    SharedPreferences.Editor   editor = preferences.edit();
-			    editor.putString("LOGIN_STATUS", "non_user");
-			    editor.commit();
-		    }
-            Intent in = new Intent(getApplicationContext(), FrontPage.class);
-    		startActivity(in);
+			    }
+	            Intent in = new Intent(getApplicationContext(), FrontPage.class);
+	    		startActivity(in);
+			}
 		}
 	}
 	private static int getAppVersion(Context context) {

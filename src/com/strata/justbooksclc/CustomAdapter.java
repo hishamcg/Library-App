@@ -1,5 +1,6 @@
 package com.strata.justbooksclc;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ public class CustomAdapter extends ArrayAdapter<Book> {
 		this.bookArry = bookArry;
 	}
 
+	@SuppressLint("ViewHolder")
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 		/*
@@ -76,7 +78,8 @@ public class CustomAdapter extends ArrayAdapter<Book> {
   		times_rented.setText(book.getTimes_rented());
   		avg_reading.setText(book.getAvg_reading());
   		summary.setText(book.getSummary());
-  		if (book.getPickup_order() != null && book.getPickup_order() != "null"){
+  		if (book.getPickup_order() != null && !book.getPickup_order().equals("null")){
+  			pickup_order.setText("pickup in process...");
   			pickup_order.setVisibility(View.VISIBLE);
   			detail_mini.setVisibility(View.GONE);
   		}

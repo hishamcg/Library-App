@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,11 +18,8 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.strata.justbooksclc.R;
 
 public class PendingOrderFragment extends ListFragment {
-	private ProgressDialog progress;
   //private static final String SERVER_BASE_URL = "192.168.2.113:4321";
   // JSON Node names
   private static final String TAG_WISHLIST = "titles";
@@ -38,16 +34,17 @@ public class PendingOrderFragment extends ListFragment {
   private static final String TIMES_RENTED = "no_of_times_rented";
   private static final String AVG_READING = "avg_reading_times";
   private static final String SUMMARY = "summary";
-  private JSONParse json_parse = new JSONParse();
+  //private JSONParse json_parse = new JSONParse();
+  private JSONParse json_parse;
   String auth_token;
   String memb;
   String numb;
   // contacts JSONArray
   JSONArray list = null;
+  CustomAdapter adapter;
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    progress = new ProgressDialog(this.getActivity());
     
     ColorDrawable gray = new ColorDrawable(this.getResources().getColor(R.color.gray));
 	getListView().setDivider(gray);
@@ -60,6 +57,7 @@ public class PendingOrderFragment extends ListFragment {
     auth_token = value.getString("AUTH_TOKEN","");
     memb = value.getString("MEMBERSHIP_NO","");
     numb = value.getString("NUMBER","");
+    json_parse = new JSONParse();
     json_parse.execute();
   }
 
@@ -112,11 +110,15 @@ public class PendingOrderFragment extends ListFragment {
       String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/delivery_order.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
       JSONParser jp = new JSONParser();
       JSONObject json = jp.getJSONFromUrl(url);
-      return json;
+      if (isCancelled())
+    	  return null;
+      else
+    	  return json;
     }
     protected void onPostExecute(JSONObject json){
-	    List<Book> bookList = new ArrayList<Book>();
+	    
 	    if (json != null && !isCancelled()){
+	      List<Book> bookList = new ArrayList<Book>();
 	      try {
 	        // Getting Array of data
 	        list = json.getJSONArray(TAG_WISHLIST);
@@ -156,36 +158,30 @@ public class PendingOrderFragment extends ListFragment {
 		        }
 			}
 			else{
-				try {
 					setEmptyText("Your delivery order list is empty");
-				} catch (NullPointerException e) {
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-				}
 			}
 	      } catch (JSONException e) {
 	        e.printStackTrace();
-	        //setEmptyText("Your current reading list is empty");
-	        Toast.makeText(getActivity().getApplicationContext(),"Your delivery order list is empty",Toast.LENGTH_LONG).show();
+	        setEmptyText("Your current reading list is empty");
 	      }
-	    }
-	    else{
-	    	setEmptyText("Your delivery order list is empty");
-	    }
-	    Book[] bookAry = new Book[bookList.size()];
-	    CustomAdapter adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
-	    // selecting single ListView item
+	      Book[] bookAry = new Book[bookList.size()];
+	      adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
+	      // selecting single ListView item
 	      setListAdapter(adapter);
-	    
 	    }
+	 }
   }
   public void onResume(){
-    super.onResume();
-	progress.hide();
+	super.onResume();
+	if (adapter != null){
+		json_parse = new JSONParse();
+		json_parse.execute();}
   }
   public void onDestroy(){
 	  super.onDestroy();
 	 json_parse.cancel(true);
+  }
+  public void onBackPressed(){
+	  json_parse.cancel(true);
   }
 } 

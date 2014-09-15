@@ -49,15 +49,21 @@
 
 			</RelativeLayout>
 			<LinearLayout
-			    android:layout_width="fill_parent"
-			    android:layout_height="fill_parent"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:background="#4000"
+			    android:layout_marginBottom="50dip"
+			    android:layout_marginLeft="5dip"
+			    android:layout_marginRight="10dip"
+			    android:paddingTop="5dip"
+			    android:paddingBottom="5dip"
+			    android:paddingLeft="10dip"
+			    android:paddingRight="10dip"
 			    android:orientation="vertical">
 		        <TextView
 			        android:id="@+id/title_label"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:layout_marginTop="27dp"
-			        android:layout_marginLeft="10dp"
 			        android:textColor="#ffffff"
 			        android:textSize="16sp"
 			        android:textStyle="bold"
@@ -69,8 +75,6 @@
 			    <LinearLayout
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:layout_marginBottom="10dp"
-			        android:layout_marginLeft="10dp"
 			        android:orientation="horizontal" >
 		
 			        <TextView
@@ -83,6 +87,30 @@
 		
 			        <TextView
 			            android:id="@+id/author_label"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            style="@style/drawer_text_author"
+			            android:text="Text View"
+				        android:ellipsize="end"
+				        android:singleLine="true"
+			            android:textColor="#eee"
+			            android:textSize="13sp" />
+			    </LinearLayout>
+			    <LinearLayout
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal" >
+		
+			        <TextView
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            style="@style/drawer_text_author"
+			            android:text="Category: "
+			            android:textColor="#eee"
+			            android:textSize="13sp"/>
+		
+			        <TextView
+			            android:id="@+id/category_label"
 			            android:layout_width="wrap_content"
 			            android:layout_height="wrap_content"
 			            style="@style/drawer_text_author"
@@ -163,103 +191,6 @@
 	                android:text="Avg reading time : "
 	                android:textColor="#777777"
 	                android:textSize="12sp" />
-	        </LinearLayout>
-	    </LinearLayout>
-
-	    <View
-	        android:layout_width="fill_parent"
-	        android:layout_height="1dp"
-	        android:background="#dcb667" 
-	        android:visibility="gone"/>
-
-	    <LinearLayout
-	        android:id="@+id/linearLayout2"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_margin="10dip"
-	        android:baselineAligned="false"
-	        android:orientation="horizontal"
-	        android:padding="5dp" 
-	        android:visibility="gone">
-
-	        <LinearLayout
-	            android:id="@+id/button_rental"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:background="@drawable/icon_click"
-	            android:clickable="true"
-	            android:gravity="center"
-	            android:orientation="vertical"
-	            android:paddingBottom="2dp" >
-
-	            <ImageView
-	                android:layout_width="30dp"
-	                android:layout_height="30dp"
-	                android:layout_marginBottom="5dp"
-	                android:background="@drawable/ic_action_import_export"
-	                android:contentDescription="@string/hello" />
-
-	            <TextView
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Rent"
-	                android:textColor="#333"
-	                android:textSize="10sp"
-	                android:textStyle="bold" />
-	        </LinearLayout>
-
-	        <LinearLayout
-	            android:id="@+id/click3"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:background="@drawable/icon_click"
-	            android:clickable="true"
-	            android:gravity="center"
-	            android:orientation="vertical" >
-
-	            <ImageView
-	                android:layout_width="30dp"
-	                android:layout_height="30dp"
-	                android:layout_marginBottom="5dp"
-	                android:background="@drawable/ic_action_new_attachment"
-	                android:contentDescription="@string/hello" />
-
-	            <TextView
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Add"
-	                android:textColor="#333"
-	                android:textSize="10sp"
-	                android:textStyle="bold" />
-	        </LinearLayout>
-
-	        <LinearLayout
-	            android:id="@+id/share"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginBottom="20dp"
-	            android:layout_weight="1"
-	            android:background="@drawable/icon_click"
-	            android:clickable="true"
-	            android:gravity="center"
-	            android:orientation="vertical" >
-
-	            <ImageView
-	                android:layout_width="30dp"
-	                android:layout_height="30dp"
-	                android:layout_marginBottom="5dp"
-	                android:background="@drawable/ic_action_share"
-	                android:contentDescription="@string/hello" />
-
-	            <TextView
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Share"
-	                android:textColor="#333"
-	                android:textSize="10sp"
-	                android:textStyle="bold" />
 	        </LinearLayout>
 	    </LinearLayout>
 	</LinearLayout>

@@ -29,15 +29,49 @@
                     android:textSize="18sp"/>
                     <!-- android:ellipsize="end"
                 android:singleLine="true"  -->
-
-                <TextView
-                    android:id="@+id/author_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Strata retail and technology"
-                    android:paddingLeft="2dip"
-                    android:textColor="#a444"
-                    android:textSize="14sp" />
+                <LinearLayout
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:orientation="horizontal"
+		            android:paddingLeft="2dp" >
+		
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="By "
+		                android:textColor="#a444"
+		                android:textSize="14sp"/>
+		
+		            <TextView
+	                    android:id="@+id/author_label"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="Strata retail and technology"
+	                    android:textColor="#a444"
+	                    android:textSize="14sp" />
+		        </LinearLayout>
+                <LinearLayout
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:orientation="horizontal"
+		            android:paddingLeft="2dp" >
+		
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="Category : "
+		                android:textColor="#a444"
+		                android:textSize="14sp"/>
+		
+		            <TextView
+		                android:id="@+id/category_label"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="Text View"
+		                android:textColor="#a444"
+		                android:textSize="14sp" />
+		        </LinearLayout>
+                
                 <TextView
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
@@ -169,7 +203,7 @@
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
-		                  android:background="@drawable/ic_action_import_export"
+		                  android:background="@drawable/rent"
 		                  android:contentDescription="@string/hello" />
 
 		              <TextView
@@ -177,7 +211,7 @@
 		                  android:layout_height="wrap_content"
 		                  android:text="Rent"
 		                  android:textColor="#a000"
-		                  android:textSize="10sp"
+		                  android:textSize="12sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
 
@@ -195,7 +229,7 @@
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
-		                  android:background="@drawable/ic_action_remove"
+		                  android:background="@drawable/remove"
 		                  android:contentDescription="@string/hello" />
 
 		              <TextView
@@ -203,7 +237,7 @@
 		                  android:layout_height="wrap_content"
 		                  android:text="Remove"
 		                  android:textColor="#a000"
-		                  android:textSize="10sp"
+		                  android:textSize="12sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
 
@@ -221,7 +255,7 @@
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
-		                  android:background="@drawable/ic_action_new_attachment"
+		                  android:background="@drawable/add"
 		                  android:contentDescription="@string/hello" />
 
 		              <TextView
@@ -229,7 +263,7 @@
 		                  android:layout_height="wrap_content"
 		                  android:text="Wishlist"
 		                  android:textColor="#a000"
-		                  android:textSize="10sp"
+		                  android:textSize="12sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
 
@@ -248,7 +282,7 @@
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
-		                  android:background="@drawable/pick_up"
+		                  android:background="@drawable/pick_up1"
 		                  android:contentDescription="@string/hello" />
 
 		              <TextView
@@ -256,7 +290,7 @@
 		                  android:layout_height="wrap_content"
 		                  android:text="Pick up"
 		                  android:textColor="#a000"
-		                  android:textSize="10sp"
+		                  android:textSize="12sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
 		          <LinearLayout
@@ -273,7 +307,7 @@
 		                  android:layout_width="30dp"
 		                  android:layout_height="30dp"
 		                  android:layout_marginBottom="5dp"
-		                  android:background="@drawable/ic_action_share"
+		                  android:background="@drawable/share"
 		                  android:contentDescription="@string/hello" />
 
 		              <TextView
@@ -281,7 +315,7 @@
 		                  android:layout_height="wrap_content"
 		                  android:text="Share"
 		                  android:textColor="#a000"
-		                  android:textSize="10sp"
+		                  android:textSize="12sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
 		      </LinearLayout>
@@ -316,7 +350,7 @@
 		                  android:layout_height="wrap_content"
 		                  android:text="Signin"
 		                  android:textColor="#a000"
-		                  android:textSize="10sp"
+		                  android:textSize="12sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
 
@@ -342,7 +376,7 @@
 		                  android:layout_height="wrap_content"
 		                  android:text="Signup"
 		                  android:textColor="#a000"
-		                  android:textSize="10sp"
+		                  android:textSize="12sp"
 		                  android:textStyle="bold" />
 		          </LinearLayout>
 		      </LinearLayout>
@@ -385,29 +419,7 @@
           android:layout_height="1dp"
           android:background="#dfa569"
           android:textStyle="bold"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-          	android:layout_marginTop="10dp"
-            android:paddingLeft="5dp" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Category : "
-                android:textColor="#a000"
-                android:textSize="14sp"/>
-
-            <TextView
-                android:id="@+id/category_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Text View"
-                android:textColor="#a000"
-                android:textSize="14sp" />
-        </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

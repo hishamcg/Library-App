@@ -54,7 +54,7 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
     private NavDrawerListAdapter adapter;
     private String numb;
 	// Tab titles
-	private String[] tabs = {"Your Next Read", "Top Rental", "New Arrival"};
+	private String[] tabs = {"Your Next Read", "New Arrival", "Top Rental"};
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 	  MenuInflater menuInflater = getMenuInflater();
@@ -235,8 +235,9 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 			mDrawerLayout.closeDrawer(mDrawerList);
 			break;
 		case 1:
-			Intent searchlib = new Intent(getApplicationContext(), AndroidTabMyListActivity.class);
-	        startActivity(searchlib);
+			Intent tab = new Intent(getApplicationContext(), AndroidTabMyListActivity.class);
+			tab.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+	        startActivity(tab);
 			
 	        mDrawerLayout.closeDrawer(mDrawerList);
 			break;

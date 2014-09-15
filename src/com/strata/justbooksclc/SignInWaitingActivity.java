@@ -1,5 +1,7 @@
 package com.strata.justbooksclc;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,7 +23,6 @@ public class SignInWaitingActivity extends Activity {
 	String auth_token;
 	String phone_no;
 	String membership_no;
-	String date_of_signup;
 	static Boolean timeOut = true;
 
 	@Override
@@ -34,13 +35,13 @@ public class SignInWaitingActivity extends Activity {
 		auth_token = auth_val.getStringExtra("AUTH_TOKEN");
 		phone_no = auth_val.getStringExtra("NUMBER");
 		membership_no = auth_val.getStringExtra("MEMBERSHIP_NO");
-		date_of_signup = auth_val.getStringExtra("DATE_OF_SIGNUP");
+		int waiting_time = 60;
 		
 		mobNoVeryfyTv = (TextView) findViewById(R.id.SW_MobNoVeryfyDesctxt);
 
 		timerTv = (TextView) findViewById(R.id.SW_TimeRemainigTv);
 		// show 30 second time count down
-		new CountDownTimer(30000, 1000) {
+		new CountDownTimer(waiting_time*1000, 1000) {
 
 			public void onTick(long millisUntilFinished) {
 				timerTv.setText("Seconds Remaining : " + millisUntilFinished
@@ -51,7 +52,7 @@ public class SignInWaitingActivity extends Activity {
 			public void onFinish() {
 				if (timeOut){
 				Toast.makeText(getApplicationContext(),
-						"Authentication Failed. Please make sure that you have DND de-activated and try again.", Toast.LENGTH_LONG).show();
+						"Authentication Failed.", Toast.LENGTH_LONG).show();
 				timerTv.setText("Time Over");}
 				// TODO Auto-generated method stub
 				SignInWaitingActivity.this.finish();
@@ -86,12 +87,16 @@ public class SignInWaitingActivity extends Activity {
 					Toast.makeText(getApplicationContext(),
 							"Authentication Success.", Toast.LENGTH_SHORT).show();
 					mobNoVeryfyTv.setText("Authentication Success.");
+					
+					long datevalue = new Date().getTime();
+	      			String data_of_signup = String.valueOf(datevalue);
+
 					SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 			        SharedPreferences.Editor   editor = preferences.edit();
 				    editor.putString("AUTH_TOKEN", auth_token);
 				    editor.putString("NUMBER", phone_no);
 				    editor.putString("MEMBERSHIP_NO", membership_no);
-				    editor.putString("DATE_OF_SIGNUP", date_of_signup);
+				    editor.putString("DATE_OF_SIGNUP", data_of_signup);
 				    System.out.println("im commiting");
 				    editor.commit();
 					Intent foo = new Intent(getApplicationContext(),PageZero.class);

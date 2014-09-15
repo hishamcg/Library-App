@@ -43,13 +43,6 @@
 				 	    android:text="Your Next Read?"
 				 	    android:background="@drawable/front_page_cover"/>
 				</LinearLayout>
-				<ImageView
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_alignParentRight="true"
-				    android:layout_centerVertical="true"
-				    android:paddingRight="16dp"
-				    android:src="@drawable/swipe_left3" />
 			</RelativeLayout>
 			<RelativeLayout 
 			    android:layout_width="fill_parent"
@@ -83,13 +76,6 @@
 				 	    android:text="New Arrivals"
 				 	    android:background="@drawable/front_page_cover"/>
 				</LinearLayout>
-				<ImageView
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_alignParentRight="true"
-				    android:layout_centerVertical="true"
-				    android:paddingRight="16dp"
-				    android:src="@drawable/swipe_left3" /> 
 			</RelativeLayout>
 			<RelativeLayout 
 			    android:layout_width="fill_parent"
@@ -123,21 +109,29 @@
 				 	    android:text="Top Rentals"
 				 	    android:background="@drawable/front_page_cover"/>
 				</LinearLayout>
-				<ImageView
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_alignParentRight="true"
-				    android:layout_centerVertical="true"
-				    android:paddingRight="16dp"
-				    android:src="@drawable/swipe_left3" />
 			</RelativeLayout>
 		</LinearLayout>
 	</ScrollView>
-	<FrameLayout
-        android:id="@+id/frame_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <!-- Listview to display slider menu -->
+	<LinearLayout 
+	    android:id="@+id/check_mark_view"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	    android:visibility="gone"
+	    android:clickable="true"
+	    android:background="#a000">
+		<ImageView
+		    android:layout_width="fill_parent"
+		    android:layout_height="150dip"
+		    android:scaleType="fitXY"
+		    android:src="@drawable/helper_template" />
+		<ImageView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="80dip"
+		    android:layout_gravity="center"
+		    android:src="@drawable/swipe_icon" />
+	</LinearLayout>
     <ListView
         android:id="@+id/list_slidermenu"
         android:layout_width="240dp"

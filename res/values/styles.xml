@@ -49,4 +49,7 @@
         <item name="android:minHeight">30dip</item>
         <item name="android:maxHeight">30dip</item>
     </style>
+    <style name="AlertDialogTheme" parent="android:Theme.Dialog">
+	    <item name="android:textSize">15sp</item>
+	</style>
 </resources>

@@ -156,8 +156,8 @@ public class SingleMenuItemActivity  extends Activity {
         final RelativeLayout pickup_layout = (RelativeLayout) findViewById(R.id.relativeLayout_pickup);
         final RelativeLayout action_view = (RelativeLayout) findViewById(R.id.relativeLayout_inside);
         final LinearLayout share = (LinearLayout) findViewById(R.id.share);
-        if (pickup_order != null && pickup_order != "null"){
-        	lblpickup_order.setText("pickup in process...");
+        if (pickup_order != null && !pickup_order.equals("null")){
+        	lblpickup_order.setText(pickup_order);
         	pickup_layout.setVisibility(View.VISIBLE);
         	action_view.setVisibility(View.GONE);
         }
@@ -339,69 +339,52 @@ public class SingleMenuItemActivity  extends Activity {
         	}
         });
         add_to_list.setOnClickListener(new Button.OnClickListener() {
-        	@SuppressWarnings("deprecation")
 			public void onClick(View v){
-        		AlertDialog alert = new AlertDialog.Builder(SingleMenuItemActivity.this).create();
-    	        alert.setTitle(title);
-    	        alert.setMessage("Are You Sure You want to add\n this book to wishlist");
-    	        alert.setButton("Yes", new DialogInterface.OnClickListener() {
-    	           public void onClick(DialogInterface dialog, int which) {
-    	        	   String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
+        	   String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
 
-    	    		   InputStream inputStream = null;
-    	        	   try {
-    	        		    HttpParams httpParameters = new BasicHttpParams();
-			        		// Set the timeout in milliseconds until a connection is established.
-			        		// The default value is zero, that means the timeout is not used.
-			        		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
-			        		// Set the default socket timeout (SO_TIMEOUT) 
-			        		// in milliseconds which is the timeout for waiting for data.
-			        		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
-    	    	            // 1. create HttpClient
-    	    	            HttpClient httpclient = new DefaultHttpClient();
+    		   InputStream inputStream = null;
+        	   try {
+        		    HttpParams httpParameters = new BasicHttpParams();
+	        		// Set the timeout in milliseconds until a connection is established.
+	        		// The default value is zero, that means the timeout is not used.
+	        		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
+	        		// Set the default socket timeout (SO_TIMEOUT) 
+	        		// in milliseconds which is the timeout for waiting for data.
+	        		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
+    	            // 1. create HttpClient
+    	            HttpClient httpclient = new DefaultHttpClient();
 
-    	    	            // 2. make POST request to the given URL
-    	    	            HttpPost httpPost = new HttpPost(url);
+    	            // 2. make POST request to the given URL
+    	            HttpPost httpPost = new HttpPost(url);
 
-    	    	            httpPost.setHeader("Content-type", "");
+    	            httpPost.setHeader("Content-type", "");
 
-    	    	            // 8. Execute POST request to the given URL
-    	    	            HttpResponse httpResponse = httpclient.execute(httpPost);
+    	            // 8. Execute POST request to the given URL
+    	            HttpResponse httpResponse = httpclient.execute(httpPost);
 
-    	    	            // 9. receive response as inputStream
-    	    	            inputStream = httpResponse.getEntity().getContent();
+    	            // 9. receive response as inputStream
+    	            inputStream = httpResponse.getEntity().getContent();
 
-    	    	            // 10. convert inputstream to string
-    	    	            if(inputStream != null)
-    	    	            {
-    		    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-    		    	            StringBuilder responseStrBuilder = new StringBuilder();
+    	            // 10. convert inputstream to string
+    	            if(inputStream != null)
+    	            {
+	    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+	    	            StringBuilder responseStrBuilder = new StringBuilder();
 
-    		    	            String inputStr;
-    		    	            while ((inputStr = streamReader.readLine()) != null)
-    		    	                responseStrBuilder.append(inputStr);
+	    	            String inputStr;
+	    	            while ((inputStr = streamReader.readLine()) != null)
+	    	                responseStrBuilder.append(inputStr);
 
-    		    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
-    		    	            String INFO = jsonObject.getString(USER_INFO);
-    		    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
-    		    	            }
-    	    	            else
-    	    	            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
-    	    	        } catch (Exception e) {
-    	    	            Log.d("InputStream", e.getLocalizedMessage());
-    	    	            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
-    	    	        }
-    	           }
-    	        });
-    	        alert.setButton2("No",new DialogInterface.OnClickListener() {
-    	            public void onClick(DialogInterface dialog, int id) {
-    	                dialog.cancel();
-    	            }
-    	        });
-    	        // Set the Icon for the Dialog
-    	        alert.setIcon(R.drawable.gcm_icon);
-    	        alert.show();
-
+	    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
+	    	            String INFO = jsonObject.getString(USER_INFO);
+	    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
+	    	            }
+    	            else
+    	            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
+    	        } catch (Exception e) {
+    	            Log.d("InputStream", e.getLocalizedMessage());
+    	            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
+    	        }
         	}
         });
         pick_up.setOnClickListener(new Button.OnClickListener() {

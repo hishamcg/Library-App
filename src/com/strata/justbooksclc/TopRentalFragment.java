@@ -19,8 +19,6 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.strata.justbooksclc.R;
 
 public class TopRentalFragment extends ListFragment {
 	private ProgressDialog progress;
@@ -40,9 +38,6 @@ public class TopRentalFragment extends ListFragment {
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String AVG_READING = "avg_reading_times";
 	private JSONParse json_parse = new JSONParse();
-	String auth_token;
-	String memb;
-	String numb;
 	// contacts JSONArray
 	JSONArray list = null;
   @Override
@@ -54,15 +49,49 @@ public class TopRentalFragment extends ListFragment {
 	getListView().setDivider(gray);
 	getListView().setDividerHeight(1);
 	
+	DBHelper mydb = new DBHelper(getActivity());
+	ArrayList<String> db_list = new ArrayList<String>();
+	db_list = mydb.getAllCotacts(2);
+	List<Book> bookList = new ArrayList<Book>();
+	if (db_list != null){
+		for (int i=0; i < db_list.size(); i++){
+			String[] mera_array = convertStringToArray(db_list.get(i));
+
+			Book book = new Book();
+			book.setImage_url(mera_array[0]);
+			book.setId(mera_array[1]);
+			book.setTimes_rented(mera_array[2]);
+			book.setAvg_reading(mera_array[3]);
+			book.setAuthor(mera_array[4]);
+			book.setTitle(mera_array[5]);
+			book.setCategory(mera_array[6]);
+			book.setPrice(mera_array[7]);
+			book.setPublisher(mera_array[8]);
+			book.setSummary(mera_array[9]);
+			
+			// adding HashList to ArrayList
+			bookList.add(book);
+		}
+		Book[] bookAry = new Book[bookList.size()];
+		CustomAdapter adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
+		// selecting single ListView item
+	    setListAdapter(adapter);
+	}
+	
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 	StrictMode.setThreadPolicy(policy);
 		
 	SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
-	auth_token = value.getString("AUTH_TOKEN","");
-	memb = value.getString("MEMBERSHIP_NO","");
-	numb = value.getString("NUMBER","");
-	
-	json_parse.execute();
+	String auth_token = value.getString("AUTH_TOKEN","");
+	String memb = value.getString("MEMBERSHIP_NO","");
+	String numb = value.getString("NUMBER","");
+	String url;
+	if (numb != null && numb != ""){
+		url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+	}else{
+		url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json";
+	}
+	json_parse.execute(url);
   }
 
 
@@ -112,16 +141,18 @@ public class TopRentalFragment extends ListFragment {
 	  protected void onPreExecute(){
 		  
 	  }
-	  protected JSONObject doInBackground(String... args){
-		  
-		  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+	  protected JSONObject doInBackground(String... url){
 		  JSONParser jp = new JSONParser();
-		  JSONObject json = jp.getJSONFromUrl(url);
-		  return json;
+		  JSONObject json = jp.getJSONFromUrl(url[0]);
+		  if (isCancelled())
+			  return null;
+		  else
+			  return json;
 	  }
 	  protected void onPostExecute(JSONObject json){
-		List<Book> bookList = new ArrayList<Book>();
-		if (json != null && !isCancelled()){
+		
+		if (json != null){
+			List<Book> bookList = new ArrayList<Book>();
 			try {
 				// Getting Array of data
 				list = json.getJSONArray(TAG_WISHLIST);
@@ -162,19 +193,31 @@ public class TopRentalFragment extends ListFragment {
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-				//setEmptyText("NO data available in top rentals");
-				Toast.makeText(getActivity().getApplicationContext(),"NO data available in top rentals",Toast.LENGTH_LONG).show();
+				setEmptyText("NO data available in top rentals");
 			}
+			Book[] bookAry = new Book[bookList.size()];
+			CustomAdapter adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
+			// selecting single ListView item
+		    setListAdapter(adapter);
 		}
-		else{
-			setEmptyText("NO data available in top rentals");
-		}
-		Book[] bookAry = new Book[bookList.size()];
-		CustomAdapter adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
-		// selecting single ListView item
-	    setListAdapter(adapter);
 	  }
   }
+  public static String strSeparator = "__,__";
+	public static String convertArrayToString(String[] array){
+	    String str = "";
+	    for (int i = 0;i<array.length; i++) {
+	        str = str+array[i];
+	        // Do not append comma at the end of last element
+	        if(i<array.length-1){
+	            str = str+strSeparator;
+	        }
+	    }
+	    return str;
+	}
+	public static String[] convertStringToArray(String str){
+	    String[] arr = str.split(strSeparator);
+	    return arr;
+	}
   public void onResume(){
 		super.onResume();
 		progress.hide();

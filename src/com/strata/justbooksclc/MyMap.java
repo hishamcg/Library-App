@@ -200,7 +200,8 @@ public class MyMap extends ListActivity {
 			                tempLocal2.setLatitude(Double.parseDouble(splited[splited.length-2]));
 			                tempLocal2.setLongitude(Double.parseDouble(splited[splited.length-1]));
 			                dist[ind][0]=v;
-			                dist[ind][1]= (String.valueOf(tempLocal2.distanceTo(tempLocal1))).split("\\.")[0];
+			                //dist[ind][1]= (String.valueOf(tempLocal2.distanceTo(tempLocal1))).split("\\.")[0];
+			                dist[ind][1] = String.format( "%.2f", tempLocal2.distanceTo(tempLocal1)/1000);
 			                ind++;
 			             }
 			            Arrays.sort(dist, new ArrayComparator(1, true));
@@ -212,7 +213,7 @@ public class MyMap extends ListActivity {
 			            	 something[i] = String.valueOf(dist[i][0])+";"+String.valueOf(dist[i][1]) ;
 				             String[] brooo = String.valueOf(dist[i][0]).split(",");
 				             showval[i] = brooo[0];
-				             array_list.add(putData(brooo[0], "distance: "+String.valueOf(dist[i][1])+" meters"));
+				             array_list.add(putData(brooo[0], "distance: "+dist[i][1]+" KM"));
 				             System.out.println(something[i]);}
 	
 			            String[] from = { "name", "purpose" };
@@ -243,9 +244,6 @@ public class MyMap extends ListActivity {
 		}
     }
     public void onListItemClick(ListView l, View view, int position, long id) {
-    	// ListView Clicked item index
-        int itemPosition     = position;
-
         // ListView Clicked item value
         String itemValue = something[position];
         //String  itemValue    = (String) listView.getItemAtPosition(position);

@@ -30,9 +30,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -93,12 +94,11 @@ public class FrontPage extends FragmentActivity{
   int position_of_viewpager1=0;
   int position_of_viewpager2=0;
   boolean shake_ready = false;
-  
+  private DBHelper mydb = new DBHelper(this);
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
 	  MenuInflater menuInflater = getMenuInflater();
       menuInflater.inflate(R.menu.main, menu);
-      
       SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
       SearchView searchView =
@@ -222,14 +222,63 @@ public class FrontPage extends FragmentActivity{
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 //-----------------------------end----------------------------------------------------------
+		int l_count = 0;
+		ArrayList<String> db_list = new ArrayList<String>();
 		if (numb != null && numb != ""){
 			pager = (ViewPager) findViewById(R.id.viewpager);
+			db_list = mydb.getAllCotacts(0);
+			if (db_list != null){
+				l_count = db_list.size();
+				String[][] mera_array = new String[l_count][10]; 
+				position_of_viewpager = l_count-1;
+				for (int i=0; i < l_count; i++){
+					mera_array[i] = convertStringToArray(db_list.get(i));
+				}
+				ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress);
+				vp.setVisibility(View.GONE);
+				MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
+				my_pager_adapter.setArray(mera_array);
+				my_pager_adapter.setCount(position_of_viewpager);
+				pager.setAdapter(my_pager_adapter);
+			}
 			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/your_next_read.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 			json_parse.execute(url,"0");
+			
 			pager1 = (ViewPager) findViewById(R.id.viewpager1);
+			db_list = mydb.getAllCotacts(1);
+			if (db_list != null){
+				l_count = db_list.size();
+				String[][] mera_array = new String[l_count][10]; 
+				position_of_viewpager1 = l_count-1;
+				for (int i=0; i < l_count; i++){
+					mera_array[i] = convertStringToArray(db_list.get(i));
+				}
+				ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress1);
+				vp.setVisibility(View.GONE);
+				MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
+				my_pager_adapter.setArray(mera_array);
+				my_pager_adapter.setCount(position_of_viewpager1);
+				pager1.setAdapter(my_pager_adapter);
+			}
 			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;		
 			json_parse1.execute(url,"1");
+			
 			pager2 = (ViewPager) findViewById(R.id.viewpager2);
+			db_list = mydb.getAllCotacts(2);
+			if (db_list != null){
+				l_count = db_list.size();
+				String[][] mera_array = new String[l_count][10]; 
+				position_of_viewpager2 = l_count-1;
+				for (int i=0; i < l_count; i++){
+					mera_array[i] = convertStringToArray(db_list.get(i));
+				}
+				ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress2);
+				vp.setVisibility(View.GONE);
+				MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
+				my_pager_adapter.setArray(mera_array);
+				my_pager_adapter.setCount(position_of_viewpager2);
+				pager2.setAdapter(my_pager_adapter);
+			}
 			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 			json_parse2.execute(url,"2");
 		}else{
@@ -244,28 +293,31 @@ public class FrontPage extends FragmentActivity{
 			json_parse2.execute(url,"2");
 		}
 		
-		pager.setOnTouchListener(new View.OnTouchListener() {
-		    @Override
-		    public boolean onTouch(View v, MotionEvent event) {
-		        pager.getParent().requestDisallowInterceptTouchEvent(true);
-		        return false;
-		    }
-		});
-		pager1.setOnTouchListener(new View.OnTouchListener() {
-		    @Override
-		    public boolean onTouch(View v, MotionEvent event) {
-		        pager1.getParent().requestDisallowInterceptTouchEvent(true);
-		        return false;
-		    }
-		});
-		pager2.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				pager2.getParent().requestDisallowInterceptTouchEvent(true);
-				return false;
-			}
-		});
+//		pager.setOnTouchListener(new View.OnTouchListener() {
+//		    @Override
+//		    public boolean onTouch(View v, MotionEvent event) {
+//		        pager.getParent().requestDisallowInterceptTouchEvent(true);
+//		        return false;
+//		    }
+//		});
+
     }
+  	public static String strSeparator = "__,__";
+  	public static String convertArrayToString(String[] array){
+  	    String str = "";
+  	    for (int i = 0;i<array.length; i++) {
+  	        str = str+array[i];
+  	        // Do not append comma at the end of last element
+  	        if(i<array.length-1){
+  	            str = str+strSeparator;
+  	        }
+  	    }
+  	    return str;
+  	}
+  	public static String[] convertStringToArray(String str){
+  	    String[] arr = str.split(strSeparator);
+  	    return arr;
+  	}
   	public class UrlValue {
   		private String thread_value;
   		private JSONObject json;
@@ -299,6 +351,7 @@ public class FrontPage extends FragmentActivity{
 		}
 		protected void onPostExecute(UrlValue url_value){
 			String[][] myarray_temp = new String[50][10];
+			String[] array_stringed = new String[50];
 			JSONArray list = null;
 			if (url_value.getJson() != null && !isCancelled()){
 				try {
@@ -318,13 +371,14 @@ public class FrontPage extends FragmentActivity{
 			          myarray_temp[i][7] = c.getString(TAG_PAGE);
 			          myarray_temp[i][8] = c.getString(TAG_LANGUAGE);
 			          myarray_temp[i][9] = c.getString(SUMMARY);
+			          array_stringed[i] = convertArrayToString(myarray_temp[i]);
 			        }
 				} catch (JSONException e) {
-					try {
-						list = url_value.getJson().getJSONArray(TAG_WISHLIST);
-					} catch (JSONException e1) {
-						e1.printStackTrace();
-					}
+//					try {
+//						list = url_value.getJson().getJSONArray(TAG_WISHLIST);
+//					} catch (JSONException e1) {
+//						e1.printStackTrace();
+//					}
 				    e.printStackTrace();
 				}
 				if(url_value.getThread_value().equals("0")){
@@ -335,6 +389,7 @@ public class FrontPage extends FragmentActivity{
 					my_pager_adapter.setArray(myarray_temp);
 					my_pager_adapter.setCount(position_of_viewpager);
 					pager.setAdapter(my_pager_adapter);
+					mydb.insertAllData(array_stringed,0);
 					//myarray = myarray_temp;
 				}else if(url_value.getThread_value().equals("1")){
 					position_of_viewpager1 = list.length()-1;
@@ -344,6 +399,21 @@ public class FrontPage extends FragmentActivity{
 					my_pager_adapter.setArray(myarray_temp);
 					my_pager_adapter.setCount(position_of_viewpager1);
 					pager1.setAdapter(my_pager_adapter);
+					mydb.insertAllData(array_stringed,1);
+					final SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+					String first_time = preferences.getString("FIRST_TIME","");
+			        if(first_time == null || first_time.equals("")){
+						final LinearLayout cm = (LinearLayout) findViewById(R.id.check_mark_view);
+						cm.setVisibility(View.VISIBLE);
+						cm.setOnClickListener(new Button.OnClickListener(){
+							public void onClick(View v){
+								cm.setVisibility(View.GONE);
+								SharedPreferences.Editor   editor = preferences.edit();
+							    editor.putString("FIRST_TIME", "false");
+							    editor.commit();
+							}
+						});
+			        }
 					//myarray = myarray_temp;
 					//pager1.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 				}else if(url_value.getThread_value().equals("2")){
@@ -354,13 +424,14 @@ public class FrontPage extends FragmentActivity{
 					my_pager_adapter.setArray(myarray_temp);
 					my_pager_adapter.setCount(position_of_viewpager2);
 					pager2.setAdapter(my_pager_adapter);
+					mydb.insertAllData(array_stringed,2);
 					//myarray = myarray_temp;
 					//pager2.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 			        SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 					final String login_status = value.getString("LOGIN_STATUS", "");
 					if (login_status.equals("non_user")){
-						Intent mainp = new Intent(getApplicationContext(),MainPage.class);
-						startActivity(mainp);
+//						Intent mainp = new Intent(getApplicationContext(),MainPage.class);
+//						startActivity(mainp);
 					}else if (login_status.equals("exp_user")){
 						Intent exp = new Intent(getApplicationContext(),ExpiredPage.class);
 						startActivity(exp);
@@ -390,8 +461,9 @@ public class FrontPage extends FragmentActivity{
 			mDrawerLayout.closeDrawer(mDrawerList);
 			break;
 		case 1:
-			Intent searchlib = new Intent(getApplicationContext(), AndroidTabMyListActivity.class);
-	        startActivity(searchlib);
+			Intent tab = new Intent(getApplicationContext(), AndroidTabMyListActivity.class);
+			tab.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+	        startActivity(tab);
 			
 	        mDrawerLayout.closeDrawer(mDrawerList);
 			break;

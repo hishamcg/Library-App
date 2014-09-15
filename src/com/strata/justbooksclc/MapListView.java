@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -30,7 +29,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.strata.justbooksclc.R;
 
 public class MapListView extends FragmentActivity {
     // Google Map
@@ -55,8 +53,6 @@ public class MapListView extends FragmentActivity {
 		String[] gohere = finn.split(";");
 		String[] andhere = gohere[0].split(",");
 		
-		System.out.println("blahhhhhhhhhhhhhhhhhhhh"+gohere[1]+"---"+andhere[0]+"---"+andhere[1]+"---"+andhere[2]);
-		
         googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
      
@@ -69,77 +65,50 @@ public class MapListView extends FragmentActivity {
             longitude = gps.getLongitude(); 
             // \n is for new line
             //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();    
-        }else{
-            // can't get location
-            // GPS or Network is not enabled
-            // Ask user to enable GPS/network in settings
-            gps.showSettingsAlert();
         }
         final LatLng mylocation = new LatLng(latitude,longitude);
-        Location tempLocal1 = new Location("ref1");
-        Location tempLocal2 = new Location("ref2");
-        tempLocal1.setLatitude(latitude);
-        tempLocal1.setLongitude(longitude);
+        final LatLng storelocation = new LatLng(Double.parseDouble(andhere[1]), Double.parseDouble(andhere[2]));
         try {
             // Loading map
             initilizeMap();
-
-//-------------------------------------------------------------------------------------------------
-/*            BufferedReader bReader = new BufferedReader(new InputStreamReader(getAssets().open(text)));
-            ArrayList<String> values = new ArrayList<String>();
-            String line = bReader.readLine();
-            while (line != null) {
-                values.add(line);
-                line = bReader.readLine();
-            	}
-            bReader.close();
-            int ind = 0;
-            String[][] dist = new String[values.size()][2];
-            for (String v : values)
-                {String[] splited = v.split(",");
-                String locat;
-                tempLocal2.setLatitude(Double.parseDouble(splited[splited.length-2]));
-                tempLocal2.setLongitude(Double.parseDouble(splited[splited.length-1]));
-                //System.out.println(splited[splited.length-2]+" "+splited[splited.length-1]);
-                locat=splited[0];
-                dist[ind][0]=v;
-                dist[ind][1]=String.valueOf(tempLocal2.distanceTo(tempLocal1));
-                //google.maps.geometry.spherical.computeDistanceBetween(tempLocal2, tempLocal1); 
-                if(locat == andhere[0])
-                {System.out.println("oki its working");}
-	            	MarkerOptions marker = new MarkerOptions().position(new LatLng(Double.parseDouble(splited[splited.length-2]), Double.parseDouble(splited[splited.length-1]))).title(locat).alpha(1f);
-	            	googleMap.addMarker(marker);
-	            	ind++;
-             }
-
-            Arrays.sort(dist, new ArrayComparator(1, true));*/
-//-------------------------------------------------------------------------------------------------
+            if(gps.canGetLocation()){
+	            // Getting URL to the Google Directions API
+	            String url = getDirectionsUrl(storelocation, mylocation);
+	
+	            DownloadTask downloadTask = new DownloadTask();
+	
+	            // Start downloading json data from Google Directions API
+	            downloadTask.execute(url);
+	            
+	            Marker desti = googleMap.addMarker(new MarkerOptions()
+	        	.position(storelocation)
+	        	.title(andhere[0]).alpha(1f)
+	            .snippet("Go here")
+	            .icon(BitmapDescriptorFactory
+	                .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+	            desti.showInfoWindow();
            
-            // Getting URL to the Google Directions API
-            String url = getDirectionsUrl(new LatLng(Double.parseDouble(andhere[1]), Double.parseDouble(andhere[2])), mylocation);
-
-            DownloadTask downloadTask = new DownloadTask();
-
-            // Start downloading json data from Google Directions API
-            downloadTask.execute(url);
             
-            Marker desti = googleMap.addMarker(new MarkerOptions()
-        	.position(new LatLng(Double.parseDouble(andhere[1]), Double.parseDouble(andhere[2])))
-        	.title(andhere[0]).alpha(1f)
-            .snippet("Go here")
-            .icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-            desti.showInfoWindow();
-            
-            googleMap.addMarker(new MarkerOptions()
-            .position(mylocation)
-            .title("You are here")
-            .snippet("HERE")
-            .icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 1000));
-            // Zoom in, animating the camera.
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+	            googleMap.addMarker(new MarkerOptions()
+	            .position(mylocation)
+	            .title("You are here")
+	            .snippet("HERE")
+	            .icon(BitmapDescriptorFactory
+	                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+	            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 1000));
+	            // Zoom in, animating the camera.
+	            googleMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+            }else{
+            	googleMap.addMarker(new MarkerOptions()
+	            .position(storelocation)
+	            .title(andhere[0])
+	            .snippet("HERE")
+	            .icon(BitmapDescriptorFactory
+	                .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+	            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(storelocation, 1000));
+	            // Zoom in, animating the camera.
+	            googleMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -228,7 +197,10 @@ public class MapListView extends FragmentActivity {
 			}catch(Exception e){
 				Log.d("Background Task",e.toString());
 			}
-			return data;		
+			if (isCancelled())
+            	return null;
+            else
+				return data;		
 		}
 		
 		// Executes in UI thread, after the execution of
@@ -264,7 +236,10 @@ public class MapListView extends FragmentActivity {
             }catch(Exception e){
             	e.printStackTrace();
             }
-            return routes;
+            if (isCancelled())
+            	return null;
+            else
+            	return routes;
 		}
 		
 		// Executes in UI thread, after the parsing process
@@ -321,11 +296,13 @@ public class MapListView extends FragmentActivity {
             }
         }
     }
- 
     @Override
     protected void onResume() {
         super.onResume();
         initilizeMap();
+    }
+    public void onDestroy(){
+    	super.onDestroy();
     }
     public void onStart(){
     	super.onStart();

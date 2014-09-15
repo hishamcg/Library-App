@@ -205,7 +205,9 @@ public class AndroidTabMyListActivity extends FragmentActivity implements Action
   	private void displayView(int position) {
 		switch (position) {
 		case 0:
-			finish();
+			Intent fro = new Intent(getApplicationContext(), FrontPage.class);
+			fro.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+	        startActivity(fro);
 	        mDrawerLayout.closeDrawer(mDrawerList);
 			break;
 		case 1:
