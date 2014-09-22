@@ -21,9 +21,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,27 +39,6 @@ public class MainPage extends Activity {
 	private static final String EXPIRY_DATE = "expiry_date";
 	private String SUCC = "false";
 	
-	@Override
-	  public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.login_menu, menu);
-    //return true;
-    return super.onCreateOptionsMenu(menu);
-	  }
-	@Override
-	  public boolean onOptionsItemSelected(MenuItem item) {
-		int itemId = item.getItemId();
-		if (itemId == R.id.action_back) {
-			finish();
-			return true;
-		} else if (itemId == R.id.action_help) {
-			Intent about = new Intent(getApplicationContext(), HelpActivity.class);
-			startActivity(about);
-			return true;
-		}else {
-			return super.onOptionsItemSelected(item);
-		}
-	  }
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

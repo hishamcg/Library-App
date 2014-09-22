@@ -55,8 +55,7 @@ public class GCMNotificationIntentService extends IntentService {
 				}
 				Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
 				title_id = (String) extras.get("title_id");
-				sendNotification("Message Received JustBooks: "
-						+ extras.get(Config.MESSAGE_KEY));
+				sendNotification(""+extras.get(Config.MESSAGE_KEY));
 				
 				Log.i(TAG, "Received: " + extras.toString());
 			}

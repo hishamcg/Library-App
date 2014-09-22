@@ -18,7 +18,6 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class CurrentlyReadingFragment extends ListFragment {
   //private static final String SERVER_BASE_URL = "192.168.2.113:4321";
@@ -169,26 +168,18 @@ public class CurrentlyReadingFragment extends ListFragment {
 		          // adding HashList to ArrayList
 		          bookList.add(book);
 		        }
+			}else{
+				setEmptyText("Your dont hold any book");
 			}
-			else{
-				try {
-					setEmptyText("Your current reading list is empty");
-				} catch (NullPointerException e) {
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-				}
-			}
-	      } catch (JSONException e) {
-	        e.printStackTrace();
-	        //setEmptyText("Your current reading list is empty");
-	        Toast.makeText(getActivity().getApplicationContext(),"Error parsing json data",Toast.LENGTH_LONG).show();
-	      }
-		    Book[] bookAry = new Book[bookList.size()];
-		    adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
-		    // selecting single ListView item
-		    setListAdapter(adapter);
-	    }
+		} catch (JSONException e) {
+			e.printStackTrace();
+			setEmptyText("Your dont hold any book");
+		}
+		Book[] bookAry = new Book[bookList.size()];
+		adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
+		// selecting single ListView item
+	    setListAdapter(adapter);
+		}
 	 }
   }
   public void onResume(){

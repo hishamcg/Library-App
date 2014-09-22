@@ -18,8 +18,6 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.strata.justbooksclc.R;
 
 public class WishlistFragment extends ListFragment {
 	//private static final String SERVER_BASE_URL = "192.168.2.113:4321";
@@ -166,14 +164,12 @@ public class WishlistFragment extends ListFragment {
 			} catch (JSONException e) {
 				e.printStackTrace();
 				setEmptyText("No books in wishlist");
-				Toast.makeText(getActivity().getApplicationContext(),"Error parsing json data",Toast.LENGTH_LONG).show();
 			}
-
 			Book[] bookAry = new Book[bookList.size()];
 			adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
 			// selecting single ListView item
 		    setListAdapter(adapter);
-		}
+			}
 	  }
   }
   public void onResume(){

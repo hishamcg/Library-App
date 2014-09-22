@@ -142,80 +142,101 @@ public class PageZero extends Activity {
 				} catch (NameNotFoundException e) {
 					e.printStackTrace();
 				}
-			}
-	        //long date_last_signup = Long.parseLong(dateOfSignup);
-			//long diff =saveddatevalue - date_last_signup;
-			
-			//-----uncomment to bypass authentication-----
-			//diff = 0;
-			//SUCC = "true";
-			//--------------------------------------------
-			if (new_version > my_version){
-				AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
-    	        alert.setTitle("Alert!");
-    	        alert.setMessage("This version of the app has been depricated. Update is required.");
-    	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
-    	           public void onClick(DialogInterface dialog, int which) {
-    	        	   try {
-    	        		   startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.strata.justbooksclc")));
-		    	       }catch(Exception e) {
-		    	            Toast.makeText(getApplicationContext(),"Unable to Connect Try Again...",Toast.LENGTH_LONG).show();
-		    	            e.printStackTrace();
-		    	       }
-    	           }
-    	        });
-    	        alert.setButton2("Exit",new DialogInterface.OnClickListener() {
-    	            public void onClick(DialogInterface dialog, int id) {
-    	                finish();
-    	            }
-    	        });
-    	        // Set the Icon for the Dialog
-    	        alert.setIcon(R.drawable.gcm_cloud);
-    	        alert.setCancelable(false);
-    	        alert.show();
+				
+				//long date_last_signup = Long.parseLong(dateOfSignup);
+				//long diff =saveddatevalue - date_last_signup;
+				
+				if (new_version > my_version){
+					AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
+	    	        alert.setTitle("Alert!");
+	    	        alert.setMessage("This version of the app has been depricated. Update is required.");
+	    	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int which) {
+	    	        	   try {
+	    	        		   startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.strata.justbooksclc")));
+			    	       }catch(Exception e) {
+			    	            Toast.makeText(getApplicationContext(),"Unable to Connect Try Again...",Toast.LENGTH_LONG).show();
+			    	            e.printStackTrace();
+			    	       }
+	    	           }
+	    	        });
+	    	        alert.setButton2("Exit",new DialogInterface.OnClickListener() {
+	    	            public void onClick(DialogInterface dialog, int id) {
+	    	                finish();
+	    	            }
+	    	        });
+	    	        // Set the Icon for the Dialog
+	    	        alert.setIcon(R.drawable.gcm_cloud);
+	    	        alert.setCancelable(false);
+	    	        alert.show();
+				}else{
+				    if(SUCC.equals("true")){
+				    	Calendar c = Calendar.getInstance(); 
+				    	int day = c.get(Calendar.DAY_OF_MONTH);
+				    	int month = c.get(Calendar.MONTH);
+				    	int year = c.get(Calendar.YEAR);
+				    	
+				        String[] date = expiry_date.split("-");
+				        
+				        try {
+				            int y1 = Integer.parseInt(date[0]);
+				            int m1 = Integer.parseInt(date[1]);
+				            int d1 = Integer.parseInt(date[2]);
+				            String user = "exp_user";
+				            if (y1 > year){
+				            	user = "user";
+				            }else if (y1 == year && m1 >= month){
+				            	if (m1 > month){
+				            		user = "user";
+				            	}else if (m1 == month && d1 >= day){
+				            		user = "user";
+				            	}
+				            }
+				            SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+						    SharedPreferences.Editor   editor = preferences.edit();
+						    editor.putString("LOGIN_STATUS", user);
+						    editor.commit();
+				            
+				        } catch(NumberFormatException nfe) {
+				        	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+						    SharedPreferences.Editor   editor = preferences.edit();
+						    editor.putString("LOGIN_STATUS", "exp_user");
+						    editor.commit();
+				        }
+				    }else{
+				    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+					    SharedPreferences.Editor   editor = preferences.edit();
+					    editor.putString("LOGIN_STATUS", "non_user");
+					    editor.commit();
+				    }
+		            Intent in = new Intent(getApplicationContext(), FrontPage.class);
+		    		startActivity(in);
+				}
 			}else{
-			    if(SUCC.equals("true")){
-			    	Calendar c = Calendar.getInstance(); 
-			    	int day = c.get(Calendar.DAY_OF_MONTH);
-			    	int month = c.get(Calendar.MONTH);
-			    	int year = c.get(Calendar.YEAR);
-			    	
-			        String[] date = expiry_date.split("-");
-			        
-			        try {
-			            int y1 = Integer.parseInt(date[0]);
-			            int m1 = Integer.parseInt(date[1]);
-			            int d1 = Integer.parseInt(date[2]);
-			            String user = "exp_user";
-			            if (y1 > year){
-			            	user = "user";
-			            }else if (y1 == year && m1 >= month){
-			            	if (m1 > month){
-			            		user = "user";
-			            	}else if (m1 == month && d1 >= day){
-			            		user = "user";
-			            	}
-			            }
-			            SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-					    SharedPreferences.Editor   editor = preferences.edit();
-					    editor.putString("LOGIN_STATUS", user);
-					    editor.commit();
-			            
-			        } catch(NumberFormatException nfe) {
-			        	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-					    SharedPreferences.Editor   editor = preferences.edit();
-					    editor.putString("LOGIN_STATUS", "exp_user");
-					    editor.commit();
-			        }
-			    }else{
-			    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-				    SharedPreferences.Editor   editor = preferences.edit();
-				    editor.putString("LOGIN_STATUS", "non_user");
-				    editor.commit();
-			    }
-	            Intent in = new Intent(getApplicationContext(), FrontPage.class);
-	    		startActivity(in);
+				AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
+		        alert.setTitle("Authentication Error!");
+		        alert.setMessage("A problem occured while authenticating your account.\nplease logout and login again.");
+		        alert.setButton("Logout", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int which) {
+		        	   finish();
+		        	   SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
+			   		   SharedPreferences.Editor editor = pref.edit();
+			   		   editor.putString("AUTH_TOKEN", "");
+			   	       editor.putString("MEMBERSHIP_NO", "");
+			   	       editor.putString("DATE_OF_SIGNUP", "");
+			  		   editor.putString("NUMBER", "");
+			   		   editor.commit();
+			   		    
+			   		   Intent logout = new Intent(getApplicationContext(),PageZero.class);
+			   		   startActivity(logout);
+		           }
+		        });
+		        // Set the Icon for the Dialog
+		        alert.setIcon(R.drawable.gcm_icon);
+		        alert.setCancelable(false);
+		        alert.show();
 			}
+	        
 		}
 	}
 	private static int getAppVersion(Context context) {

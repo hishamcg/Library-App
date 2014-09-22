@@ -158,11 +158,11 @@ public class PendingOrderFragment extends ListFragment {
 		        }
 			}
 			else{
-					setEmptyText("Your delivery order list is empty");
+				setEmptyText("You dont have any Pending Orders");
 			}
 	      } catch (JSONException e) {
 	        e.printStackTrace();
-	        setEmptyText("Your current reading list is empty");
+	        setEmptyText("You dont have any Pending Orders");
 	      }
 	      Book[] bookAry = new Book[bookList.size()];
 	      adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
