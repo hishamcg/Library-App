@@ -12,7 +12,9 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -39,6 +41,21 @@ public class MapListView extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		String my_theme = value.getString("MY_THEME", "");
+			
+		if (my_theme.equals("green"))
+			setTheme(R.style.MyThemeGreen);
+		else if (my_theme.equals("brown"))
+			setTheme(R.style.MyThemeBrown);
+		else if (my_theme.equals("violet"))
+			setTheme(R.style.MyThemeViolet);
+		else if (my_theme.equals("blue"))
+			setTheme(R.style.MyThemeBlue);
+		else
+			setTheme(R.style.MyTheme);
+        
         setContentView(R.layout.map_layout);
         
 		//Get a Tracker (should auto-report)

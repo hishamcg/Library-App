@@ -3,18 +3,10 @@ package com.strata.justbooksclc;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
@@ -22,9 +14,7 @@ import android.widget.TextView;
 
 public class TopRentalFragment extends ListFragment {
 	private ProgressDialog progress;
-	//private static final String SERVER_BASE_URL = "192.168.2.113:4321";
 	// JSON Node names
-	private static final String TAG_WISHLIST = "titles";
 	private static final String TAG_AUTHOR = "author";
 	private static final String TAG_CATEGORY = "category";
 	private static final String TAG_PAGE = "no_of_pages";
@@ -33,13 +23,9 @@ public class TopRentalFragment extends ListFragment {
 	private static final String RENTAL_ID = "rental_id";
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
-	private static final String TAG_ID = "id";
 	private static final String TAG_ID_call = "title_id";
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String AVG_READING = "avg_reading_times";
-	private JSONParse json_parse = new JSONParse();
-	// contacts JSONArray
-	JSONArray list = null;
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -77,21 +63,6 @@ public class TopRentalFragment extends ListFragment {
 		// selecting single ListView item
 	    setListAdapter(adapter);
 	}
-	
-    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-	StrictMode.setThreadPolicy(policy);
-		
-	SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
-	String auth_token = value.getString("AUTH_TOKEN","");
-	String memb = value.getString("MEMBERSHIP_NO","");
-	String numb = value.getString("NUMBER","");
-	String url;
-	if (numb != null && numb != ""){
-		url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
-	}else{
-		url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json";
-	}
-	json_parse.execute(url);
   }
 
 
@@ -137,71 +108,7 @@ public class TopRentalFragment extends ListFragment {
 		startActivity(in);
   }
   
-  private class JSONParse extends AsyncTask<String,String,JSONObject>{
-	  protected void onPreExecute(){
-		  
-	  }
-	  protected JSONObject doInBackground(String... url){
-		  JSONParser jp = new JSONParser();
-		  JSONObject json = jp.getJSONFromUrl(url[0]);
-		  if (isCancelled())
-			  return null;
-		  else
-			  return json;
-	  }
-	  protected void onPostExecute(JSONObject json){
-		
-		if (json != null){
-			List<Book> bookList = new ArrayList<Book>();
-			try {
-				// Getting Array of data
-				list = json.getJSONArray(TAG_WISHLIST);
-				if(list.length() != 0){
-					// looping through All data
-					for (int i = 0; i < list.length(); i++) {
-						JSONObject c = list.getJSONObject(i);
-						
-						// Storing each json item in variable
-						String author = c.getString(TAG_AUTHOR);
-						String category = c.getString(TAG_CATEGORY);
-						String page = c.getString(TAG_PAGE);
-						String language = c.getString(TAG_LANGUAGE);
-						String title = c.getString(TAG_TITLE);
-						String image_url = c.getString(TAG_IMAGE_URL);
-						String summary = c.getString(SUMMARY);
-						String title_id = c.getString(TAG_ID);
-				        String times_rented = c.getString(TIMES_RENTED);
-				        String avg_reading= c.getString(AVG_READING);
-		
-						Book book = new Book();
-						book.setTitle(title);
-						book.setAuthor(author);
-						book.setCategory(category);
-						book.setPrice(page);
-						book.setPublisher(language);
-						book.setImage_url(image_url);
-						book.setSummary(summary);
-						book.setId(title_id);
-						book.setTimes_rented(times_rented);
-						book.setAvg_reading(avg_reading);
-						
-						// adding HashList to ArrayList
-						bookList.add(book);
-					}
-				}else{
-					setEmptyText("NO data available in top rentals");
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-				setEmptyText("NO data available in top rentals");
-			}
-			Book[] bookAry = new Book[bookList.size()];
-			CustomAdapter adapter = new CustomAdapter(getActivity(), bookList.toArray(bookAry));
-			// selecting single ListView item
-		    setListAdapter(adapter);
-		}
-	  }
-  }
+  
   public static String strSeparator = "__,__";
 	public static String convertArrayToString(String[] array){
 	    String str = "";
@@ -221,9 +128,5 @@ public class TopRentalFragment extends ListFragment {
   public void onResume(){
 		super.onResume();
 		progress.hide();
-  }
-  public void onDestroy(){
-	  super.onDestroy();
-	 json_parse.cancel(true);
   }
  } 

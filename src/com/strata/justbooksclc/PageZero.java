@@ -70,7 +70,7 @@ public class PageZero extends Activity {
 			    editor.putString("LOGIN_STATUS", "non_user");
 			    editor.commit();
 				Intent in = new Intent(getApplicationContext(), FrontPage.class);
-			    editor.commit();
+			    //editor.commit();
         		startActivity(in);
 			}
 		}else{
@@ -124,8 +124,18 @@ public class PageZero extends Activity {
 		@SuppressWarnings("deprecation")
 		protected void onPostExecute(JSONObject json){
 			String expiry_date = null;
+			int books_returns_count = 0;
 			int my_version = 0;
 			int new_version = 0;
+			//String user_name = "NA";
+			String user_full_name = "NA";
+			String address = "NA";
+			String locality = "NA";
+			String state ="NA";
+			String city ="NA";
+			String pincode="NA";
+			String email="NA";
+			String plan ="NA";
 			//SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 			//final String dateOfSignup = value.getString("DATE_OF_SIGNUP","");
 			//final long saveddatevalue = new Date().getTime();
@@ -134,7 +144,33 @@ public class PageZero extends Activity {
 				try {
 					SUCC = json.getString(SUCCESS);
 					JSONObject DATA = json.getJSONObject("data");
-					expiry_date = DATA.getString("expiry_date"); 
+					JSONObject USER_DATA = DATA.getJSONObject("user_data");
+					
+					email = USER_DATA.getString("email");
+					expiry_date = DATA.getString("exp");
+					books_returns_count = Integer.parseInt(DATA.getString("book_returns_count"));
+					//books_returns_count = 600;
+					user_full_name = DATA.getString("first_name")+"__,__"+DATA.getString("middle_name")+"__,__"+DATA.getString("last_name");
+//					user_name_set.add(DATA.getString("first_name"));
+//					user_name_set.add(DATA.getString("middle_name"));
+//					user_name_set.add(DATA.getString("last_name"));
+					
+					address = DATA.getString("address");
+					locality = DATA.getString("locality");
+					state = DATA.getString("state");
+					city = DATA.getString("city");
+					pincode = DATA.getString("pincode");
+					plan = DATA.getString("plan_name");
+					
+					if (address.equals("null"))address = "NA";
+					if (locality.equals("null"))locality = "NA";
+					if (state.equals("null"))state = "NA";
+					if (city.equals("null"))city = "NA";
+					if (pincode.equals("null"))pincode = "NA";
+					
+						
+					
+					
 					new_version = Integer.parseInt(DATA.getString("version"));
 					my_version = Integer.parseInt(getPackageManager().getPackageInfo(getPackageName(), 0).versionName.split("\\.")[0]);
 				} catch (JSONException e) {
@@ -192,9 +228,32 @@ public class PageZero extends Activity {
 				            		user = "user";
 				            	}
 				            }
+				            
+				            int value = 0;
+						    if (books_returns_count < 49)
+						    	value = 0;
+						    else if (books_returns_count > 49 && books_returns_count < 249)
+						    	value = 1;
+						    else if (books_returns_count > 250 && books_returns_count < 499)
+						    	value = 2;
+						    else
+						    	value = 3;
+						    	
+						    
 				            SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 						    SharedPreferences.Editor   editor = preferences.edit();
 						    editor.putString("LOGIN_STATUS", user);
+						    editor.putInt("BOOK_BAND", value);
+						    editor.putString("READING_SCORE", String.valueOf(books_returns_count));
+						    //editor.putString("USER_NAME",user_name );
+						    editor.putString("USER_NAMES",user_full_name);
+						    editor.putString("ADDRESS",address);
+						    editor.putString("LOCALITY",locality);
+						    editor.putString("STATE",state);
+						    editor.putString("CITY",city);
+						    editor.putString("PINCODE",pincode);
+						    editor.putString("EMAIL",email);
+						    editor.putString("PLAN",plan);
 						    editor.commit();
 				            
 				        } catch(NumberFormatException nfe) {
@@ -224,7 +283,7 @@ public class PageZero extends Activity {
 			   		   editor.putString("AUTH_TOKEN", "");
 			   	       editor.putString("MEMBERSHIP_NO", "");
 			   	       editor.putString("DATE_OF_SIGNUP", "");
-			  		   editor.putString("NUMBER", "");
+			  		   editor.putString("NUMBER","");
 			   		   editor.commit();
 			   		    
 			   		   Intent logout = new Intent(getApplicationContext(),PageZero.class);

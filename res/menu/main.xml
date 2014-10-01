@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--xmlns:strata="http://schemae.android.com/apk/res-auto"-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 	
     <item android:id="@+id/action_search"
           android:title="search"
@@ -13,4 +13,71 @@
           android:textSize="12sp"
           android:title="list view"
           android:showAsAction="ifRoom"/>
+	    
+    <item android:id="@+id/action_overflow"
+          android:textSize="12sp"
+          android:title="overflow"
+          android:icon="@drawable/ic_action_overflow"
+          android:showAsAction="ifRoom" >
+		 <menu>
+		    <item android:id="@+id/action_user"
+		          android:textSize="12sp"
+		          android:title="guest@email.com"
+		          android:icon="@drawable/ic_user"
+		          android:showAsAction="ifRoom" />
+		    <item android:id="@+id/action_address"
+		          android:textSize="12sp"
+		          android:title="Profile"
+		          android:icon="@drawable/ic_address"
+		          android:showAsAction="ifRoom" />
+		    <item android:id="@+id/action_level"
+		          android:textSize="12sp"
+		          android:title="Book Bands"
+		          android:icon="@drawable/ic_skill_level"
+		          android:showAsAction="ifRoom" >
+				 <menu>
+				    <item android:id="@+id/action_dull"
+				          android:textSize="12sp"
+				          android:icon="@drawable/ic_gray"
+				          android:title="Beginner"
+				          android:showAsAction="never"/>
+				 
+				    <item android:id="@+id/action_newbie"
+				          android:textSize="12sp" 
+				          android:icon="@drawable/ic_green"
+				          android:title="Occasional Reader"
+				          android:showAsAction="never"/>
+				    
+				    <item android:id="@+id/action_rookie"
+				          android:textSize="12sp" 
+				          android:icon="@drawable/ic_brown"
+				          android:title="Regular reader"
+				          android:showAsAction="never"/>
+				    
+				    <item android:id="@+id/action_pro"
+				          android:textSize="12sp" 
+				          android:icon="@drawable/ic_violet"
+				          android:title="Avid Reader"
+				          android:showAsAction="never"/>
+				    
+				    <item android:id="@+id/action_guru"
+				          android:textSize="12sp" 
+				          android:icon="@drawable/ic_blue"
+				          android:title="Bookworm"
+				          android:showAsAction="never"/>
+				    
+				    <item android:id="@+id/action_help_me"
+				          android:textSize="12sp" 
+				          android:icon="@drawable/ic_help_me"
+				          android:title="Help Me"
+				          android:showAsAction="never"/>
+				 </menu>
+			</item>
+			<item android:id="@+id/action_policy"
+		          android:textSize="12sp"
+		          android:title="Policy"
+		          android:icon="@drawable/ic_policy"
+		          android:showAsAction="ifRoom" />
+	    </menu>
+    </item>
 </menu>

@@ -2,7 +2,9 @@ package com.strata.justbooksclc;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -26,6 +28,20 @@ public class HelpActivity extends Activity {
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		String my_theme = value.getString("MY_THEME", "");
+			
+		if (my_theme.equals("green"))
+			setTheme(R.style.MyThemeGreen);
+		else if (my_theme.equals("brown"))
+			setTheme(R.style.MyThemeBrown);
+		else if (my_theme.equals("violet"))
+			setTheme(R.style.MyThemeViolet);
+		else if (my_theme.equals("blue"))
+			setTheme(R.style.MyThemeBlue);
+		else
+			setTheme(R.style.MyTheme);
+		
 		setContentView(R.layout.help_activity);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		

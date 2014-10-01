@@ -21,9 +21,19 @@
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/icon"
         android:textColor="@color/list_item_title"
-        android:text="text"
+        android:text="Home"
+        android:textSize="15sp"
         android:gravity="center_vertical"
         android:layout_centerVertical="true"
-        android:paddingRight="40dp"/>
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"/>
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:contentDescription="@string/desc_list_item_icon"
+        android:src="@drawable/ic_arrow_right"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

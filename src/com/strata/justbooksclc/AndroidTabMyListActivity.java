@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ public class AndroidTabMyListActivity extends FragmentActivity implements Action
 	//for drawer
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private LinearLayout mDrawerLinear;
     private ActionBarDrawerToggle mDrawerToggle;
   // nav drawer title
     private CharSequence mDrawerTitle;
@@ -91,6 +93,21 @@ public class AndroidTabMyListActivity extends FragmentActivity implements Action
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		String my_theme = value.getString("MY_THEME", "");
+			
+		if (my_theme.equals("green"))
+			setTheme(R.style.MyThemeGreen);
+		else if (my_theme.equals("brown"))
+			setTheme(R.style.MyThemeBrown);
+		else if (my_theme.equals("violet"))
+			setTheme(R.style.MyThemeViolet);
+		else if (my_theme.equals("blue"))
+			setTheme(R.style.MyThemeBlue);
+		else
+			setTheme(R.style.MyTheme);
+		
 		setContentView(R.layout.main);
 		progress = new ProgressDialog(this);
 		
@@ -107,6 +124,7 @@ public class AndroidTabMyListActivity extends FragmentActivity implements Action
 		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_tab);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+		mDrawerLinear = (LinearLayout) findViewById(R.id.linear_slide);
 		
 		navDrawerItems = new ArrayList<NavDrawerItem>();
 		
@@ -208,21 +226,21 @@ public class AndroidTabMyListActivity extends FragmentActivity implements Action
 			Intent fro = new Intent(getApplicationContext(), FrontPage.class);
 			fro.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 	        startActivity(fro);
-	        mDrawerLayout.closeDrawer(mDrawerList);
+	        mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 1:
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 2:
 			Intent location = new Intent(getApplicationContext(), MyMap.class);
 			location.putExtra("from","tab_layout");
 	  		startActivity(location);
-	  		mDrawerLayout.closeDrawer(mDrawerList);
+	  		mDrawerLayout.closeDrawer(mDrawerLinear);
 	  		break;
 		case 3:
 			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
 			startActivity(help);
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 4:
 			SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
@@ -231,11 +249,16 @@ public class AndroidTabMyListActivity extends FragmentActivity implements Action
 		    editor.putString("MEMBERSHIP_NO", "");
 		    editor.putString("DATE_OF_SIGNUP", "");
 		    editor.putString("NUMBER", "");
+		    editor.putString("regId", "");
+		    editor.putString("BOOK_BAND", "");
+		    editor.putString("MY_THEME", "");
 		    editor.commit();
+		    finish();
 		    
 		    Intent logout = new Intent(getApplicationContext(),PageZero.class);
+		    logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		    startActivity(logout);
-		    mDrawerLayout.closeDrawer(mDrawerList);
+		    mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 
 		default:

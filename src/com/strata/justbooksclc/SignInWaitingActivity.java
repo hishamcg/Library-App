@@ -41,6 +41,21 @@ public class SignInWaitingActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		String my_theme = value.getString("MY_THEME", "");
+			
+		if (my_theme.equals("green"))
+			setTheme(R.style.MyThemeGreen);
+		else if (my_theme.equals("brown"))
+			setTheme(R.style.MyThemeBrown);
+		else if (my_theme.equals("violet"))
+			setTheme(R.style.MyThemeViolet);
+		else if (my_theme.equals("blue"))
+			setTheme(R.style.MyThemeBlue);
+		else
+			setTheme(R.style.MyTheme);
+		
 		setContentView(R.layout.activity_sign_in_waiting);
 		//getting the 4 digit random number
 		Intent auth_val = getIntent();

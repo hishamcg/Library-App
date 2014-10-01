@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#eee"
+    android:orientation="vertical" >
+<ScrollView
+    android:id="@+id/scrollview"
+    android:background="#eee"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eee"
+    android:padding="10dp"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+      android:id="@+id/click0"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/edit_border"
+      android:clickable="true"
+      android:layout_marginTop="5dip"
+      android:paddingTop="10dip"
+      android:paddingBottom="10dip"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Eligibility"
+          android:layout_gravity="center"
+          android:textColor="#a111"
+          android:textSize="15sp"/>
+  </LinearLayout>
+    <LinearLayout
+      android:id="@+id/policy0"
+      android:visibility="gone"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_marginBottom="5dp"
+      android:padding="10dip"
+      android:background="#fff"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="#a222"
+          android:text="Any individual with a postal address in Bangalore, Mumbai, Pune, Mysore and Hyderabad and a local residence/work/ mobile contact number is welcome to sign up with Just Books. However, Just Books reserves the right to accept, or reject membership at its sole discretion. Membership is for personal use only, however, can be transferred with explicit communication to Just Books. No member may re-lend books borrowed from Just Books at any time."
+          android:textSize="14sp" />
+  </LinearLayout>
+  
+  <LinearLayout
+    android:id="@+id/click1"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/edit_border"
+      android:clickable="true"
+      android:layout_marginTop="5dip"
+      android:paddingTop="10dip"
+      android:paddingBottom="10dip"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Plans and Payment terms"
+          android:layout_gravity="center"
+          android:textColor="#a111"
+          android:textSize="15sp"/>
+  </LinearLayout>
+    <LinearLayout
+      android:id="@+id/policy1"
+      android:visibility="gone"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_marginBottom="5dp"
+      android:padding="10dip"
+      android:background="#fff"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="#a222"
+          android:text="By subscribing to a specific membership plan of Just Books, the member is explicitly agreeing to pay the reading fee attached to the plan plus any applicable tax at the frequency specified by the plan. Any non-compliance with the payment terms in spite of 2 reminders will attract penalty of 10% per payment period on the amount due and may lead to cancellation of membership."
+          android:textSize="14sp" />
+  </LinearLayout>
+  
+    <LinearLayout
+      android:id="@+id/click2"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/edit_border"
+      android:clickable="true"
+      android:layout_marginTop="5dip"
+      android:paddingTop="10dip"
+      android:paddingBottom="10dip"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Reading period and reading fee"
+          android:layout_gravity="center"
+          android:textColor="#a111"
+          android:textSize="15sp"/>
+  </LinearLayout>
+    <LinearLayout
+      android:id="@+id/policy2"
+      android:visibility="gone"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_marginBottom="5dp"
+      android:padding="10dip"
+      android:background="#fff"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="#a222"
+          android:text="JustBooks CLC proposes a reasonable reading period with a restriction on the number of books that a member can hold at any point of time. No fine or any sort of a penalty will be levied for delayed return of books. However, under specific circumstances where many members wait on a copy for more than a month, JustBooks clc reserves a right to request for the book to be returned and members are expected to return the requested book within five days of the request. Reading fee should be paid as per the plan. In the event a member does not renew his/her subscription the company reserves the right to adjust the deposit amount towards the reading fees. If there is no balance in the deposit amount then the company will terminate the membership of that member."
+          android:textSize="14sp" />
+  </LinearLayout>
+  
+    <LinearLayout
+      android:id="@+id/click3"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/edit_border"
+      android:clickable="true"
+      android:layout_marginTop="5dip"
+      android:paddingTop="10dip"
+      android:paddingBottom="10dip"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Lost or Damaged books"
+          android:layout_gravity="center"
+          android:textColor="#a111"
+          android:textSize="15sp"/>
+  </LinearLayout>
+    <LinearLayout
+      android:id="@+id/policy3"
+      android:visibility="gone"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_marginBottom="5dp"
+      android:padding="10dip"
+      android:background="#fff"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="#a222"
+          android:text="At Just Books, we take utmost care to maintain books in good condition. Any anomaly (unprinted pages) or damage if found should be reported either at the front desk while getting the book issued or to the delivery executive if the book is delivered at the door. Failure to check and/or report the same will be constituted as the member having received a book in good condition. While returning the book, the front desk executive or the delivery executive (if the book is collected at the door) will check for any damage of book(s) and report to the member accordingly. The determination of a book being damaged will be at the sole discretion of Just Books. Members can choose to replace a lost or damaged book within 10 days or pay the penalty amount determined by Just Books."
+          android:textSize="14sp" />
+  </LinearLayout>
+  
+    <LinearLayout
+      android:id="@+id/click4"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/edit_border"
+      android:clickable="true"
+      android:layout_marginTop="5dip"
+      android:paddingTop="10dip"
+      android:paddingBottom="10dip"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Membership closure and refund"
+          android:layout_gravity="center"
+          android:textColor="#a111"
+          android:textSize="15sp"/>
+  </LinearLayout>
+    <LinearLayout
+      android:id="@+id/policy4"
+      android:visibility="gone"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_marginBottom="5dp"
+      android:padding="10dip"
+      android:background="#fff"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="#a222"
+          android:text="To discourage ad-hoc and short term membership, members are required to comply with a minimum membership term of three months. For members who subscribe to plans with a refundable deposit, any premature closure of membership in less than three months from the date of sign-up, will result in the reading fee for the remaining period of the mandatory term getting adjusted against the deposit. The rest of the deposit, however will be refunded. For members who subscribe to annual plans without deposit there is no refund applicable at the time of closure. Under extreme situations caused by non-compliance to the Terms of Use, Just Books reserves the right to terminate a membership for any or no reason.\n\nMember need to return all books they may be holding and return the membership card at the time of closing their account. Non return of membership card will attract a Rs 100 lost card charge and book will attract a charge of MRP + 100 (for jacketing and RFID tag)"
+          android:textSize="14sp" />
+  </LinearLayout>
+  
+    <LinearLayout
+      android:id="@+id/click5"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/edit_border"
+      android:clickable="true"
+      android:layout_marginTop="5dip"
+      android:paddingTop="10dip"
+      android:paddingBottom="10dip"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="DD Services"
+          android:layout_gravity="center"
+          android:textColor="#a111"
+          android:textSize="15sp"/>
+  </LinearLayout>
+    <LinearLayout
+      android:id="@+id/policy5"
+      android:visibility="gone"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_marginBottom="5dp"
+      android:padding="10dip"
+      android:background="#fff"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="#a222"
+          android:text="DD services is provided only within 7Kms of the nearest branch."
+          android:textSize="14sp" />
+  </LinearLayout>
+  
+    <LinearLayout
+      android:id="@+id/click6"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/edit_border"
+      android:clickable="true"
+      android:layout_marginTop="5dip"
+      android:paddingTop="10dip"
+      android:paddingBottom="10dip"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Temporary suspension of membership"
+          android:layout_gravity="center"
+          android:textColor="#a111"
+          android:textSize="15sp"/>
+  </LinearLayout>
+    <LinearLayout
+      android:id="@+id/policy6"
+      android:visibility="gone"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_marginBottom="5dp"
+      android:padding="10dip"
+      android:background="#fff"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="#a222"
+          android:text="JustBooks clc allows temporary suspension of membership provided the member has completed a 3 months membership period. To avail this benefit the member has to submit the temporary membership waiver form in writing at least 5 days prior to expiration of the membership. All books and magazines will be returned to us. The member will not be able to use the library during the waiver period. To resume the member will have to pay a minimum of one month’s subscription."
+          android:textSize="14sp" />
+  </LinearLayout>
+  
+    <LinearLayout
+      android:id="@+id/click7"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/edit_border"
+      android:clickable="true"
+      android:layout_marginTop="5dip"
+      android:paddingTop="10dip"
+      android:paddingBottom="10dip"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Changes to Terms of Use"
+          android:layout_gravity="center"
+          android:textColor="#a111"
+          android:textSize="15sp"/>
+  </LinearLayout>
+    <LinearLayout
+      android:id="@+id/policy7"
+      android:visibility="gone"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_marginBottom="5dp"
+      android:padding="10dip"
+      android:background="#fff"
+      android:orientation="vertical" >
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="#a222"
+          android:text="Just Books reserves the right, from time to time, with or without notice to you, to change these Terms of Use in our sole and absolute discretion. The most current version of these Terms of Use can be reviewed by clicking on the “Terms of Use” located at the bottom of the pages of the justbooksclc.com Website. The most current version of the Terms of Use will supersede all previous versions. Your continued use of our service after changes are made means that you agree to be bound by such changes."
+          android:textSize="14sp" /> 
+  </LinearLayout>
+</LinearLayout>
+</ScrollView>
+</LinearLayout>

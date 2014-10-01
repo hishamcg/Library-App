@@ -11,7 +11,7 @@
 	        android:id="@+id/click_image"
 	        android:layout_width="fill_parent"
 	        android:layout_height="185dip"
-	        android:background="@drawable/book_shelf6"
+	        android:background="@drawable/book_shelf3"
 	        android:clickable="true"
 	        android:paddingBottom="15dip"
 	        android:paddingLeft="20dip"

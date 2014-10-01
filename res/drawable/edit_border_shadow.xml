@@ -3,24 +3,24 @@
     <!-- Bottom Line -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#5e4122" />
+            <solid android:color="@color/shelf_gray" />
         </shape>
     </item>
     <!-- Bottom Line -->
     <item android:bottom="1dip">
         <shape android:shape="rectangle">
-            <solid android:color="#9d6c38" />
+            <solid android:color="@color/shelf_gray1" />
         </shape>
     </item>
 	<item android:bottom="2dip">
         <shape android:shape="rectangle">
-            <solid android:color="#b67e41" />
+            <solid android:color="@color/shelf_gray2" />
         </shape>
     </item>
     <!-- Color of your action bar -->
     <item android:bottom="3dip">
         <shape android:shape="rectangle">
-            <solid android:color="#c38e56" />
+            <solid android:color="@color/shelf_gray3" />
         </shape>
     </item>
 </layer-list>

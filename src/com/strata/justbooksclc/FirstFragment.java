@@ -80,7 +80,17 @@ public class FirstFragment extends Fragment {
         .into(target);
 
         final LinearLayout click_image =(LinearLayout) v.findViewById(R.id.click_image);
-
+        String my_theme = getArguments().getString("my_theme");
+        if (my_theme.equals("green"))
+        	click_image.setBackgroundResource( R.drawable.book_shelf2 );
+		else if (my_theme.equals("brown"))
+			click_image.setBackgroundResource( R.drawable.book_shelf6 );
+		else if (my_theme.equals("violet"))
+			click_image.setBackgroundResource( R.drawable.book_shelf5 );
+		else if (my_theme.equals("blue"))
+			click_image.setBackgroundResource( R.drawable.book_shelf3 );
+		else
+			click_image.setBackgroundResource( R.drawable.book_shelf1 );
         click_image.setOnClickListener(new Button.OnClickListener(){
         	public void onClick(View view){
     			Intent in = new Intent(getActivity().getApplicationContext(),SingleMenuItemActivity.class);
@@ -103,7 +113,7 @@ public class FirstFragment extends Fragment {
         return v;
    }
 
-    public static FirstFragment newInstance(String text,String text2,String text3,String text4,String text5,String text6,String text7,String text8,String text9,String text10){
+    public static FirstFragment newInstance(String text,String text2,String text3,String text4,String text5,String text6,String text7,String text8,String text9,String text10, String my_theme){
 
         FirstFragment f = new FirstFragment();
         Bundle b = new Bundle();
@@ -117,6 +127,7 @@ public class FirstFragment extends Fragment {
         b.putString("page", text8);
         b.putString("language", text9);
         b.putString("summary", text10);
+        b.putString("my_theme", my_theme);
 
 
 

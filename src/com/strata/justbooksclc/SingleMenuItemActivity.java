@@ -102,6 +102,25 @@ public class SingleMenuItemActivity  extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		final String auth_token = value.getString("AUTH_TOKEN","");
+		final String memb = value.getString("MEMBERSHIP_NO","");
+		final String numb = value.getString("NUMBER","");
+		final String login_status = value.getString("LOGIN_STATUS","");
+		String my_theme = value.getString("MY_THEME", "");
+			
+		if (my_theme.equals("green"))
+			setTheme(R.style.MyThemeGreen);
+		else if (my_theme.equals("brown"))
+			setTheme(R.style.MyThemeBrown);
+		else if (my_theme.equals("violet"))
+			setTheme(R.style.MyThemeViolet);
+		else if (my_theme.equals("blue"))
+			setTheme(R.style.MyThemeBlue);
+		else
+			setTheme(R.style.MyTheme);
+        
         setContentView(R.layout.single_list_view2);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         progress = new ProgressDialog(this);
@@ -131,12 +150,6 @@ public class SingleMenuItemActivity  extends Activity {
 
         String message = in.getStringExtra("message");
         final String title_id = in.getStringExtra(TAG_ID);
-
-        SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-		final String auth_token = value.getString("AUTH_TOKEN","");
-		final String memb = value.getString("MEMBERSHIP_NO","");
-		final String numb = value.getString("NUMBER","");
-		final String login_status = value.getString("LOGIN_STATUS","");
 
         // Displaying all values on the screen
         TextView lblAuthor = (TextView) findViewById(R.id.author_label);

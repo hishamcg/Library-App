@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import com.strata.justbooksclc.R;
 
 public class ExpiredPage extends Activity {
 	@SuppressLint("NewApi")

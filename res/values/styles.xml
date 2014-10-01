@@ -4,6 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
+  <!-- Gray -->
     <style name="MyTheme" parent="@android:style/Theme.Holo">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:actionMenuTextColor">@color/white</item>
@@ -16,6 +17,68 @@
         <!--  <item name="android:backgroundSplit">#40bff5</item>-->
     </style>
     <style name="ActionBar.TitleTextStyle" parent="@android:style/TextAppearance">
+	    <item name="android:textColor">@color/white</item>
+	</style>
+	
+ <!-- Green -->   
+	<style name="MyThemeGreen" parent="@android:style/Theme.Holo">
+        <item name="android:actionBarStyle">@style/MyActionBarGreen</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="MyActionBarGreen" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/theme_green</item>
+        <item name="android:titleTextStyle">@style/ActionBar.TitleTextStyleGreen</item>
+        <item name="android:textFilterEnabled">true</item>
+        <!--  <item name="android:backgroundSplit">#40bff5</item>-->
+    </style>
+    <style name="ActionBar.TitleTextStyleGreen" parent="@android:style/TextAppearance">
+	    <item name="android:textColor">@color/white</item>
+	</style>
+
+<!-- Violet -->   
+	<style name="MyThemeViolet" parent="@android:style/Theme.Holo">
+        <item name="android:actionBarStyle">@style/MyActionBarViolet</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="MyActionBarViolet" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/theme_violet</item>
+        <item name="android:titleTextStyle">@style/ActionBar.TitleTextStyleViolet</item>
+        <item name="android:textFilterEnabled">true</item>
+        <!--  <item name="android:backgroundSplit">#40bff5</item>-->
+    </style>
+    <style name="ActionBar.TitleTextStyleViolet" parent="@android:style/TextAppearance">
+	    <item name="android:textColor">@color/white</item>
+	</style>
+<!-- Brown -->
+	<style name="MyThemeBrown" parent="@android:style/Theme.Holo">
+        <item name="android:actionBarStyle">@style/MyActionBarBrown</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="MyActionBarBrown" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/theme_brown</item>
+        <item name="android:titleTextStyle">@style/ActionBar.TitleTextStyleBrown</item>
+        <item name="android:textFilterEnabled">true</item>
+        <!--  <item name="android:backgroundSplit">#40bff5</item>-->
+    </style>
+    <style name="ActionBar.TitleTextStyleBrown" parent="@android:style/TextAppearance">
+	    <item name="android:textColor">@color/white</item>
+	</style>
+<!--Blue -->
+	<style name="MyThemeBlue" parent="@android:style/Theme.Holo">
+        <item name="android:actionBarStyle">@style/MyActionBarBlue</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="MyActionBarBlue" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/theme_blue</item>
+        <item name="android:titleTextStyle">@style/ActionBar.TitleTextStyleBlue</item>
+        <item name="android:textFilterEnabled">true</item>
+        <!--  <item name="android:backgroundSplit">#40bff5</item>-->
+    </style>
+    <style name="ActionBar.TitleTextStyleBlue" parent="@android:style/TextAppearance">
 	    <item name="android:textColor">@color/white</item>
 	</style>
 

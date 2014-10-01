@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="list_item_title">#fff</color>
-    <color name="list_background">#303030</color>
+    <color name="list_background">#505050</color>
     <color name="list_background_pressed">#992416</color>
     <color name="list_divider">#272727</color>
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
     <color name="white">#fff</color>
     <color name="gray">#eee</color>
+    <!-- brown -->
+    <color name="shelf_brown">#5e4122</color>
+    <color name="shelf_brown1">#9d6c38</color>
+    <color name="shelf_brown2">#b67e41</color>
+    <color name="shelf_brown3">#c38e56</color>
+    <!-- gray -->
+    <color name="shelf_gray">#444</color>
+    <color name="shelf_gray1">#666</color>
+    <color name="shelf_gray2">#888</color>
+    <color name="shelf_gray3">#999</color>
+    <!-- green -->
+    <color name="shelf_green">#3f8523</color>
+    <color name="shelf_green1">#57a737</color>
+    <color name="shelf_green2">#6bc547</color>
+    <color name="shelf_green3">#539a54</color>
+    <!-- violet -->
+    <color name="shelf_violet">#691419</color>
+    <color name="shelf_violet1">#87282d</color>
+    <color name="shelf_violet2">#9c373c</color>
+    <color name="shelf_violet3">#a33e43</color>
+    <!-- blue -->
+    <color name="shelf_blue">#304447</color>
+    <color name="shelf_blue1">#455F64</color>
+    <color name="shelf_blue2">#5C6E72</color>
+    <color name="shelf_blue3">#697D81</color>
 </resources>

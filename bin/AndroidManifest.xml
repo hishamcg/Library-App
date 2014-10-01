@@ -86,10 +86,11 @@
         <activity
             android:name="com.strata.justbooksclc.MainPage"
             android:windowSoftInputMode="stateAlwaysVisible"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:screenOrientation="portrait"
             android:label="Sign in">
         </activity>
+        <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" -->
         <activity
             android:name="com.strata.justbooksclc.ExpiredPage"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
@@ -100,6 +101,21 @@
         <activity
             android:name="com.strata.justbooksclc.MapListView"
             android:label="Store Location"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.strata.justbooksclc.ProfilePage"
+            android:label="Profile"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.strata.justbooksclc.Policy"
+            android:label="Terms and Conditions"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.strata.justbooksclc.BookBand"
+            android:label="BookBand"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -146,8 +162,7 @@
         <activity
             android:name="com.strata.justbooksclc.SignInWaitingActivity"
             android:label="Authentication" 
-            android:screenOrientation="portrait"
-            android:noHistory="true">
+            android:screenOrientation="portrait">
         </activity>
 
 		<activity

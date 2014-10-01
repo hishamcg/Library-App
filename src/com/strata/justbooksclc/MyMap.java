@@ -27,6 +27,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
@@ -41,6 +42,7 @@ public class MyMap extends ListActivity {
 	//for drawer
 	  private DrawerLayout mDrawerLayout;
 	  private ListView mDrawerList;
+	  private LinearLayout mDrawerLinear;
 	  private ActionBarDrawerToggle mDrawerToggle;
 	  // nav drawer title
 	  private CharSequence mDrawerTitle;
@@ -74,14 +76,28 @@ public class MyMap extends ListActivity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		String my_theme = value.getString("MY_THEME", "");
+		numb = value.getString("NUMBER","");
+			
+		if (my_theme.equals("green"))
+			setTheme(R.style.MyThemeGreen);
+		else if (my_theme.equals("brown"))
+			setTheme(R.style.MyThemeBrown);
+		else if (my_theme.equals("violet"))
+			setTheme(R.style.MyThemeViolet);
+		else if (my_theme.equals("blue"))
+			setTheme(R.style.MyThemeBlue);
+		else
+			setTheme(R.style.MyTheme);
+        
         setContentView(R.layout.fragment_pages);
         
 		//Get a Tracker (should auto-report)
 		//GoogleAnalytics.getInstance(this).getLogger().setLogLevel(LogLevel.VERBOSE);
 		((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.GLOBAL_TRACKER);
-        
-        SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-		numb = value.getString("NUMBER","");
+		
       //---------------------for the drawer		
   		mTitle = mDrawerTitle = getTitle();
   		if (numb != null && numb != ""){
@@ -98,6 +114,7 @@ public class MyMap extends ListActivity {
   		
   		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
   		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+  		mDrawerLinear = (LinearLayout) findViewById(R.id.linear_slide);
   		
   		navDrawerItems = new ArrayList<NavDrawerItem>();
   		
@@ -283,7 +300,7 @@ public class MyMap extends ListActivity {
 			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(intent);
 			finish();
-	  		mDrawerLayout.closeDrawer(mDrawerList);
+	  		mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 1:
 			//fragment = new AndroidTabLayoutFragment();
@@ -293,29 +310,34 @@ public class MyMap extends ListActivity {
 			}
 			finish();
 			
-	        mDrawerLayout.closeDrawer(mDrawerList);
+	        mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 2:
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 	  		break;
 		case 3:
 			//fragment = new AboutFragment();
 			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
 			startActivity(help);
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 4:
 			SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = pref.edit();
-			editor.putString("AUTH_TOKEN", "0");
-		    editor.putString("MEMBERSHIP_NO", "0");
-		    editor.putString("DATE_OF_SIGNUP", "0");
-		    editor.putString("NUMBER", "00000");
+			editor.putString("AUTH_TOKEN", "");
+		    editor.putString("MEMBERSHIP_NO", "");
+		    editor.putString("DATE_OF_SIGNUP", "");
+		    editor.putString("NUMBER", "");
+		    editor.putString("regId", "");
+		    editor.putString("BOOK_BAND", "");
+		    editor.putString("MY_THEME", "");
 		    editor.commit();
+		    finish();
 		    
 		    Intent logout = new Intent(getApplicationContext(),PageZero.class);
+		    logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		    startActivity(logout);
-		    mDrawerLayout.closeDrawer(mDrawerList);
+		    mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 
 		default:
@@ -329,25 +351,25 @@ public class MyMap extends ListActivity {
 			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(intent);
 			finish();
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 1:
-	  		mDrawerLayout.closeDrawer(mDrawerList);
+	  		mDrawerLayout.closeDrawer(mDrawerLinear);
 	  		break;
 		case 2:
 			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
 			startActivity(help);
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 3:
 			Intent searchlib = new Intent(getApplicationContext(), MainPage.class);
     		startActivity(searchlib);
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 4:
 			Intent sign_up_call = new Intent(getApplicationContext(), HelpActivity.class);
     		startActivity(sign_up_call);
-		    mDrawerLayout.closeDrawer(mDrawerList);
+		    mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 
 		default:

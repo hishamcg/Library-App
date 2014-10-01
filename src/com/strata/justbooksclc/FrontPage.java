@@ -9,8 +9,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -50,6 +53,7 @@ public class FrontPage extends FragmentActivity{
   //for drawer
   private DrawerLayout mDrawerLayout;
   private ListView mDrawerList;
+  private LinearLayout mDrawerLinear;
   private ActionBarDrawerToggle mDrawerToggle;
   // nav drawer title
   private CharSequence mDrawerTitle;
@@ -81,15 +85,18 @@ public class FrontPage extends FragmentActivity{
   //shake detection
   private SensorManager mSensorManager;
   private ShakeEventListener mSensorListener;
-  
+  String[][] shake_array;
   ViewPager pager;
   ViewPager pager1;
   ViewPager pager2;
   //JSONArray list = null;
   String auth_token;
   String memb;
-  String numb;
-  
+  String email;
+  String numb = "";
+  String my_theme = "gray";
+  int sl;//skill level
+  ActionBar actionBar;
   int position_of_viewpager=0;
   int position_of_viewpager1=0;
   int position_of_viewpager2=0;
@@ -99,6 +106,31 @@ public class FrontPage extends FragmentActivity{
   public boolean onCreateOptionsMenu(Menu menu) {
 	  MenuInflater menuInflater = getMenuInflater();
       menuInflater.inflate(R.menu.main, menu);
+      MenuItem overflow = menu.findItem(R.id.action_overflow);
+      MenuItem user = menu.findItem(R.id.action_user);
+      user.setTitle(email);
+      if (sl == 0){
+    	  MenuItem mg = menu.findItem(R.id.action_guru);
+    	  mg.setIcon(R.drawable.ic_lock);
+          MenuItem mp = menu.findItem(R.id.action_pro);
+          mp.setIcon(R.drawable.ic_lock);
+          MenuItem mr = menu.findItem(R.id.action_rookie);
+          mr.setIcon(R.drawable.ic_lock);
+      }else if (sl == 1){
+    	  MenuItem mg = menu.findItem(R.id.action_guru);
+    	  mg.setIcon(R.drawable.ic_lock);
+          MenuItem mp = menu.findItem(R.id.action_pro);
+          mp.setIcon(R.drawable.ic_lock);
+      }else if (sl == 2){
+    	  MenuItem mg = menu.findItem(R.id.action_guru);
+    	  mg.setIcon(R.drawable.ic_lock);
+      }
+      
+      if (numb != null && numb != "") {           
+    	  overflow.setVisible(true);
+      }else{
+    	  overflow.setVisible(false);
+      }
       SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
       SearchView searchView =
@@ -113,43 +145,161 @@ public class FrontPage extends FragmentActivity{
       textView.setTextColor(0xffffffff);
       return super.onCreateOptionsMenu(menu);
     }
-  @Override
+  @SuppressWarnings("deprecation")
+@Override
     public boolean onOptionsItemSelected(MenuItem item) {
+	  	
 	    if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-	    mDrawerLayout.closeDrawer(mDrawerList);
+	    mDrawerLayout.closeDrawer(mDrawerLinear);
 	    int itemId = item.getItemId();
 	    if (itemId == R.id.action_search) {
 	      return true;
-	    }else if (itemId == R.id.list_view){
+	    }else if (itemId == R.id.action_policy ){
+	    	Intent policy = new Intent(getApplicationContext(), Policy.class);
+	        startActivity(policy);
+	    	return true;
+	    }else if (itemId == R.id.list_view ){
 	    	Intent searchlib = new Intent(getApplicationContext(), AndroidTabLayoutActivity.class);
 			searchlib.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 	        startActivity(searchlib);
+	    	return true;
+	    }else if (itemId == R.id.action_address ){
+	    	Intent profile = new Intent(getApplicationContext(), ProfilePage.class);
+	        startActivity(profile);
+	    	return true;
+	    }else if (itemId == R.id.action_help_me){
+	    	Intent bookband = new Intent(getApplicationContext(), BookBand.class);
+	        startActivity(bookband);
+	    	return true;
+	    }else if (itemId == R.id.action_dull){
+	    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+	        SharedPreferences.Editor   editor = preferences.edit();
+	        editor.putString("MY_THEME", "");
+		    editor.commit();
+		    Intent in = new Intent(getApplicationContext(), FrontPage.class);
+		    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    		startActivity(in);
+    		finish();
+	    	return true;
+	    }else if (itemId == R.id.action_newbie){
+	    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+	        SharedPreferences.Editor   editor = preferences.edit();
+	        editor.putString("MY_THEME", "green");
+		    editor.commit();
+    		finish();
+		    Intent in = new Intent(getApplicationContext(), FrontPage.class);
+		    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    		startActivity(in);
+	    	return true;
+	    }else if (itemId == R.id.action_rookie){
+	    	if (sl >=1){
+	    		SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		        SharedPreferences.Editor   editor = preferences.edit();
+		        editor.putString("MY_THEME", "brown");
+			    editor.commit();
+	    		finish();
+			    Intent in = new Intent(getApplicationContext(), FrontPage.class);
+			    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+	    		startActivity(in);
+	    	}else {
+	    		final AlertDialog alert = new AlertDialog.Builder(FrontPage.this).create();
+    	        alert.setTitle("Skill Level");
+    	        alert.setMessage("Your need a skill score above 50 to unlock this theme.");
+    	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int which) {
+    	        	   alert.cancel();
+    	           }
+    	        });
+    	        alert.setIcon(R.drawable.skill_level);
+    	        alert.show();
+	    	}
+	    	return true;
+	    }else if (itemId == R.id.action_pro){
+    		if (sl >=2){
+    			SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+    	        SharedPreferences.Editor   editor = preferences.edit();
+    	        editor.putString("MY_THEME", "violet");
+    		    editor.commit();
+        		finish();
+    		    Intent in = new Intent(getApplicationContext(), FrontPage.class);
+    		    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        		startActivity(in);
+	    	}else {
+	    		final AlertDialog alert = new AlertDialog.Builder(FrontPage.this).create();
+    	        alert.setTitle("Skill Level");
+    	        alert.setMessage("Your need a skill score above 250 to unlock this theme.");
+    	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int which) {
+    	        	   alert.cancel();
+    	           }
+    	        });
+    	        alert.setIcon(R.drawable.skill_level);
+    	        alert.show();
+	    	}
+	    	return true;
+	    }else if (itemId == R.id.action_guru){
+	    	
+    		if (sl ==3){
+    			SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+    	        SharedPreferences.Editor   editor = preferences.edit();
+    	        editor.putString("MY_THEME", "blue");
+    		    editor.commit();
+        		finish();
+    		    Intent in = new Intent(getApplicationContext(), FrontPage.class);
+    		    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        		startActivity(in);
+	    	}else {
+	    		final AlertDialog alert = new AlertDialog.Builder(FrontPage.this).create();
+    	        alert.setTitle("Skill Level");
+    	        alert.setMessage("Your need a skill score above 500 to unlock this theme.");
+    	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int which) {
+    	        	   alert.cancel();
+    	           }
+    	        });
+    	        alert.setIcon(R.drawable.skill_level);
+    	        alert.show();
+	    	}
 	    	return true;
 	    }
 	    else {
 	      return super.onOptionsItemSelected(item);
 	    }
     }
+
   	@SuppressLint("NewApi")
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.front_page);
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		numb = value.getString("NUMBER", "");
+		sl = value.getInt("BOOK_BAND",0);
+		my_theme = value.getString("MY_THEME", "");
+		email = value.getString("EMAIL", "guest@email.com");
 		
+		
+		if (my_theme.equals("green"))
+			setTheme(R.style.MyThemeGreen);
+		else if (my_theme.equals("brown"))
+			setTheme(R.style.MyThemeBrown);
+		else if (my_theme.equals("violet"))
+			setTheme(R.style.MyThemeViolet);
+		else if (my_theme.equals("blue"))
+			setTheme(R.style.MyThemeBlue);
+		else
+			setTheme(R.style.MyTheme);
+		
+		setContentView(R.layout.front_page);
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
 		//Get a Tracker (should auto-report)
 		//GoogleAnalytics.getInstance(this).getLogger().setLogLevel(LogLevel.VERBOSE);
 		((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.GLOBAL_TRACKER);
 		
 		
-		//progress = new ProgressDialog(this);
-		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		StrictMode.setThreadPolicy(policy);
-		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-		auth_token = value.getString("AUTH_TOKEN","");
-		memb = value.getString("MEMBERSHIP_NO","");
-		numb = value.getString("NUMBER","");
+		//progress = new ProgressDialog(this)
 		
 		//-----for shake----
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -159,12 +309,29 @@ public class FrontPage extends FragmentActivity{
 
 	      public void onShake() {
 	    	  if(shake_ready){
-		    	int randInt = new Random().nextInt(position_of_viewpager);
+		    	/*int randInt = new Random().nextInt(position_of_viewpager);
 		    	pager.setCurrentItem(randInt);
 		    	randInt = new Random().nextInt(position_of_viewpager1);
 		    	pager1.setCurrentItem(randInt);
 		    	randInt = new Random().nextInt(position_of_viewpager2);
-		    	pager2.setCurrentItem(randInt);
+		    	pager2.setCurrentItem(randInt);*/
+	    		if (shake_array.length > 0 ){
+	    			int randInt = new Random().nextInt(shake_array.length);
+	    			Intent in = new Intent(getApplicationContext(),SingleMenuItemActivity.class);
+	    			in.putExtra(IMAGE_URL,shake_array[randInt][0]);
+	    			in.putExtra(TAG_ID, shake_array[randInt][1]);
+	    			in.putExtra(TIMES_RENTED, shake_array[randInt][2]);
+	    			in.putExtra(AVG_READING,shake_array[randInt][3]);
+	    			in.putExtra(TAG_AUTHOR,shake_array[randInt][4]);
+	    			in.putExtra(TAG_TITLE, shake_array[randInt][5]);
+	    			in.putExtra(TAG_CATEGORY, shake_array[randInt][6]);
+	    			in.putExtra(TAG_PAGE, shake_array[randInt][7]);
+	    			in.putExtra(TAG_LANGUAGE, shake_array[randInt][8]);
+	    			in.putExtra(SUMMARY,shake_array[randInt][9]);
+	    			in.putExtra("message", "create");
+	    			in.putExtra("check","logged_in");
+	    			startActivity(in);
+	    		}
 	    	  }
 	      }
 	    });
@@ -185,16 +352,14 @@ public class FrontPage extends FragmentActivity{
 		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+		mDrawerLinear = (LinearLayout) findViewById(R.id.linear_slide);
 		
 		navDrawerItems = new ArrayList<NavDrawerItem>();
 		
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));// Home
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));// Wishlist
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));// Location
-		//navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));// GCM
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));// About
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));// Log out
-		// Recycle the typed array
+		for (int i=0;i < navMenuTitles.length;i++){
+			navDrawerItems.add(new NavDrawerItem(navMenuTitles[i], navMenuIcons.getResourceId(i, -1)));
+		}
+		
 		navMenuIcons.recycle();
 		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 		// setting the nav drawer list adapter
@@ -268,10 +433,14 @@ public class FrontPage extends FragmentActivity{
 			if (db_list != null){
 				l_count = db_list.size();
 				String[][] mera_array = new String[l_count][10]; 
+				// saving data for shake array random book view
+				shake_array = new String[l_count][10]; 
+				
 				position_of_viewpager2 = l_count-1;
 				for (int i=0; i < l_count; i++){
 					mera_array[i] = convertStringToArray(db_list.get(i));
 				}
+				shake_array = mera_array;
 				ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress2);
 				vp.setVisibility(View.GONE);
 				MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -458,25 +627,25 @@ public class FrontPage extends FragmentActivity{
   	private void displayView(int position) {
 		switch (position) {
 		case 0:
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 1:
 			Intent tab = new Intent(getApplicationContext(), AndroidTabMyListActivity.class);
 			tab.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 	        startActivity(tab);
 			
-	        mDrawerLayout.closeDrawer(mDrawerList);
+	        mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 2:
 			Intent location = new Intent(getApplicationContext(), MyMap.class);
 			location.putExtra("from", "front_page");
 	  		startActivity(location);
-	  		mDrawerLayout.closeDrawer(mDrawerList);
+	  		mDrawerLayout.closeDrawer(mDrawerLinear);
 	  		break;
 		case 3:
 			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
 			startActivity(help);
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 4:
 			SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
@@ -486,13 +655,15 @@ public class FrontPage extends FragmentActivity{
 		    editor.putString("DATE_OF_SIGNUP", "");
 		    editor.putString("NUMBER", "");
 		    editor.putString(REG_ID, "");
+		    editor.putString("BOOK_BAND", "");
+		    editor.putString("MY_THEME", "");
 		    editor.commit();
+		    finish();
 		    
 		    Intent logout = new Intent(getApplicationContext(),PageZero.class);
 		    logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		    startActivity(logout);
-		    finish();
-		    mDrawerLayout.closeDrawer(mDrawerList);
+		    mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 
 		default:
@@ -503,28 +674,28 @@ public class FrontPage extends FragmentActivity{
   	private void displayViewNonUser(int position) {
 		switch (position) {
 		case 0:
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 1:
 			Intent location = new Intent(getApplicationContext(), MyMap.class);
 			location.putExtra("from", "front_page");
 	  		startActivity(location);
-	  		mDrawerLayout.closeDrawer(mDrawerList);
+	  		mDrawerLayout.closeDrawer(mDrawerLinear);
 	  		break;
 		case 2:
 			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
 			startActivity(help);
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 3:
 			Intent searchlib = new Intent(getApplicationContext(), MainPage.class);
     		startActivity(searchlib);
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 4:
 			Intent sign_up_call = new Intent(getApplicationContext(), HelpActivity.class);
     		startActivity(sign_up_call);
-		    mDrawerLayout.closeDrawer(mDrawerList);
+		    mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 
 		default:
@@ -541,7 +712,7 @@ public class FrontPage extends FragmentActivity{
 
         @Override
         public Fragment getItem(int pos) {
-          return FirstFragment.newInstance(myarray[pos+1][0],myarray[pos+1][1],myarray[pos+1][2],myarray[pos+1][3],myarray[pos+1][4],myarray[pos+1][5],myarray[pos+1][6],myarray[pos+1][7],myarray[pos+1][8],myarray[pos+1][9]);
+          return FirstFragment.newInstance(myarray[pos+1][0],myarray[pos+1][1],myarray[pos+1][2],myarray[pos+1][3],myarray[pos+1][4],myarray[pos+1][5],myarray[pos+1][6],myarray[pos+1][7],myarray[pos+1][8],myarray[pos+1][9],my_theme);
         }
         public void setCount(int count){
         	this.count = count;
@@ -587,6 +758,7 @@ public class FrontPage extends FragmentActivity{
 	  json_parse.cancel(true);
 	  json_parse1.cancel(true);
 	  json_parse2.cancel(true);
+	  mydb.close();
     }
     public void onStart(){
     	super.onStart();
@@ -597,6 +769,12 @@ public class FrontPage extends FragmentActivity{
     	super.onStop();
     	//Stop the analytics tracking
     	GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    	
+    }
+    public void onBackPressed(){
+    	super.onBackPressed();
+    	mydb.close();
+    	finish();
     }
 
 }
