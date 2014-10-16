@@ -118,12 +118,10 @@ public class MyMap extends ListActivity {
   		
   		navDrawerItems = new ArrayList<NavDrawerItem>();
   		
-  		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));// Home
-  		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));// Wishlist
-  		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));// Location
-  		//navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));// GCM
-  		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));// About
-  		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));// Log out
+  		for (int i=0;i < navMenuTitles.length;i++){
+			navDrawerItems.add(new NavDrawerItem(navMenuTitles[i], navMenuIcons.getResourceId(i, -1)));
+		}
+  		
   		// Recycle the typed array
   		navMenuIcons.recycle();
   		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
@@ -305,7 +303,7 @@ public class MyMap extends ListActivity {
 		case 1:
 			//fragment = new AndroidTabLayoutFragment();
 			if (from.equals("front_page")){
-				Intent searchlib = new Intent(getApplicationContext(), AndroidTabLayoutActivity.class);
+				Intent searchlib = new Intent(getApplicationContext(), AndroidTabMyListActivity.class);
 		        startActivity(searchlib);
 			}
 			finish();
@@ -328,7 +326,6 @@ public class MyMap extends ListActivity {
 		    editor.putString("MEMBERSHIP_NO", "");
 		    editor.putString("DATE_OF_SIGNUP", "");
 		    editor.putString("NUMBER", "");
-		    editor.putString("regId", "");
 		    editor.putString("BOOK_BAND", "");
 		    editor.putString("MY_THEME", "");
 		    editor.commit();
@@ -367,7 +364,7 @@ public class MyMap extends ListActivity {
 			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 4:
-			Intent sign_up_call = new Intent(getApplicationContext(), HelpActivity.class);
+			Intent sign_up_call = new Intent(getApplicationContext(), Signup.class);
     		startActivity(sign_up_call);
 		    mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;

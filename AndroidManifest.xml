@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.strata.justbooksclc"
     
-    android:versionCode="3"
-    android:versionName="1.2" >
+    android:versionCode="6"
+    android:versionName="1.5" >
     
     <uses-sdk android:minSdkVersion="11" 
               android:targetSdkVersion="21"/>
@@ -93,7 +93,7 @@
         <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" -->
         <activity
             android:name="com.strata.justbooksclc.ExpiredPage"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:screenOrientation="portrait"
             android:label="Account Expired">
         </activity>
@@ -116,6 +116,11 @@
         <activity
             android:name="com.strata.justbooksclc.BookBand"
             android:label="BookBand"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.strata.justbooksclc.Signup"
+            android:label="SignUp"
             android:screenOrientation="portrait">
         </activity>
         <activity

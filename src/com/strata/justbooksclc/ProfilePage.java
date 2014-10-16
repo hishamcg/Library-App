@@ -25,11 +25,28 @@ public class ProfilePage extends Activity {
 	  }
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		
+		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		String my_theme = value.getString("MY_THEME", "");
+		String name = value.getString("USER_NAMES","NA");
+			
+		if (my_theme.equals("green"))
+			setTheme(R.style.MyThemeGreen);
+		else if (my_theme.equals("brown"))
+			setTheme(R.style.MyThemeBrown);
+		else if (my_theme.equals("violet"))
+			setTheme(R.style.MyThemeViolet);
+		else if (my_theme.equals("blue"))
+			setTheme(R.style.MyThemeBlue);
+		else
+			setTheme(R.style.MyTheme);
+		
 		setContentView(R.layout.profile_page);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		TextView user_name = (TextView) findViewById(R.id.user_name);
 		TextView user_email = (TextView) findViewById(R.id.user_email);
+		TextView membership_no = (TextView) findViewById(R.id.membership_no);
 		TextView user_branch = (TextView) findViewById(R.id.user_branch);
 		TextView user_reading_score = (TextView) findViewById(R.id.user_reading_score);
 		TextView user_plan = (TextView) findViewById(R.id.user_plan);
@@ -41,9 +58,6 @@ public class ProfilePage extends Activity {
 		TextView user_pincode = (TextView) findViewById(R.id.user_pincode);
 		TextView user_phone = (TextView) findViewById(R.id.user_phone);
 		
-		
-		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-		String name = value.getString("USER_NAMES","NA");
 		String[] arr_name = name.split(strSeparator);
 		for (int i=0;i<3;i++){
 			if (arr_name[i].equals("null"))arr_name[i] = "";
@@ -51,6 +65,8 @@ public class ProfilePage extends Activity {
 		user_name.setText(arr_name[0]);
 		user_full_name.setText(arr_name[0]+" "+arr_name[1]+" "+arr_name[1]);
 		user_email.setText(value.getString("EMAIL", "NA"));
+		membership_no.setText(value.getString("MEMBERSHIP_NO", "NA"));
+		user_branch.setText(value.getString("BRANCH", "NA"));
 		user_reading_score.setText(value.getString("READING_SCORE", "0"));
 		user_plan.setText(value.getString("PLAN", "NA"));
 		user_address.setText(value.getString("ADDRESS", "NA"));

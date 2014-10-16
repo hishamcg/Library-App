@@ -186,6 +186,7 @@ public class SignInWaitingActivity extends Activity {
 	    editor.putString("NUMBER", phone_no);
 	    editor.putString("MEMBERSHIP_NO", membership_no);
 	    editor.putString("DATE_OF_SIGNUP", data_of_signup);
+	    editor.putString("MY_THEME", "gray");
 	    System.out.println("im commiting");
 	    editor.commit();
 		Intent foo = new Intent(getApplicationContext(),PageZero.class);

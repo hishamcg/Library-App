@@ -27,8 +27,16 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:layout_centerHorizontal="true"
-			        android:layout_centerVertical="true"
-			        android:visibility="visible" />
+			        android:layout_centerVertical="true"/>
+				<ImageView
+			        android:id="@+id/image_cover_temp"
+			        android:layout_width="99dp"
+			        android:layout_height="130dip"
+			        android:contentDescription="TODO"
+			        android:layout_marginTop="40dip"
+			        android:layout_marginLeft="20dip"
+			        android:scaleType="fitXY"
+			        android:src="@drawable/book_cover1" />
 				<LinearLayout
 				    android:layout_width="wrap_content"
 				    android:layout_height="fill_parent"
@@ -60,8 +68,16 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:layout_centerHorizontal="true"
-			        android:layout_centerVertical="true"
-			        android:visibility="visible" />
+			        android:layout_centerVertical="true" />
+				<ImageView
+			        android:id="@+id/image_cover_temp1"
+			        android:layout_width="99dp"
+			        android:layout_height="130dip"
+			        android:contentDescription="TODO"
+			        android:layout_marginTop="40dip"
+			        android:layout_marginLeft="20dip"
+			        android:scaleType="fitXY"
+			        android:src="@drawable/book_cover1" />
 				<LinearLayout
 				    android:layout_width="wrap_content"
 				    android:layout_height="fill_parent"
@@ -93,8 +109,16 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:layout_centerHorizontal="true"
-			        android:layout_centerVertical="true"
-			        android:visibility="visible" />
+			        android:layout_centerVertical="true"/>
+				<ImageView
+			        android:id="@+id/image_cover_temp2"
+			        android:layout_width="99dp"
+			        android:layout_height="130dip"
+			        android:contentDescription="TODO"
+			        android:layout_marginTop="40dip"
+			        android:layout_marginLeft="20dip"
+			        android:scaleType="fitXY"
+			        android:src="@drawable/book_cover1" />
 				<LinearLayout
 				    android:layout_width="wrap_content"
 				    android:layout_height="fill_parent"
@@ -114,6 +138,23 @@
 			</RelativeLayout>
 		</LinearLayout>
 	</ScrollView>
+	<RelativeLayout 
+	    android:id="@+id/shake_view"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	    android:visibility="gone"
+	    android:clickable="true"
+	    android:background="#a000">
+		<ImageView
+		    android:id="@+id/shake_image"
+		    android:layout_width="200dip"
+		    android:layout_height="300dip"
+		    android:scaleType="fitXY"
+		    android:layout_centerHorizontal="true"
+		    android:layout_centerVertical="true"
+		    android:src="@drawable/swipe_icon" />
+	</RelativeLayout>
 	<LinearLayout 
 	    android:id="@+id/check_mark_view"
 	    android:layout_width="fill_parent"

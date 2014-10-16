@@ -27,7 +27,7 @@
  	        android:text="Account"
  	        android:layout_gravity="center"
  	        android:textColor="#a111"
- 	        android:textSize="17sp"/>
+ 	        android:textSize="@dimen/letter1"/>
  	</LinearLayout>
     <LinearLayout
  	    android:layout_width="fill_parent"
@@ -46,7 +46,7 @@
  	        android:layout_height="wrap_content"
  	        android:text="Hisham"
  	        android:textColor="#a000"
- 	        android:textSize="17sp"
+ 	        android:textSize="@dimen/letter1"
  	        android:textStyle="bold"
  	        android:layout_marginBottom="10dip" />
  	    <TextView
@@ -54,9 +54,9 @@
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content"
  	        android:text="guest@email.com"
- 	        android:textColor="#a222"
- 	        android:textSize="14sp" />
- 	    
+ 	        android:textColor="#a000"
+ 	        android:textStyle="bold"
+ 	        android:textSize="@dimen/letter2" />
  	    <LinearLayout
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content"
@@ -65,16 +65,35 @@
 	 	    <TextView
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
+	 	        android:text="Membership No : "
+	 	        android:textSize="@dimen/letter2" />
+	 	    <TextView
+	 	        android:id="@+id/membership_no"
+	 	        android:layout_width="wrap_content"
+	 	        android:layout_height="wrap_content"
+	 	        android:textColor="#a000"
+	 	        android:text="NA"
+	 	        android:textSize="@dimen/letter2" />
+	 	</LinearLayout>
+ 	    <LinearLayout
+ 	        android:layout_width="wrap_content"
+ 	        android:layout_height="wrap_content"
+ 	        android:layout_marginTop="5dip"
+ 	        android:orientation="horizontal">
+	 	    <TextView
+	 	        android:layout_width="wrap_content"
+	 	        android:layout_height="wrap_content"
+	 	        android:textColor="#a000"
 	 	        android:text="Branch : "
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	    <TextView
 	 	        android:id="@+id/user_branch"
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="jp nagar"
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	</LinearLayout>
 	 	<LinearLayout
  	        android:layout_width="wrap_content"
@@ -84,16 +103,16 @@
 	 	    <TextView
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#dfa569"
 	 	        android:text="Reading Score : "
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	    <TextView
 	 	        android:id="@+id/user_reading_score"
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="88"
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	</LinearLayout>
 	 	<LinearLayout
  	        android:layout_width="wrap_content"
@@ -103,16 +122,16 @@
 	 	    <TextView
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="plan : "
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	    <TextView
 	 	        android:id="@+id/user_plan"
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="avid reader basic"
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	</LinearLayout>
  	</LinearLayout>
     
@@ -128,7 +147,7 @@
  	        android:text="Address"
  	        android:layout_gravity="center"
  	        android:textColor="#a111"
- 	        android:textSize="17sp"/>
+ 	        android:textSize="@dimen/letter1"/>
  	</LinearLayout>
     
  	<LinearLayout
@@ -146,17 +165,17 @@
  	        android:id="@+id/user_full_name"
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content"
- 	        android:textColor="#a222"
+ 	        android:textColor="#a000"
  	        android:text="my full name"
- 	        android:textSize="14sp" />
+ 	        android:textSize="@dimen/letter2" />
  	    <TextView
  	        android:id="@+id/user_address"
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content"
  	        android:layout_marginTop="5dip"
- 	        android:textColor="#a222"
+ 	        android:textColor="#a000"
  	        android:text="justbooks"
- 	        android:textSize="14sp" />
+ 	        android:textSize="@dimen/letter2" />
  	    <LinearLayout
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content"
@@ -165,16 +184,16 @@
 	 	    <TextView
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="Location : "
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	    <TextView
 	 	        android:id="@+id/user_location"
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="jp nagar"
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
  	    </LinearLayout>
  	    <LinearLayout
  	        android:layout_width="wrap_content"
@@ -183,16 +202,16 @@
 	 	    <TextView
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="City : "
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	    <TextView
 	 	        android:id="@+id/user_city"
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="Bangalore"
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
  	    </LinearLayout>
  	    <LinearLayout
  	        android:layout_width="wrap_content"
@@ -201,16 +220,16 @@
 	 	    <TextView
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="State : "
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	    <TextView
 	 	        android:id="@+id/user_state"
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="Karnataka"
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
  	    </LinearLayout>
  	    <LinearLayout
  	        android:layout_width="wrap_content"
@@ -219,16 +238,16 @@
 	 	    <TextView
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="Pincode : "
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	    <TextView
 	 	        android:id="@+id/user_pincode"
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="123123"
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
  	    </LinearLayout>
  	    <LinearLayout
  	        android:layout_width="wrap_content"
@@ -238,16 +257,16 @@
 	 	    <TextView
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="Ph : "
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
 	 	    <TextView
 	 	        android:id="@+id/user_phone"
 	 	        android:layout_width="wrap_content"
 	 	        android:layout_height="wrap_content"
-	 	        android:textColor="#a222"
+	 	        android:textColor="#a000"
 	 	        android:text="123123123"
-	 	        android:textSize="14sp" />
+	 	        android:textSize="@dimen/letter2" />
  	    </LinearLayout>
  	</LinearLayout>
 </LinearLayout>

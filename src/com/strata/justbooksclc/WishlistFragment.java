@@ -111,8 +111,6 @@ public class WishlistFragment extends ListFragment {
 		  
 	  }
 	  protected JSONObject doInBackground(String... args){
-		  
-		  System.out.println("score");
 		  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 		  JSONParser jp = new JSONParser();
 		  JSONObject json = jp.getJSONFromUrl(url);

@@ -106,7 +106,6 @@ public class PendingOrderFragment extends ListFragment {
       
     }
     protected JSONObject doInBackground(String... args){
-      System.out.println("score");
       String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/delivery_order.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
       JSONParser jp = new JSONParser();
       JSONObject json = jp.getJSONFromUrl(url);
@@ -139,8 +138,6 @@ public class PendingOrderFragment extends ListFragment {
 		          String title_id = c.getString(TAG_ID);
 			      String times_rented = c.getString(TIMES_RENTED);
 			      String avg_reading= c.getString(AVG_READING);
-		          
-		          System.out.println("########id#######"+title_id);
 		  
 		          Book book = new Book();
 		          book.setTitle(title);

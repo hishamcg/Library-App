@@ -149,8 +149,6 @@ public class CurrentlyReadingFragment extends ListFragment {
 			      String times_rented = c.getString(TIMES_RENTED);
 			      String avg_reading= c.getString(AVG_READING);
 			      String pickup_order = c.getString(PICKUP_ORDER);
-		          
-		          System.out.println("########id#######"+title_id);
 		  
 		          Book book = new Book();
 		          book.setTitle(title);

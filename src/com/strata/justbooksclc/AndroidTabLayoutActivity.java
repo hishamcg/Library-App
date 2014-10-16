@@ -31,6 +31,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.newrelic.agent.android.NewRelic;
 import com.strata.justbooksclc.R;
 import com.strata.justbooksclc.adapter.NavDrawerListAdapter;
 import com.strata.justbooksclc.model.NavDrawerItem;
@@ -56,8 +57,9 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
     private TypedArray navMenuIcons;
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
-    private String numb;
-    int sl;
+    private String numb = "";
+    String my_theme = "gray";
+    int sl = 0;
     String email;
 	// Tab titles
 	private String[] tabs = {"Your Next Read", "New Arrival", "Top Rental"};
@@ -68,7 +70,20 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	      menuInflater.inflate(R.menu.list_view, menu);
 	      MenuItem overflow = menu.findItem(R.id.action_overflow);
 	      MenuItem user = menu.findItem(R.id.action_user);
+	      MenuItem action_level = menu.findItem(R.id.action_level);
 	      user.setTitle(email);
+	      //changing bookband heart color according to the theme
+	      if(my_theme.equals("green"))
+	    	  action_level.setIcon(R.drawable.ic_heart_green);
+	      else if(my_theme.equals("brown"))
+	    	  action_level.setIcon(R.drawable.ic_heart_brown);
+	      else if(my_theme.equals("violet"))
+	    	  action_level.setIcon(R.drawable.ic_heart_violet);
+	      else if(my_theme.equals("blue"))
+	    	  action_level.setIcon(R.drawable.ic_heart_blue);
+	      else
+	    	  action_level.setIcon(R.drawable.ic_heart_gray);
+	      //locking the view for bookband
 	      if (sl == 0){
 	    	  MenuItem mg = menu.findItem(R.id.action_guru);
 	    	  mg.setIcon(R.drawable.ic_lock);
@@ -76,12 +91,21 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	          mp.setIcon(R.drawable.ic_lock);
 	          MenuItem mr = menu.findItem(R.id.action_rookie);
 	          mr.setIcon(R.drawable.ic_lock);
-	      }else if (sl == 1){
+		      MenuItem mn = menu.findItem(R.id.action_newbie);
+		      mn.setIcon(R.drawable.ic_lock);}
+	      else if (sl == 1){
 	    	  MenuItem mg = menu.findItem(R.id.action_guru);
 	    	  mg.setIcon(R.drawable.ic_lock);
 	          MenuItem mp = menu.findItem(R.id.action_pro);
 	          mp.setIcon(R.drawable.ic_lock);
+	          MenuItem mr = menu.findItem(R.id.action_rookie);
+	          mr.setIcon(R.drawable.ic_lock);
 	      }else if (sl == 2){
+	    	  MenuItem mg = menu.findItem(R.id.action_guru);
+	    	  mg.setIcon(R.drawable.ic_lock);
+	          MenuItem mp = menu.findItem(R.id.action_pro);
+	          mp.setIcon(R.drawable.ic_lock);
+	      }else if (sl == 3){
 	    	  MenuItem mg = menu.findItem(R.id.action_guru);
 	    	  mg.setIcon(R.drawable.ic_lock);
 	      }
@@ -133,28 +157,41 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		    	Intent bookband = new Intent(getApplicationContext(), BookBand.class);
 		        startActivity(bookband);
 		    	return true;
-		    }else if (itemId == R.id.action_dull){
+		    }else if (itemId == R.id.action_dull && !my_theme.equals("gray")){
 		    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		        SharedPreferences.Editor   editor = preferences.edit();
-		        editor.putString("MY_THEME", "");
+		        editor.putString("MY_THEME", "gray");
 			    editor.commit();
 	    		finish();
 			    Intent in = new Intent(getApplicationContext(), AndroidTabLayoutActivity.class);
 			    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 	    		startActivity(in);
 		    	return true;
-		    }else if (itemId == R.id.action_newbie){
-		    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-		        SharedPreferences.Editor   editor = preferences.edit();
-		        editor.putString("MY_THEME", "green");
-			    editor.commit();
-	    		finish();
-			    Intent in = new Intent(getApplicationContext(), AndroidTabLayoutActivity.class);
-			    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-	    		startActivity(in);
-		    	return true;
-		    }else if (itemId == R.id.action_rookie){
+		    }else if (itemId == R.id.action_newbie && !my_theme.equals("green")){
 		    	if (sl >=1){
+		    		SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+			        SharedPreferences.Editor   editor = preferences.edit();
+			        editor.putString("MY_THEME", "green");
+				    editor.commit();
+		    		finish();
+				    Intent in = new Intent(getApplicationContext(), AndroidTabLayoutActivity.class);
+				    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		    		startActivity(in);
+		    	}else {
+		    		final AlertDialog alert = new AlertDialog.Builder(AndroidTabLayoutActivity.this).create();
+	    	        alert.setTitle("Book Band");
+	    	        alert.setMessage("You need a reading score above 5 to unlock this theme.");
+	    	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int which) {
+	    	        	   alert.cancel();
+	    	           }
+	    	        });
+	    	        alert.setIcon(R.drawable.ic_heart_green);
+	    	        alert.show();
+		    	}
+		    	return true;
+		    }else if (itemId == R.id.action_rookie && !my_theme.equals("brown")){
+		    	if (sl >=2){
 		    		SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 			        SharedPreferences.Editor   editor = preferences.edit();
 			        editor.putString("MY_THEME", "brown");
@@ -172,12 +209,12 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	    	        	   alert.cancel();
 	    	           }
 	    	        });
-	    	        alert.setIcon(R.drawable.skill_level);
+	    	        alert.setIcon(R.drawable.ic_heart_brown);
 	    	        alert.show();
 		    	}
 		    	return true;
-		    }else if (itemId == R.id.action_pro){
-	    		if (sl >=2){
+		    }else if (itemId == R.id.action_pro && !my_theme.equals("violet")){
+	    		if (sl >=3){
 	    			SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 	    	        SharedPreferences.Editor   editor = preferences.edit();
 	    	        editor.putString("MY_THEME", "violet");
@@ -195,13 +232,13 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	    	        	   alert.cancel();
 	    	           }
 	    	        });
-	    	        alert.setIcon(R.drawable.skill_level);
+	    	        alert.setIcon(R.drawable.ic_heart_violet);
 	    	        alert.show();
 		    	}
 		    	return true;
-		    }else if (itemId == R.id.action_guru){
+		    }else if (itemId == R.id.action_guru && !my_theme.equals("blue")){
 		    	
-	    		if (sl ==3){
+	    		if (sl ==4){
 	    			SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 	    	        SharedPreferences.Editor   editor = preferences.edit();
 	    	        editor.putString("MY_THEME", "blue");
@@ -219,7 +256,7 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	    	        	   alert.cancel();
 	    	           }
 	    	        });
-	    	        alert.setIcon(R.drawable.skill_level);
+	    	        alert.setIcon(R.drawable.ic_heart_blue);
 	    	        alert.show();
 		    	}
 		    	return true;
@@ -233,12 +270,14 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		//setting up new relic
+		NewRelic.withApplicationToken("AA6bdf42b2e97af26de101413a456782897ba273f7").start(this.getApplication());
 		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		numb = value.getString("NUMBER","");
-		sl = value.getInt("SKILL_LEVEL",0);
-		String my_theme = value.getString("MY_THEME", "");
-		email = value.getString("EMAIL", "guest@email.com");
+		if (numb != null && numb != ""){
+			sl = value.getInt("BOOK_BAND",0);
+			my_theme = value.getString("MY_THEME", "");
+			email = value.getString("EMAIL", "guest@email.com");}
 			
 		if (my_theme.equals("green"))
 			setTheme(R.style.MyThemeGreen);
@@ -276,18 +315,15 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		mDrawerLinear = (LinearLayout) findViewById(R.id.linear_slide);
 		navDrawerItems = new ArrayList<NavDrawerItem>();
 		
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));// Home
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));// Wishlist
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));// Location
-		//navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));// GCM
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));// About
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));// Log out
+		for (int i=0;i < navMenuTitles.length;i++){
+			navDrawerItems.add(new NavDrawerItem(navMenuTitles[i], navMenuIcons.getResourceId(i, -1)));
+		}
+		
 		// Recycle the typed array
 		navMenuIcons.recycle();
 		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 		// setting the nav drawer list adapter
-		adapter = new NavDrawerListAdapter(getApplicationContext(),
-				navDrawerItems);
+		adapter = new NavDrawerListAdapter(getApplicationContext(),navDrawerItems);
 		mDrawerList.setAdapter(adapter);
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -368,8 +404,7 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 	}
 	private class SlideMenuClickListener implements ListView.OnItemClickListener {
   		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 			// display view for selected nav drawer item
   			if (numb != null && numb != ""){
   				displayView(position);
@@ -410,7 +445,6 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 		    editor.putString("MEMBERSHIP_NO", "");
 		    editor.putString("DATE_OF_SIGNUP", "");
 		    editor.putString("NUMBER", "");
-		    editor.putString("regId", "");
 		    editor.putString("BOOK_BAND", "");
 		    editor.putString("MY_THEME", "");
 		    editor.commit();
@@ -449,7 +483,7 @@ public class AndroidTabLayoutActivity extends FragmentActivity implements Action
 			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 4:
-			Intent sign_up_call = new Intent(getApplicationContext(), HelpActivity.class);
+			Intent sign_up_call = new Intent(getApplicationContext(), Signup.class);
     		startActivity(sign_up_call);
 		    mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;

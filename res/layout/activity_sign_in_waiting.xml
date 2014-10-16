@@ -43,7 +43,7 @@
 	    <EditText
 	        android:id="@+id/SW_OtpText"
 	        android:layout_width="fill_parent"
-	        android:layout_height="35dp"
+	        android:layout_height="40dp"
 	        android:textSize="16sp"
 	        android:padding="5dip"
 	        android:background="@drawable/edittext_style"
@@ -56,19 +56,17 @@
 	    </EditText>
 	    <Button
 	        android:id="@+id/btn_otp"
-	        style="@style/button_text"
 	        android:layout_width="fill_parent"
-	        android:layout_height="35dp"
+	        android:layout_height="40dp"
 	        android:background="@drawable/gcm_reg_button"
 	        android:text="Enter"
 	        android:textColor="#ffffff" />
     </LinearLayout>
     <Button
 	        android:id="@+id/btn_skip"
-	        style="@style/button_text"
 	        android:layout_width="fill_parent"
 	        android:layout_alignParentBottom="true"
-	        android:layout_height="35dp"
+	        android:layout_height="40dp"
 	        android:background="@drawable/gcm_reg_button"
 	        android:text="Skip and Enter manually"
 	        android:textColor="#ffffff" />

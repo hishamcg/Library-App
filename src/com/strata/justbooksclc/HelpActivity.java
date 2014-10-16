@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import com.newrelic.agent.android.NewRelic;
 import com.strata.justbooksclc.R;
 
 public class HelpActivity extends Activity {
@@ -28,6 +30,8 @@ public class HelpActivity extends Activity {
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		//settingup new relic
+		NewRelic.withApplicationToken("AA6bdf42b2e97af26de101413a456782897ba273f7").start(this.getApplication());
 		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		String my_theme = value.getString("MY_THEME", "");
 			

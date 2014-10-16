@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,12 +16,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +29,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -40,17 +45,16 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.plus.model.people.Person;
-import com.strata.justbooksclc.R;
 
 public class SingleMenuItemActivity  extends Activity {
 
-	private ProgressDialog progress;
 	Person person;
 	// JSON node keys
 	private static final String USER_INFO = "info";
@@ -66,11 +70,21 @@ public class SingleMenuItemActivity  extends Activity {
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String PICKUP_ORDER = "pickup_order_id";
 	private static final String AVG_READING = "avg_reading_times";
-
+	
+	private JSONParse json_parse = new JSONParse();
+	String branch_name;
+	String title_id;
+	long time_of_last_shake = 0;
+	long initial_time = System.currentTimeMillis();
+	long buffer_time_for_shake = 1000;
+	
+	private SensorManager mSensorManager;
+	private ShakeEventListener mSensorListener;
+	
 	@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.front_page, menu);
+        menuInflater.inflate(R.menu.search_page_menu, menu);
         SearchManager searchManager =
               (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 	    SearchView searchView =
@@ -108,6 +122,7 @@ public class SingleMenuItemActivity  extends Activity {
 		final String memb = value.getString("MEMBERSHIP_NO","");
 		final String numb = value.getString("NUMBER","");
 		final String login_status = value.getString("LOGIN_STATUS","");
+		branch_name = value.getString("BRANCH","");
 		String my_theme = value.getString("MY_THEME", "");
 			
 		if (my_theme.equals("green"))
@@ -123,7 +138,6 @@ public class SingleMenuItemActivity  extends Activity {
         
         setContentView(R.layout.single_list_view2);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        progress = new ProgressDialog(this);
         setWindowContentOverlayCompat();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -149,8 +163,7 @@ public class SingleMenuItemActivity  extends Activity {
         }
 
         String message = in.getStringExtra("message");
-        final String title_id = in.getStringExtra(TAG_ID);
-
+        title_id = in.getStringExtra(TAG_ID);
         // Displaying all values on the screen
         TextView lblAuthor = (TextView) findViewById(R.id.author_label);
         TextView lblCategory = (TextView) findViewById(R.id.category_label);
@@ -162,6 +175,9 @@ public class SingleMenuItemActivity  extends Activity {
         TextView lblSummary = (TextView) findViewById(R.id.summary);
         TextView lblpickup_order = (TextView) findViewById(R.id.pickup_order);
         ImageView lblimage = (ImageView) findViewById(R.id.image_label);
+        
+        final RelativeLayout avail_layout = (RelativeLayout) findViewById(R.id.avail_layout);
+        
         final LinearLayout rental_btn = (LinearLayout) findViewById(R.id.button_rental);
         final LinearLayout remove = (LinearLayout) findViewById(R.id.remove);
         final LinearLayout add_to_list = (LinearLayout) findViewById(R.id.add_to_list);
@@ -184,22 +200,26 @@ public class SingleMenuItemActivity  extends Activity {
         	linearLayout3.setVisibility(View.GONE);
         	if (message.equals("create")){
         		remove.setVisibility(View.GONE);
-
+        		json_parse.execute();
 	        }
         	else if(message.equals("current")){
         		pick_up.setVisibility(View.VISIBLE);
         		remove.setVisibility(View.GONE);
         		add_to_list.setVisibility(View.GONE);
         		rental_btn.setVisibility(View.GONE);
+        		avail_layout.setVisibility(View.GONE);
         	}else if (message.equals("delivery")){
         		lblpickup_order.setText("rental order in process...");
             	pickup_layout.setVisibility(View.VISIBLE);
             	action_view.setVisibility(View.GONE);
+            	avail_layout.setVisibility(View.GONE);
         	}else{
 	        	add_to_list.setVisibility(View.GONE);
+        		json_parse.execute();
 	        }
         }else{
         	linearLayout2.setVisibility(View.GONE);
+        	avail_layout.setVisibility(View.GONE);
         }
         lblAuthor.setText(author);
         lblCategory.setText(category);
@@ -226,50 +246,7 @@ public class SingleMenuItemActivity  extends Activity {
     	        alert.setButton("Yes", new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int which) {
     	        	   String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/orders/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
-
-    	    		   InputStream inputStream = null;
-    	        	   try {
-    	        		    HttpParams httpParameters = new BasicHttpParams();
-			        		// Set the timeout in milliseconds until a connection is established.
-			        		// The default value is zero, that means the timeout is not used.
-			        		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
-			        		// Set the default socket timeout (SO_TIMEOUT) 
-			        		// in milliseconds which is the timeout for waiting for data.
-			        		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
-    	    	            // 1. create HttpClient
-    	    	            HttpClient httpclient = new DefaultHttpClient();
-
-    	    	            // 2. make POST request to the given URL
-    	    	            HttpPost httpPost = new HttpPost(url);
-
-    	    	            httpPost.setHeader("Content-type", "");
-
-    	    	            // 8. Execute POST request to the given URL
-    	    	            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-    	    	            // 9. receive response as inputStream
-    	    	            inputStream = httpResponse.getEntity().getContent();
-
-    	    	            // 10. convert inputstream to string
-    	    	            if(inputStream != null)
-    	    	            {
-    		    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-    		    	            StringBuilder responseStrBuilder = new StringBuilder();
-
-    		    	            String inputStr;
-    		    	            while ((inputStr = streamReader.readLine()) != null)
-    		    	                responseStrBuilder.append(inputStr);
-
-    		    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
-    		    	            String INFO = jsonObject.getString(USER_INFO);
-    		    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
-    		    	            }
-    	    	            else
-    	    	            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
-    	    	        } catch (Exception e) {
-    	    	            Log.d("InputStream", e.getLocalizedMessage());
-    	    	            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
-    	    	        }
+    	        	   httpToPostRequest(url);
     	           }
     	        });
     	        alert.setButton2("No",new DialogInterface.OnClickListener() {
@@ -294,50 +271,7 @@ public class SingleMenuItemActivity  extends Activity {
     	        alert.setButton("Yes", new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int which) {
     	        	   String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists/destroy.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
-
-    	    		   InputStream inputStream = null;
-    	        	   try {
-    	        		    HttpParams httpParameters = new BasicHttpParams();
-			        		// Set the timeout in milliseconds until a connection is established.
-			        		// The default value is zero, that means the timeout is not used.
-			        		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
-			        		// Set the default socket timeout (SO_TIMEOUT) 
-			        		// in milliseconds which is the timeout for waiting for data.
-			        		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
-    	    	            // 1. create HttpClient
-    	    	            HttpClient httpclient = new DefaultHttpClient();
-
-    	    	            // 2. make POST request to the given URL
-    	    	            HttpPost httpPost = new HttpPost(url);
-
-    	    	            httpPost.setHeader("Content-type", "");
-
-    	    	            // 8. Execute POST request to the given URL
-    	    	            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-    	    	            // 9. receive response as inputStream
-    	    	            inputStream = httpResponse.getEntity().getContent();
-
-    	    	            // 10. convert inputstream to string
-    	    	            if(inputStream != null)
-    	    	            {
-    		    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-    		    	            StringBuilder responseStrBuilder = new StringBuilder();
-
-    		    	            String inputStr;
-    		    	            while ((inputStr = streamReader.readLine()) != null)
-    		    	                responseStrBuilder.append(inputStr);
-
-    		    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
-    		    	            String INFO = jsonObject.getString(USER_INFO);
-    		    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
-    		    	            }
-    	    	            else
-    	    	            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
-    	    	        } catch (Exception e) {
-    	    	            Log.d("InputStream", e.getLocalizedMessage());
-    	    	            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
-    	    	        }
+    	        	   httpToPostRequest(url);
     	           }
     	        });
     	        alert.setButton2("No",new DialogInterface.OnClickListener() {
@@ -354,50 +288,7 @@ public class SingleMenuItemActivity  extends Activity {
         add_to_list.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v){
         	   String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists/create.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&membership_no="+memb;
-
-    		   InputStream inputStream = null;
-        	   try {
-        		    HttpParams httpParameters = new BasicHttpParams();
-	        		// Set the timeout in milliseconds until a connection is established.
-	        		// The default value is zero, that means the timeout is not used.
-	        		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
-	        		// Set the default socket timeout (SO_TIMEOUT) 
-	        		// in milliseconds which is the timeout for waiting for data.
-	        		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
-    	            // 1. create HttpClient
-    	            HttpClient httpclient = new DefaultHttpClient();
-
-    	            // 2. make POST request to the given URL
-    	            HttpPost httpPost = new HttpPost(url);
-
-    	            httpPost.setHeader("Content-type", "");
-
-    	            // 8. Execute POST request to the given URL
-    	            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-    	            // 9. receive response as inputStream
-    	            inputStream = httpResponse.getEntity().getContent();
-
-    	            // 10. convert inputstream to string
-    	            if(inputStream != null)
-    	            {
-	    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-	    	            StringBuilder responseStrBuilder = new StringBuilder();
-
-	    	            String inputStr;
-	    	            while ((inputStr = streamReader.readLine()) != null)
-	    	                responseStrBuilder.append(inputStr);
-
-	    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
-	    	            String INFO = jsonObject.getString(USER_INFO);
-	    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
-	    	            }
-    	            else
-    	            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
-    	        } catch (Exception e) {
-    	            Log.d("InputStream", e.getLocalizedMessage());
-    	            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
-    	        }
+        	   httpToPostRequest(url);
         	}
         });
         pick_up.setOnClickListener(new Button.OnClickListener() {
@@ -409,50 +300,7 @@ public class SingleMenuItemActivity  extends Activity {
     	        alert.setButton("Yes", new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int which) {
     	        	   String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/orders/pickup.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&rental_id="+rental_id+"&membership_no="+memb;
-
-    	    		   InputStream inputStream = null;
-    	        	   try {
-    	        		    HttpParams httpParameters = new BasicHttpParams();
-			        		// Set the timeout in milliseconds until a connection is established.
-			        		// The default value is zero, that means the timeout is not used.
-			        		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
-			        		// Set the default socket timeout (SO_TIMEOUT) 
-			        		// in milliseconds which is the timeout for waiting for data.
-			        		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
-    	    	            // 1. create HttpClient
-    	    	            HttpClient httpclient = new DefaultHttpClient();
-
-    	    	            // 2. make POST request to the given URL
-    	    	            HttpPost httpPost = new HttpPost(url);
-
-    	    	            httpPost.setHeader("Content-type", "");
-
-    	    	            // 8. Execute POST request to the given URL
-    	    	            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-    	    	            // 9. receive response as inputStream
-    	    	            inputStream = httpResponse.getEntity().getContent();
-
-    	    	            // 10. convert inputstream to string
-    	    	            if(inputStream != null)
-    	    	            {
-    		    	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-    		    	            StringBuilder responseStrBuilder = new StringBuilder();
-
-    		    	            String inputStr;
-    		    	            while ((inputStr = streamReader.readLine()) != null)
-    		    	                responseStrBuilder.append(inputStr);
-
-    		    	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
-    		    	            String INFO = jsonObject.getString(USER_INFO);
-    		    	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
-    		    	            }
-    	    	            else
-    	    	            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
-    	    	        } catch (Exception e) {
-    	    	            Log.d("InputStream", e.getLocalizedMessage());
-    	    	            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
-    	    	        }
+    	        	   httpToPostRequest(url);
     	           }
     	        });
     	        alert.setButton2("No",new DialogInterface.OnClickListener() {
@@ -486,12 +334,69 @@ public class SingleMenuItemActivity  extends Activity {
         sign_up.setOnClickListener(new Button.OnClickListener() {
         	public void onClick(View v){
     	        //Intent sign_up_call = new Intent(getApplicationContext(), CallCustomerCare.class);
-        		Intent sign_up_call = new Intent(getApplicationContext(), HelpActivity.class);
+        		Intent sign_up_call = new Intent(getApplicationContext(), Signup.class);
         		startActivity(sign_up_call);
         	}
         });
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+	    mSensorListener = new ShakeEventListener();  
+	    mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+        public void onShake() {
+        	long now = System.currentTimeMillis();
+        	if(now > initial_time + buffer_time_for_shake){
+        		finish();
+        	}
+        }
+	    	  
+	    });
+        
 
     }
+	private void httpToPostRequest(String url) {
+		InputStream inputStream = null;
+		try {
+		    HttpParams httpParameters = new BasicHttpParams();
+    		// Set the timeout in milliseconds until a connection is established.
+    		// The default value is zero, that means the timeout is not used.
+    		HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
+    		// Set the default socket timeout (SO_TIMEOUT) 
+    		// in milliseconds which is the timeout for waiting for data.
+    		HttpConnectionParams.setSoTimeout(httpParameters, 5000);
+            // 1. create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // 2. make POST request to the given URL
+            HttpPost httpPost = new HttpPost(url);
+
+            httpPost.setHeader("Content-type", "");
+
+            // 8. Execute POST request to the given URL
+            HttpResponse httpResponse = httpclient.execute(httpPost);
+
+            // 9. receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // 10. convert inputstream to string
+            if(inputStream != null)
+            {
+	            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+	            StringBuilder responseStrBuilder = new StringBuilder();
+
+	            String inputStr;
+	            while ((inputStr = streamReader.readLine()) != null)
+	                responseStrBuilder.append(inputStr);
+
+	            JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
+	            String INFO = jsonObject.getString(USER_INFO);
+	            Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_LONG).show();
+	            }
+            else
+            	Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+            Toast.makeText(getApplicationContext(),"Sorry something went wrong",Toast.LENGTH_LONG).show();
+        }
+	}
 	//this was supposed to drop a shadow on actionbar
 	private void setWindowContentOverlayCompat() {
 	    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -533,9 +438,57 @@ public class SingleMenuItemActivity  extends Activity {
 	        return null;
 	    }
 	}
+	
+	private class JSONParse extends AsyncTask<String,String,JSONObject>{
+	  protected void onPreExecute(){
+		  
+	  }
+	  protected JSONObject doInBackground(String... args){
+		  try {
+			branch_name = URLEncoder.encode(branch_name, "UTF-8");
+		  } catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				branch_name = "801";
+		  }
+		  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/titles/check_availability.json?title_id="+title_id+"&branch_name="+branch_name;
+		  JSONParser jp = new JSONParser();
+		  JSONObject json = jp.getJSONFromUrl(url);
+		  if (isCancelled()){
+          	  return null;}
+          else
+			return json;
+	  }
+	  protected void onPostExecute(JSONObject json){
+		  if (json != null && !isCancelled()){
+			  TextView lblavail_text = (TextView) findViewById(R.id.avail_text);
+		      ProgressBar progress_avail = (ProgressBar) findViewById(R.id.progress_avail);
+			  try {
+					// Getting Array of data
+				  String status = json.getString("status");
+				  lblavail_text.setText(status) ;
+				  progress_avail.setVisibility(View.GONE);
+				} catch (JSONException e) {
+					e.printStackTrace();
+					lblavail_text.setText("Books in circulation. Not currently available") ;
+					progress_avail.setVisibility(View.GONE);
+				}
+		  }
+	  }
+	}
 	@Override
 	public void onResume(){
-		super.onResume();
-		progress.hide();
-	}
+      super.onResume();
+      mSensorManager.registerListener(mSensorListener,
+      mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_UI);
+    }
+	public void onDestroy(){
+	  super.onDestroy();
+	  mSensorManager.unregisterListener(mSensorListener);
+	  json_parse.cancel(true);
+    }
+    public void onBackPressed(){
+	  json_parse.cancel(true);
+	  mSensorManager.unregisterListener(mSensorListener);
+	  finish();
+    }
 }

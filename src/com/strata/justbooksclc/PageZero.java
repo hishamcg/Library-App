@@ -5,6 +5,8 @@ import java.util.Calendar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.newrelic.agent.android.NewRelic;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -40,8 +42,12 @@ public class PageZero extends Activity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //settingup new relic
+      	NewRelic.withApplicationToken("AA6bdf42b2e97af26de101413a456782897ba273f7").start(this.getApplication());
         setContentView(R.layout.page_zero);
-        
+        //setting font
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts1/opensans.ttf");
+        //FontsOverride.setDefaultFont(this);
         //to receive data from notification
         Bundle extras = getIntent().getExtras();
         if(extras != null){
@@ -51,27 +57,42 @@ public class PageZero extends Activity {
 		memb = value.getString("MEMBERSHIP_NO", "");
 		
 		if (isNetworkAvailable()){
-			//here i'm checking if the user has already signed in or not
-			//data from shared pref (NUMBER,AUTH_TOKEN,MEMBERSHIP_NO,DATE_OF_SIGNUP)
-			
-	    	if (memb != null && memb != ""){
-	    		//for now commenting to check new layout
-	    		final SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
-	    		String registrationId = pref.getString(REG_ID, "");
-	    		int registeredVersion = pref.getInt(APP_VERSION, Integer.MIN_VALUE);
-	    		int currentVersion = getAppVersion(getApplicationContext());
-	    		if (registrationId.isEmpty() || registeredVersion != currentVersion) {
-	    			register_activity.start_registration(getApplicationContext());
-	    		}
-	    		json_parse.execute();
+			//checking if the user mobile has an android version above 3
+			if (android.os.Build.VERSION.SDK_INT >=  android.os.Build.VERSION_CODES.HONEYCOMB){
+				//here i'm checking if the user has already signed in or not
+				//data from shared pref (NUMBER,AUTH_TOKEN,MEMBERSHIP_NO,DATE_OF_SIGNUP)
+		    	if (memb != null && memb != ""){
+		    		//for now commenting to check new layout
+		    		final SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
+		    		String registrationId = pref.getString(REG_ID, "");
+		    		int registeredVersion = pref.getInt(APP_VERSION, Integer.MIN_VALUE);
+		    		int currentVersion = getAppVersion(getApplicationContext());
+		    		if (registrationId.isEmpty() || registeredVersion != currentVersion) {
+		    			register_activity.start_registration(getApplicationContext());
+		    		}
+		    		json_parse.execute();
+				}else{
+					SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+				    SharedPreferences.Editor   editor = preferences.edit();
+				    editor.putString("LOGIN_STATUS", "non_user");
+				    editor.commit();
+					Intent in = new Intent(getApplicationContext(), FrontPage.class);
+				    //editor.commit();
+	        		startActivity(in);
+				}
 			}else{
-				SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-			    SharedPreferences.Editor   editor = preferences.edit();
-			    editor.putString("LOGIN_STATUS", "non_user");
-			    editor.commit();
-				Intent in = new Intent(getApplicationContext(), FrontPage.class);
-			    //editor.commit();
-        		startActivity(in);
+				AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
+		        alert.setTitle("Alert!!");
+		        alert.setMessage("Sorry this app requires android version 3.0 or above");
+		        alert.setButton2("EXIT",new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		                finish();
+		            }
+		        });
+		        // Set the Icon for the Dialog
+		        alert.setIcon(R.drawable.gcm_icon);
+		        alert.show();
 			}
 		}else{
 			TextView tv = (TextView) findViewById(R.id.no_connection);
@@ -136,6 +157,7 @@ public class PageZero extends Activity {
 			String pincode="NA";
 			String email="NA";
 			String plan ="NA";
+			String branch ="NA";
 			//SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 			//final String dateOfSignup = value.getString("DATE_OF_SIGNUP","");
 			//final long saveddatevalue = new Date().getTime();
@@ -151,10 +173,8 @@ public class PageZero extends Activity {
 					books_returns_count = Integer.parseInt(DATA.getString("book_returns_count"));
 					//books_returns_count = 600;
 					user_full_name = DATA.getString("first_name")+"__,__"+DATA.getString("middle_name")+"__,__"+DATA.getString("last_name");
-//					user_name_set.add(DATA.getString("first_name"));
-//					user_name_set.add(DATA.getString("middle_name"));
-//					user_name_set.add(DATA.getString("last_name"));
-					
+//					
+					branch = DATA.getString("branch_id");
 					address = DATA.getString("address");
 					locality = DATA.getString("locality");
 					state = DATA.getString("state");
@@ -230,15 +250,21 @@ public class PageZero extends Activity {
 				            }
 				            
 				            int value = 0;
-						    if (books_returns_count < 49)
+				            String my_band = "gray";
+				            if (books_returns_count < 5)
 						    	value = 0;
-						    else if (books_returns_count > 49 && books_returns_count < 249)
+				            else if (books_returns_count >= 5 && books_returns_count < 50){
 						    	value = 1;
-						    else if (books_returns_count > 250 && books_returns_count < 499)
+						    	my_band = "green";
+				            }else if (books_returns_count >= 50 && books_returns_count < 250){
 						    	value = 2;
-						    else
+						    	my_band = "brown";
+						    }else if (books_returns_count >= 250 && books_returns_count < 500){
 						    	value = 3;
-						    	
+						    	my_band = "violet";
+						    }else{
+						    	value = 4;
+						    	my_band = "blue";}
 						    
 				            SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 						    SharedPreferences.Editor   editor = preferences.edit();
@@ -254,6 +280,8 @@ public class PageZero extends Activity {
 						    editor.putString("PINCODE",pincode);
 						    editor.putString("EMAIL",email);
 						    editor.putString("PLAN",plan);
+						    editor.putString("BRANCH",branch);
+						    editor.putString("MY_THEME",my_band);
 						    editor.commit();
 				            
 				        } catch(NumberFormatException nfe) {
@@ -284,6 +312,8 @@ public class PageZero extends Activity {
 			   	       editor.putString("MEMBERSHIP_NO", "");
 			   	       editor.putString("DATE_OF_SIGNUP", "");
 			  		   editor.putString("NUMBER","");
+					   editor.putString("BOOK_BAND", "");
+			  		   editor.putString("MY_THEME","");
 			   		   editor.commit();
 			   		    
 			   		   Intent logout = new Intent(getApplicationContext(),PageZero.class);

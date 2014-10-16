@@ -2,6 +2,7 @@ package com.strata.justbooksclc;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 
 import org.json.JSONArray;
@@ -36,14 +37,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.newrelic.agent.android.NewRelic;
+import com.squareup.picasso.Callback.EmptyCallback;
+import com.squareup.picasso.Picasso;
 import com.strata.justbooksclc.adapter.NavDrawerListAdapter;
 import com.strata.justbooksclc.model.NavDrawerItem;
 
@@ -77,7 +83,6 @@ public class FrontPage extends FragmentActivity{
   private static final String AVG_READING = "avg_reading_times";
   private static final String IMAGE_URL = "image_url";
   private static final String SUMMARY = "summary";
-  private static final String REG_ID = "regId";
   private JSONParse json_parse = new JSONParse();
   private JSONParse json_parse1 = new JSONParse();
   private JSONParse json_parse2 = new JSONParse();
@@ -86,6 +91,12 @@ public class FrontPage extends FragmentActivity{
   private SensorManager mSensorManager;
   private ShakeEventListener mSensorListener;
   String[][] shake_array;
+  int shake_array_length = 0;
+  long initial_shake_time = 0;
+  long buffer_time_for_shake = 1000;
+  String[][] mera_array;
+  String[][] mera_array1;
+  String[][] mera_array2;
   ViewPager pager;
   ViewPager pager1;
   ViewPager pager2;
@@ -95,9 +106,9 @@ public class FrontPage extends FragmentActivity{
   String email;
   String numb = "";
   String my_theme = "gray";
-  int sl;//skill level
+  int sl = 0;//skill level
   ActionBar actionBar;
-  int position_of_viewpager=0;
+  int position_of_viewpager[]= new int[3];
   int position_of_viewpager1=0;
   int position_of_viewpager2=0;
   boolean shake_ready = false;
@@ -108,7 +119,21 @@ public class FrontPage extends FragmentActivity{
       menuInflater.inflate(R.menu.main, menu);
       MenuItem overflow = menu.findItem(R.id.action_overflow);
       MenuItem user = menu.findItem(R.id.action_user);
+      MenuItem action_level = menu.findItem(R.id.action_level);
       user.setTitle(email);
+      //changing bookband heart color according to the theme
+    	  
+      if(my_theme.equals("green"))
+    	  action_level.setIcon(R.drawable.ic_heart_green);
+      else if(my_theme.equals("brown"))
+    	  action_level.setIcon(R.drawable.ic_heart_brown);
+      else if(my_theme.equals("violet"))
+    	  action_level.setIcon(R.drawable.ic_heart_violet);
+      else if(my_theme.equals("blue"))
+    	  action_level.setIcon(R.drawable.ic_heart_blue);
+      else
+    	  action_level.setIcon(R.drawable.ic_heart_gray);
+      //locking the view for bookband
       if (sl == 0){
     	  MenuItem mg = menu.findItem(R.id.action_guru);
     	  mg.setIcon(R.drawable.ic_lock);
@@ -116,15 +141,26 @@ public class FrontPage extends FragmentActivity{
           mp.setIcon(R.drawable.ic_lock);
           MenuItem mr = menu.findItem(R.id.action_rookie);
           mr.setIcon(R.drawable.ic_lock);
-      }else if (sl == 1){
+	      MenuItem mn = menu.findItem(R.id.action_newbie);
+	      mn.setIcon(R.drawable.ic_lock);}
+      else if (sl == 1){
     	  MenuItem mg = menu.findItem(R.id.action_guru);
     	  mg.setIcon(R.drawable.ic_lock);
           MenuItem mp = menu.findItem(R.id.action_pro);
           mp.setIcon(R.drawable.ic_lock);
+          MenuItem mr = menu.findItem(R.id.action_rookie);
+          mr.setIcon(R.drawable.ic_lock);
       }else if (sl == 2){
     	  MenuItem mg = menu.findItem(R.id.action_guru);
     	  mg.setIcon(R.drawable.ic_lock);
+          MenuItem mp = menu.findItem(R.id.action_pro);
+          mp.setIcon(R.drawable.ic_lock);
+      }else if (sl == 3){
+    	  MenuItem mg = menu.findItem(R.id.action_guru);
+    	  mg.setIcon(R.drawable.ic_lock);
       }
+      
+      
       
       if (numb != null && numb != "") {           
     	  overflow.setVisible(true);
@@ -173,28 +209,41 @@ public class FrontPage extends FragmentActivity{
 	    	Intent bookband = new Intent(getApplicationContext(), BookBand.class);
 	        startActivity(bookband);
 	    	return true;
-	    }else if (itemId == R.id.action_dull){
+	    }else if (itemId == R.id.action_dull && !my_theme.equals("gray") ){
 	    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 	        SharedPreferences.Editor   editor = preferences.edit();
-	        editor.putString("MY_THEME", "");
-		    editor.commit();
-		    Intent in = new Intent(getApplicationContext(), FrontPage.class);
-		    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-    		startActivity(in);
-    		finish();
-	    	return true;
-	    }else if (itemId == R.id.action_newbie){
-	    	SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
-	        SharedPreferences.Editor   editor = preferences.edit();
-	        editor.putString("MY_THEME", "green");
+	        editor.putString("MY_THEME", "gray");
 		    editor.commit();
     		finish();
 		    Intent in = new Intent(getApplicationContext(), FrontPage.class);
 		    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
     		startActivity(in);
 	    	return true;
-	    }else if (itemId == R.id.action_rookie){
+	    }else if (itemId == R.id.action_newbie && !my_theme.equals("green")){
 	    	if (sl >=1){
+	    		SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		        SharedPreferences.Editor   editor = preferences.edit();
+		        editor.putString("MY_THEME", "green");
+			    editor.commit();
+	    		finish();
+			    Intent in = new Intent(getApplicationContext(), FrontPage.class);
+			    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+	    		startActivity(in);
+	    	}else {
+	    		final AlertDialog alert = new AlertDialog.Builder(FrontPage.this).create();
+    	        alert.setTitle("Book Band");
+    	        alert.setMessage("You need a reading score above 5 to unlock this theme.");
+    	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int which) {
+    	        	   alert.cancel();
+    	           }
+    	        });
+    	        alert.setIcon(R.drawable.ic_heart_green);
+    	        alert.show();
+	    	}
+	    	return true;
+	    }else if (itemId == R.id.action_rookie && !my_theme.equals("brown")){
+	    	if (sl >=2){
 	    		SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		        SharedPreferences.Editor   editor = preferences.edit();
 		        editor.putString("MY_THEME", "brown");
@@ -205,19 +254,19 @@ public class FrontPage extends FragmentActivity{
 	    		startActivity(in);
 	    	}else {
 	    		final AlertDialog alert = new AlertDialog.Builder(FrontPage.this).create();
-    	        alert.setTitle("Skill Level");
-    	        alert.setMessage("Your need a skill score above 50 to unlock this theme.");
+    	        alert.setTitle("Book Band");
+    	        alert.setMessage("You need a reading score above 50 to unlock this theme.");
     	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int which) {
     	        	   alert.cancel();
     	           }
     	        });
-    	        alert.setIcon(R.drawable.skill_level);
+    	        alert.setIcon(R.drawable.ic_heart_brown);
     	        alert.show();
 	    	}
 	    	return true;
-	    }else if (itemId == R.id.action_pro){
-    		if (sl >=2){
+	    }else if (itemId == R.id.action_pro && !my_theme.equals("violet")){
+    		if (sl >=3){
     			SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
     	        SharedPreferences.Editor   editor = preferences.edit();
     	        editor.putString("MY_THEME", "violet");
@@ -228,20 +277,20 @@ public class FrontPage extends FragmentActivity{
         		startActivity(in);
 	    	}else {
 	    		final AlertDialog alert = new AlertDialog.Builder(FrontPage.this).create();
-    	        alert.setTitle("Skill Level");
-    	        alert.setMessage("Your need a skill score above 250 to unlock this theme.");
+    	        alert.setTitle("Book Band");
+    	        alert.setMessage("You need a reading score above 250 to unlock this theme.");
     	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int which) {
     	        	   alert.cancel();
     	           }
     	        });
-    	        alert.setIcon(R.drawable.skill_level);
+    	        alert.setIcon(R.drawable.ic_heart_violet);
     	        alert.show();
 	    	}
 	    	return true;
-	    }else if (itemId == R.id.action_guru){
+	    }else if (itemId == R.id.action_guru && !my_theme.equals("blue")){
 	    	
-    		if (sl ==3){
+    		if (sl ==4){
     			SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
     	        SharedPreferences.Editor   editor = preferences.edit();
     	        editor.putString("MY_THEME", "blue");
@@ -252,14 +301,14 @@ public class FrontPage extends FragmentActivity{
         		startActivity(in);
 	    	}else {
 	    		final AlertDialog alert = new AlertDialog.Builder(FrontPage.this).create();
-    	        alert.setTitle("Skill Level");
-    	        alert.setMessage("Your need a skill score above 500 to unlock this theme.");
+    	        alert.setTitle("Book Band");
+    	        alert.setMessage("You need a reading score above 500 to unlock this theme.");
     	        alert.setButton("Ok", new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int which) {
     	        	   alert.cancel();
     	           }
     	        });
-    	        alert.setIcon(R.drawable.skill_level);
+    	        alert.setIcon(R.drawable.ic_heart_blue);
     	        alert.show();
 	    	}
 	    	return true;
@@ -273,11 +322,21 @@ public class FrontPage extends FragmentActivity{
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//setting new relic
+		NewRelic.withApplicationToken("AA6bdf42b2e97af26de101413a456782897ba273f7").start(this.getApplication());
+				
 		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
+		int last_data_fetch = value.getInt("DATA_FETCH_DATE", 0);
 		numb = value.getString("NUMBER", "");
-		sl = value.getInt("BOOK_BAND",0);
-		my_theme = value.getString("MY_THEME", "");
-		email = value.getString("EMAIL", "guest@email.com");
+		if (numb != null && numb != ""){
+			sl = value.getInt("BOOK_BAND",0);
+			my_theme = value.getString("MY_THEME", "");
+			email = value.getString("EMAIL", "guest@email.com");
+			memb = value.getString("MEMBERSHIP_NO", "");
+			auth_token = value.getString("AUTH_TOKEN", "");
+			}
+			
+		
 		
 		
 		if (my_theme.equals("green"))
@@ -292,46 +351,55 @@ public class FrontPage extends FragmentActivity{
 			setTheme(R.style.MyTheme);
 		
 		setContentView(R.layout.front_page);
+		//wait for the server
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 		//Get a Tracker (should auto-report)
 		//GoogleAnalytics.getInstance(this).getLogger().setLogLevel(LogLevel.VERBOSE);
 		((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.GLOBAL_TRACKER);
 		
-		
-		//progress = new ProgressDialog(this)
-		
-		//-----for shake----
+		//-----for shake---------------------------------------
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-	    mSensorListener = new ShakeEventListener();   
-
+	    mSensorListener = new ShakeEventListener();  
 	    mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
-
 	      public void onShake() {
-	    	  if(shake_ready){
-		    	/*int randInt = new Random().nextInt(position_of_viewpager);
-		    	pager.setCurrentItem(randInt);
-		    	randInt = new Random().nextInt(position_of_viewpager1);
-		    	pager1.setCurrentItem(randInt);
-		    	randInt = new Random().nextInt(position_of_viewpager2);
-		    	pager2.setCurrentItem(randInt);*/
-	    		if (shake_array.length > 0 ){
-	    			int randInt = new Random().nextInt(shake_array.length);
-	    			Intent in = new Intent(getApplicationContext(),SingleMenuItemActivity.class);
-	    			in.putExtra(IMAGE_URL,shake_array[randInt][0]);
-	    			in.putExtra(TAG_ID, shake_array[randInt][1]);
-	    			in.putExtra(TIMES_RENTED, shake_array[randInt][2]);
-	    			in.putExtra(AVG_READING,shake_array[randInt][3]);
-	    			in.putExtra(TAG_AUTHOR,shake_array[randInt][4]);
-	    			in.putExtra(TAG_TITLE, shake_array[randInt][5]);
-	    			in.putExtra(TAG_CATEGORY, shake_array[randInt][6]);
-	    			in.putExtra(TAG_PAGE, shake_array[randInt][7]);
-	    			in.putExtra(TAG_LANGUAGE, shake_array[randInt][8]);
-	    			in.putExtra(SUMMARY,shake_array[randInt][9]);
-	    			in.putExtra("message", "create");
-	    			in.putExtra("check","logged_in");
-	    			startActivity(in);
-	    		}
+	    	  long now = System.currentTimeMillis();
+	    	  if(shake_ready && now > initial_shake_time + buffer_time_for_shake){
+	    		  initial_shake_time = System.currentTimeMillis();
+	    		  final RelativeLayout s_lay = (RelativeLayout) findViewById(R.id.shake_view);
+	    		  if(s_lay.getVisibility() == View.GONE){
+			    	final int randInt = new Random().nextInt(position_of_viewpager[0]);
+			    	pager.setCurrentItem(randInt);
+		    		ImageView s_imag = (ImageView) findViewById(R.id.shake_image);
+		    		s_lay.setVisibility(View.VISIBLE);
+		    		Picasso.with(getApplicationContext())
+			            .load(shake_array[randInt][0])
+			            .error(R.drawable.book)
+			            .into(s_imag, new EmptyCallback());
+		    		s_lay.setOnClickListener(new Button.OnClickListener(){
+						public void onClick(View v){
+							s_lay.setVisibility(View.GONE);
+							//int randInt = new Random().nextInt(shake_array.length);
+			    			Intent in = new Intent(getApplicationContext(),SingleMenuItemActivity.class);
+			    			in.putExtra(IMAGE_URL,shake_array[randInt][0]);
+			    			in.putExtra("title_id", shake_array[randInt][1]);
+			    			in.putExtra(TIMES_RENTED, shake_array[randInt][2]);
+			    			in.putExtra(AVG_READING,shake_array[randInt][3]);
+			    			in.putExtra(TAG_AUTHOR,shake_array[randInt][4]);
+			    			in.putExtra(TAG_TITLE, shake_array[randInt][5]);
+			    			in.putExtra(TAG_CATEGORY, shake_array[randInt][6]);
+			    			in.putExtra(TAG_PAGE, shake_array[randInt][7]);
+			    			in.putExtra(TAG_LANGUAGE, shake_array[randInt][8]);
+			    			in.putExtra(SUMMARY,shake_array[randInt][9]);
+			    			in.putExtra("message", "create");
+			    			in.putExtra("check","logged_in");
+			    			startActivity(in);
+						}
+					});
+	    		  }else{
+	    			  s_lay.setVisibility(View.GONE);
+	    		  }
+    			
 	    	  }
 	      }
 	    });
@@ -387,90 +455,70 @@ public class FrontPage extends FragmentActivity{
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 //-----------------------------end----------------------------------------------------------
-		int l_count = 0;
-		ArrayList<String> db_list = new ArrayList<String>();
-		if (numb != null && numb != ""){
-			pager = (ViewPager) findViewById(R.id.viewpager);
-			db_list = mydb.getAllCotacts(0);
-			if (db_list != null){
-				l_count = db_list.size();
-				String[][] mera_array = new String[l_count][10]; 
-				position_of_viewpager = l_count-1;
-				for (int i=0; i < l_count; i++){
-					mera_array[i] = convertStringToArray(db_list.get(i));
-				}
-				ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress);
-				vp.setVisibility(View.GONE);
-				MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
-				my_pager_adapter.setArray(mera_array);
-				my_pager_adapter.setCount(position_of_viewpager);
-				pager.setAdapter(my_pager_adapter);
-			}
-			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/your_next_read.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
-			json_parse.execute(url,"0");
-			
-			pager1 = (ViewPager) findViewById(R.id.viewpager1);
-			db_list = mydb.getAllCotacts(1);
-			if (db_list != null){
-				l_count = db_list.size();
-				String[][] mera_array = new String[l_count][10]; 
-				position_of_viewpager1 = l_count-1;
-				for (int i=0; i < l_count; i++){
-					mera_array[i] = convertStringToArray(db_list.get(i));
-				}
-				ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress1);
-				vp.setVisibility(View.GONE);
-				MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
-				my_pager_adapter.setArray(mera_array);
-				my_pager_adapter.setCount(position_of_viewpager1);
-				pager1.setAdapter(my_pager_adapter);
-			}
-			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;		
-			json_parse1.execute(url,"1");
-			
-			pager2 = (ViewPager) findViewById(R.id.viewpager2);
-			db_list = mydb.getAllCotacts(2);
-			if (db_list != null){
-				l_count = db_list.size();
-				String[][] mera_array = new String[l_count][10]; 
-				// saving data for shake array random book view
-				shake_array = new String[l_count][10]; 
-				
-				position_of_viewpager2 = l_count-1;
-				for (int i=0; i < l_count; i++){
-					mera_array[i] = convertStringToArray(db_list.get(i));
-				}
-				shake_array = mera_array;
-				ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress2);
-				vp.setVisibility(View.GONE);
-				MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
-				my_pager_adapter.setArray(mera_array);
-				my_pager_adapter.setCount(position_of_viewpager2);
-				pager2.setAdapter(my_pager_adapter);
-			}
-			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
-			json_parse2.execute(url,"2");
-		}else{
-			pager = (ViewPager) findViewById(R.id.viewpager);
-			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/your_next_read.json";
-			json_parse.execute(url,"0");
-			pager1 = (ViewPager) findViewById(R.id.viewpager1);
-			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json";		
-			json_parse1.execute(url,"1");
-			pager2 = (ViewPager) findViewById(R.id.viewpager2);
-			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json";
-			json_parse2.execute(url,"2");
-		}
-		
-//		pager.setOnTouchListener(new View.OnTouchListener() {
-//		    @Override
-//		    public boolean onTouch(View v, MotionEvent event) {
-//		        pager.getParent().requestDisallowInterceptTouchEvent(true);
-//		        return false;
-//		    }
-//		});
 
+		pager = (ViewPager) findViewById(R.id.viewpager);
+		ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress);
+		ImageView ict = (ImageView) findViewById(R.id.image_cover_temp);
+		UpdateListFromDatabase(pager,0,vp,ict);
+		pager1 = (ViewPager) findViewById(R.id.viewpager1);
+		vp = (ProgressBar) findViewById(R.id.viewpager_progress1);
+		ict = (ImageView) findViewById(R.id.image_cover_temp1);
+		UpdateListFromDatabase(pager1,1,vp,ict);
+		pager2 = (ViewPager) findViewById(R.id.viewpager2);
+		vp = (ProgressBar) findViewById(R.id.viewpager_progress2);
+		ict = (ImageView) findViewById(R.id.image_cover_temp2);
+		UpdateListFromDatabase(pager2,2,vp,ict);
+		//System.arraycopy(mera_array, 0, shake_array, 0,mera_array.length);
+		//System.arraycopy(mera_array1, 0, shake_array, mera_array.length,mera_array1.length);
+		//System.arraycopy(mera_array2, 0, shake_array, mera_array.length+mera_array1.length,mera_array2.length);
+
+		shake_ready = true;
+		Calendar c = Calendar.getInstance();
+		int current_date = c.get(Calendar.WEEK_OF_YEAR)*7+c.get(Calendar.DATE);
+		
+		if (last_data_fetch != current_date){
+			SharedPreferences.Editor   editor = value.edit();
+			editor.putInt("DATA_FETCH_DATE", current_date);
+			editor.commit();
+			String[] url = new String[3];
+			if (numb != null && numb != ""){
+				url[0] = "http://"+Config.SERVER_BASE_URL+"/api/v1/your_next_read.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+				url[1] = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+				url[2] = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+			}else{
+				url[0] = "http://"+Config.SERVER_BASE_URL+"/api/v1/your_next_read.json";
+				url[1] = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json";
+				url[2] = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json";
+			}
+			json_parse.execute(url[0],"0");
+			json_parse1.execute(url[1],"1");
+			json_parse2.execute(url[2],"2");
+		}
     }
+  	
+  	private void UpdateListFromDatabase(ViewPager pager,int slot,ProgressBar vp,ImageView ict){
+  		int l_count = 0;
+		ArrayList<String> db_list = new ArrayList<String>();
+		db_list = mydb.getAllCotacts(slot);
+		if (db_list != null && !db_list.isEmpty()){
+			l_count = db_list.size();
+			mera_array = new String[l_count][10]; 
+			position_of_viewpager[slot] = l_count;
+			//shake_array_length += l_count;
+			for (int i=0; i < l_count; i++){
+				mera_array[i] = convertStringToArray(db_list.get(i));
+			}
+			if (slot == 0)
+				shake_array = mera_array;
+			ict.setVisibility(View.GONE);
+			vp.setVisibility(View.GONE);
+			
+			MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
+			my_pager_adapter.setArray(mera_array);
+			my_pager_adapter.setCount(l_count);
+			pager.setAdapter(my_pager_adapter);
+		}
+  	}
   	public static String strSeparator = "__,__";
   	public static String convertArrayToString(String[] array){
   	    String str = "";
@@ -504,6 +552,7 @@ public class FrontPage extends FragmentActivity{
 			this.json = json;
 		}
   	}
+  	
   	private class JSONParse extends AsyncTask<String,String,UrlValue>{
   		@SuppressLint("NewApi")
 		protected void onPreExecute(){
@@ -519,8 +568,8 @@ public class FrontPage extends FragmentActivity{
 			return url_value;
 		}
 		protected void onPostExecute(UrlValue url_value){
-			String[][] myarray_temp = new String[50][10];
-			String[] array_stringed = new String[50];
+			String[][] myarray_temp = new String[80][10];
+			String[] array_stringed = new String[80];
 			JSONArray list = null;
 			if (url_value.getJson() != null && !isCancelled()){
 				try {
@@ -550,23 +599,28 @@ public class FrontPage extends FragmentActivity{
 //					}
 				    e.printStackTrace();
 				}
+				if (list != null){
 				if(url_value.getThread_value().equals("0")){
-					position_of_viewpager = list.length()-1;
+					position_of_viewpager[0] = list.length();
 					ProgressBar vp = (ProgressBar) findViewById(R.id.viewpager_progress);
+					ImageView ict = (ImageView) findViewById(R.id.image_cover_temp);
+					ict.setVisibility(View.GONE);
 					vp.setVisibility(View.GONE);
 					MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
 					my_pager_adapter.setArray(myarray_temp);
-					my_pager_adapter.setCount(position_of_viewpager);
+					my_pager_adapter.setCount(position_of_viewpager[0]);
 					pager.setAdapter(my_pager_adapter);
 					mydb.insertAllData(array_stringed,0);
 					//myarray = myarray_temp;
 				}else if(url_value.getThread_value().equals("1")){
-					position_of_viewpager1 = list.length()-1;
+					position_of_viewpager[1] = list.length();
 					ProgressBar vp1 = (ProgressBar) findViewById(R.id.viewpager_progress1);
+					ImageView ict = (ImageView) findViewById(R.id.image_cover_temp1);
+					ict.setVisibility(View.GONE);
 					vp1.setVisibility(View.GONE);
 					MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
 					my_pager_adapter.setArray(myarray_temp);
-					my_pager_adapter.setCount(position_of_viewpager1);
+					my_pager_adapter.setCount(position_of_viewpager[1]);
 					pager1.setAdapter(my_pager_adapter);
 					mydb.insertAllData(array_stringed,1);
 					final SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
@@ -586,12 +640,14 @@ public class FrontPage extends FragmentActivity{
 					//myarray = myarray_temp;
 					//pager1.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 				}else if(url_value.getThread_value().equals("2")){
-					position_of_viewpager2 = list.length()-1;
+					position_of_viewpager[2] = list.length();
 					ProgressBar vp2 = (ProgressBar) findViewById(R.id.viewpager_progress2);
+					ImageView ict = (ImageView) findViewById(R.id.image_cover_temp2);
+					ict.setVisibility(View.GONE);
 					vp2.setVisibility(View.GONE);
 					MyPagerAdapter my_pager_adapter = new MyPagerAdapter(getSupportFragmentManager());
 					my_pager_adapter.setArray(myarray_temp);
-					my_pager_adapter.setCount(position_of_viewpager2);
+					my_pager_adapter.setCount(position_of_viewpager[2]);
 					pager2.setAdapter(my_pager_adapter);
 					mydb.insertAllData(array_stringed,2);
 					//myarray = myarray_temp;
@@ -605,10 +661,9 @@ public class FrontPage extends FragmentActivity{
 						Intent exp = new Intent(getApplicationContext(),ExpiredPage.class);
 						startActivity(exp);
 					}
-					shake_ready = true;
 				}else{
 					Toast.makeText(getApplicationContext(), "something went wrong.", Toast.LENGTH_LONG).show();
-				}
+				}}
 			}
 		}	
   	}
@@ -654,7 +709,6 @@ public class FrontPage extends FragmentActivity{
 		    editor.putString("MEMBERSHIP_NO", "");
 		    editor.putString("DATE_OF_SIGNUP", "");
 		    editor.putString("NUMBER", "");
-		    editor.putString(REG_ID, "");
 		    editor.putString("BOOK_BAND", "");
 		    editor.putString("MY_THEME", "");
 		    editor.commit();
@@ -693,7 +747,7 @@ public class FrontPage extends FragmentActivity{
 			mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 		case 4:
-			Intent sign_up_call = new Intent(getApplicationContext(), HelpActivity.class);
+			Intent sign_up_call = new Intent(getApplicationContext(), Signup.class);
     		startActivity(sign_up_call);
 		    mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
@@ -705,14 +759,14 @@ public class FrontPage extends FragmentActivity{
   	
   	private class MyPagerAdapter extends FragmentPagerAdapter {
   		private int count;
-  		private String[][] myarray = new String[50][10];
+  		private String[][] myarray = new String[80][10];
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int pos) {
-          return FirstFragment.newInstance(myarray[pos+1][0],myarray[pos+1][1],myarray[pos+1][2],myarray[pos+1][3],myarray[pos+1][4],myarray[pos+1][5],myarray[pos+1][6],myarray[pos+1][7],myarray[pos+1][8],myarray[pos+1][9],my_theme);
+        	return FirstFragment.newInstance(myarray[pos][0],myarray[pos][1],myarray[pos][2],myarray[pos][3],myarray[pos][4],myarray[pos][5],myarray[pos][6],myarray[pos][7],myarray[pos][8],myarray[pos][9],my_theme);
         }
         public void setCount(int count){
         	this.count = count;
@@ -744,9 +798,9 @@ public class FrontPage extends FragmentActivity{
     @Override
     public void onResume(){
       super.onResume();
+      initial_shake_time = System.currentTimeMillis();
       mSensorManager.registerListener(mSensorListener,
-        mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-        SensorManager.SENSOR_DELAY_UI);
+      mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_UI);
     }
     @Override
     protected void onPause() {
@@ -771,10 +825,15 @@ public class FrontPage extends FragmentActivity{
     	GoogleAnalytics.getInstance(this).reportActivityStop(this);
     	
     }
+    @Override
     public void onBackPressed(){
-    	super.onBackPressed();
-    	mydb.close();
-    	finish();
+    	final RelativeLayout s_lay = (RelativeLayout) findViewById(R.id.shake_view);
+		if(s_lay.getVisibility() == View.VISIBLE){
+			s_lay.setVisibility(View.GONE);
+		}else{
+	    	mydb.close();
+	    	finish();
+	    }
     }
 
 }

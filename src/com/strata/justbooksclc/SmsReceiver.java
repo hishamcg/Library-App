@@ -10,7 +10,7 @@ import android.telephony.SmsMessage;
 public class SmsReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
-
+		
 		Bundle extras = intent.getExtras();
 		if (extras == null)
 			return;
@@ -24,7 +24,7 @@ public class SmsReceiver extends BroadcastReceiver {
 			String sender = SMessage.getOriginatingAddress();
 			String body = SMessage.getMessageBody().toString();
 			String[] splited = sender.split("-");
-			if (splited[0].equals("AD") || (splited[0].equals("AM") || splited[0].equals("LM") || splited[0].equals("MD") || splited[0].equals("BZ")) && (splited[1].equals("STRATA") || splited[1].equals("JBOOKS"))){
+			if (splited[0].equals("AD") || (splited[0].equals("AM") || splited[0].equals("LM") || splited[0].equals("MD") || splited[0].equals("BZ") || splited[0].equals("DM")) && (splited[1].equals("STRATA") || splited[1].equals("JBOOKS"))){
 				// A custom Intent that will used as another Broadcast
 				Intent in = new Intent("SmsMessage.intent.MAIN").putExtra("get_msg", sender + ":" + body);
 				context.sendBroadcast(in);

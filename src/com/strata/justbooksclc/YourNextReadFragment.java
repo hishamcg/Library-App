@@ -26,6 +26,7 @@ public class YourNextReadFragment extends ListFragment {
 	private static final String TAG_ID_call = "title_id";
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String AVG_READING = "avg_reading_times";
+	private DBHelper mydb;
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -35,7 +36,7 @@ public class YourNextReadFragment extends ListFragment {
 	getListView().setDivider(gray);
 	getListView().setDividerHeight(1);
 	
-	DBHelper mydb = new DBHelper(getActivity());
+	mydb = new DBHelper(getActivity());
 	ArrayList<String> db_list = new ArrayList<String>();
 	db_list = mydb.getAllCotacts(0);
 	List<Book> bookList = new ArrayList<Book>();
@@ -127,4 +128,8 @@ public class YourNextReadFragment extends ListFragment {
 		super.onResume();
 		progress.hide();
   }
+  public void onDestroy(){
+	  super.onDestroy();
+	  mydb.close();
+    }
  } 

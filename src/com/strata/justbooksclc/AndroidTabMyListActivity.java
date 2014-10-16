@@ -28,6 +28,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.newrelic.agent.android.NewRelic;
 import com.strata.justbooksclc.R;
 import com.strata.justbooksclc.adapter.NavDrawerListAdapter;
 import com.strata.justbooksclc.model.NavDrawerItem;
@@ -59,7 +60,6 @@ public class AndroidTabMyListActivity extends FragmentActivity implements Action
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 	  MenuInflater menuInflater = getMenuInflater();
-      //menuInflater.inflate(R.menu.front_page, menu);
       menuInflater.inflate(R.menu.search_page_menu, menu);
       SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -81,7 +81,7 @@ public class AndroidTabMyListActivity extends FragmentActivity implements Action
 	    if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-	    mDrawerLayout.closeDrawer(mDrawerList);
+	    mDrawerLayout.closeDrawer(mDrawerLinear);
 	    int itemId = item.getItemId();
 	    if (itemId == R.id.action_search) {
 	      return true;
@@ -93,7 +93,8 @@ public class AndroidTabMyListActivity extends FragmentActivity implements Action
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		//setting up new relic
+		NewRelic.withApplicationToken("AA6bdf42b2e97af26de101413a456782897ba273f7").start(this.getApplication());
 		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		String my_theme = value.getString("MY_THEME", "");
 			
@@ -128,12 +129,10 @@ public class AndroidTabMyListActivity extends FragmentActivity implements Action
 		
 		navDrawerItems = new ArrayList<NavDrawerItem>();
 		
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));// Home
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));// Wishlist
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));// Location
-		//navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));// GCM
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));// About
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));// Log out
+		for (int i=0;i < navMenuTitles.length;i++){
+			navDrawerItems.add(new NavDrawerItem(navMenuTitles[i], navMenuIcons.getResourceId(i, -1)));
+		}
+		
 		// Recycle the typed array
 		navMenuIcons.recycle();
 		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());

@@ -28,6 +28,7 @@ public class NewArrivalFragment extends ListFragment {
   private static final String TAG_ID_call = "title_id";
   private static final String TIMES_RENTED = "no_of_times_rented";
   private static final String AVG_READING = "avg_reading_times";
+  private DBHelper mydb;
 
 @Override
 public void onActivityCreated(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public void onActivityCreated(Bundle savedInstanceState) {
 	getListView().setDivider(gray);
 	getListView().setDividerHeight(1);
 	
-	DBHelper mydb = new DBHelper(getActivity());
+	mydb = new DBHelper(getActivity());
 	ArrayList<String> db_list = new ArrayList<String>();
 	db_list = mydb.getAllCotacts(1);
 	List<Book> bookList = new ArrayList<Book>();
@@ -128,7 +129,11 @@ public void onListItemClick(ListView l, View view, int position, long id) {
 	    return arr;
 	}
 	public void onResume(){
-			super.onResume();
-			progress.hide();
+		super.onResume();
+		progress.hide();
+	}
+	public void onDestroy(){
+		super.onDestroy();
+		mydb.close();
 	}
 } 
