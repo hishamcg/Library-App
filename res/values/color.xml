@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="list_item_title">#fff</color>
-    <color name="list_background">#505050</color>
+    <color name="list_item_title">#222</color>
+    <color name="list_background">#fff</color>
     <color name="list_background_pressed">#992416</color>
-    <color name="list_divider">#272727</color>
+    <color name="list_divider">#eee</color>
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
     <color name="white">#fff</color>
@@ -19,9 +19,9 @@
     <color name="shelf_gray2">#888</color>
     <color name="shelf_gray3">#999</color>
     <!-- green -->
-    <color name="shelf_green">#3f8523</color>
-    <color name="shelf_green1">#57a737</color>
-    <color name="shelf_green2">#6bc547</color>
+	<color name="shelf_green">#3f8523</color>
+    <color name="shelf_green1">#478A47</color>
+    <color name="shelf_green2">#4E994F</color>
     <color name="shelf_green3">#539a54</color>
     <!-- violet -->
     <color name="shelf_violet">#691419</color>

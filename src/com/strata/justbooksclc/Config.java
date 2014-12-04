@@ -3,7 +3,7 @@ package com.strata.justbooksclc;
 public interface Config {
 	static final String APP_SERVER_URL = "http://mapi.justbooksclc.com/api/v1/push_notifications/receive";
 	//static final String APP_SERVER_URL = "http://staging.justbooksclc.com:8787/api/v1/push_notifications/receive";
-	//static final String APP_SERVER_URL = "http://192.168.2.105:4321/api/v1/push_notifications/receive";
+	//static final String APP_SERVER_URL = "http://192.168.1.3:3000/api/v1/push_notifications/receive";
 
 	// Google Project Number
 	static final String GOOGLE_PROJECT_ID = "959617453751";

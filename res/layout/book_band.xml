@@ -66,7 +66,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:textColor="#a222"
-              android:text="You just started reading books. But you need more than 5 Reading Score to reach next level"
+              android:text="You just started reading books. But you need more than 1 Reading Score to reach next level"
               android:textSize="15sp" />
       </LinearLayout>   
     </LinearLayout>
@@ -95,7 +95,7 @@
           android:layout_centerVertical="true"
           android:layout_marginRight="10dip"
           android:scaleType="fitXY"
-          android:src="@drawable/ic_green" />
+          android:src="@drawable/ic_brown" />
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
           android:layout_centerVertical="true"
           android:layout_marginRight="10dip"
           android:scaleType="fitXY"
-          android:src="@drawable/ic_brown" />
+          android:src="@drawable/ic_green" />
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"

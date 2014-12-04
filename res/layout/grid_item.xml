@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shelf_image"
+    android:layout_width="120dip"
+    android:layout_height="185dip"
+    android:orientation="vertical"
+    android:paddingTop="40dip"
+    android:weightSum="10"
+    android:background="@drawable/book_shelf5">
+    <FrameLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal">
+	    
+	    <ImageView
+            android:id="@+id/image_grid"
+            android:layout_width="82dip"
+            android:layout_height="122dip"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="17dp"
+            android:contentDescription="TODO"
+            android:padding="1dp"
+            android:scaleType="fitXY"/>
+	    <ImageView
+	        android:id="@+id/image_cover"
+	        android:layout_width="99dp"
+	        android:layout_height="130dip"
+	        android:contentDescription="TODO"
+	        android:scaleType="fitXY"
+	        android:src="@drawable/book_template" />
+
+	    <ProgressBar
+	        android:id="@+id/loading"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center"
+	        android:visibility="visible" />
+
+	</FrameLayout>
+</LinearLayout>

@@ -1,9 +1,11 @@
 package com.strata.justbooksclc;
 
+import java.util.HashMap;
+
 import android.app.Application;
+
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import java.util.HashMap;
  
 public class MyApplication extends Application {
  
@@ -23,7 +25,7 @@ public class MyApplication extends Application {
 		super();
 	}
 	 
-	synchronized Tracker getTracker(TrackerName trackerId) {
+	public synchronized Tracker getTracker(TrackerName trackerId) {
 		if (!mTrackers.containsKey(trackerId)) {
 			GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
 			/*Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID)

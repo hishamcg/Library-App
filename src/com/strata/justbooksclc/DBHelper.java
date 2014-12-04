@@ -1,6 +1,7 @@
 package com.strata.justbooksclc;
 
 import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,7 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
    public static final String DATABASE_NAME = "MyDBName.db";
-   public static final String[] TABLE_NAME = {"your_next_read","new_arrivals","top_rentals"};
+   public static final String[] TABLE_NAME = {"your_next_read","new_arrivals","top_rentals","wishlist"};
    public static final String CONTACTS_COLUMN_ID = "id";
    public static final String COLUMN_DATA = "mydata";
 
@@ -22,13 +23,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
    @Override
    public void onCreate(SQLiteDatabase db) {
-      db.execSQL("create table "+TABLE_NAME[0]+"(id integer primary key autoincrement, mydata text)");
-      db.execSQL("create table "+TABLE_NAME[1]+"(id integer primary key autoincrement, mydata text)");
-      db.execSQL("create table "+TABLE_NAME[2]+"(id integer primary key autoincrement, mydata text)");}
+	  for (int i=0;i<TABLE_NAME.length;i++){
+	      db.execSQL("create table "+TABLE_NAME[i]+"(id integer primary key autoincrement, mydata text)");
+	  }
+	}
 
    @Override
    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-      db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME[0]);
+	  for (int i=0;i<TABLE_NAME.length;i++){
+		  db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME[i]);
+	  }
       onCreate(db);
    }
    

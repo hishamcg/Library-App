@@ -22,7 +22,7 @@
 <!-- Percentage of events to include in reports -->
 <string name="ga_sampleFrequency">100.0</string>
 
-<screenName name="com.strata.justbooksclc.FrontPage">JustBooks</screenName>
+<screenName name="com.strata.justbooksclc.AndroidTabMyListActivity">JustBooks</screenName>
 
 <!-- Enable automatic Activity measurement -->
 <bool name="ga_autoActivityTracking">true</bool>

@@ -16,14 +16,14 @@
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item >Home</item>
-        <item >My List</item>
+        <item >Books</item>
         <item >Location</item>
         <item >About</item>
         <item >Logout</item>
     </string-array>
     
     <string-array name="nav_drawer_items_non_user">
-        <item >Home</item>
+        <item >Books</item>
         <item >Location</item>
         <item >About</item>
         <item >Signin</item>
@@ -51,6 +51,27 @@
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
 
-    
+    <!-- For theme change -->
+    <string-array name="justbooks_themes_array">
+        <item >gray</item>
+        <item >brown</item>
+        <item >green</item>
+        <item >violet</item>
+        <item >blue</item>
+    </string-array>
+    <string-array name="themes_locked_message">
+        <item >This Theme is available</item>
+        <item >You need a reading score above 1 to unlock this theme.</item>
+        <item >Your need a skill score above 50 to unlock this theme.</item>
+        <item >Your need a skill score above 250 to unlock this theme.</item>
+        <item >Your need a skill score above 500 to unlock this theme.</item>
+    </string-array>
+    <array name="themes_icon">
+        <item>@drawable/ic_heart_gray</item>
+        <item>@drawable/ic_heart_brown</item>
+        <item>@drawable/ic_heart_green</item>
+        <item>@drawable/ic_heart_violet</item>
+        <item>@drawable/ic_heart_blue</item>
+    </array>
 
 </resources>

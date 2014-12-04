@@ -139,12 +139,12 @@
  	    android:layout_width="fill_parent"
  	    android:layout_height="wrap_content"
  	    android:padding="5dip"
- 	    android:background="@drawable/edit_border"
+ 	    android:background="@drawable/edit_border_small"
  	    android:orientation="vertical" >
  	    <TextView
  	        android:layout_width="wrap_content"
  	        android:layout_height="wrap_content"
- 	        android:text="Address"
+ 	        android:text="Delivery Address"
  	        android:layout_gravity="center"
  	        android:textColor="#a111"
  	        android:textSize="@dimen/letter1"/>
