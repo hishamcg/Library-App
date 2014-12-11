@@ -111,8 +111,9 @@ public class WishlistAdapter extends ArrayAdapter<Book> {
     public int getCount() {
 		int numberOfCells = numberOfRows*numberOfColumns;
 		numberOfBooks = bookArry.size();
-		if (numberOfRows*numberOfColumns < numberOfBooks){
-			numberOfCells = numberOfBooks + (3-numberOfBooks%numberOfRows);
+		//adding 1 so as to compensate for the add book image
+		if (numberOfRows*numberOfColumns < numberOfBooks+1){
+			numberOfCells = (numberOfBooks+1) + (3-(numberOfBooks+1)%numberOfRows);
 		}
         return numberOfCells;
     }

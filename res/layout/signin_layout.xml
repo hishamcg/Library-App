@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#b000"
+    android:padding="10dip"
     tools:context=".SearchActivity" >
     
     <ImageView
@@ -12,7 +13,6 @@
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
         android:src="@drawable/jb_logo" />
     <TextView
         android:id="@+id/hint_signin"
@@ -20,13 +20,14 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/editText1"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:layout_marginBottom="23dp"
         android:textColor="#fff"
         android:textStyle="bold"
-        android:text="Enter your mobile number to sign in"/>
+        android:text="Enter your mobile number to signin"/>
 
     <Button
-        android:background="@drawable/gcm_reg_button"
+        android:background="@drawable/button_green"
         android:id="@+id/button1"
         android:layout_width="250dp"
         android:layout_height="40dp"

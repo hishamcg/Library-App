@@ -8,7 +8,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fillViewport="true">
-<RelativeLayout 
+<RelativeLayout
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:layout_marginTop="20dp"
         android:textColor="#a000"
         android:text="About JustBooksclc"
@@ -39,17 +40,29 @@
         android:text="Just Books clc is a new generation community library chain that provides a unique reading experience to book lovers with a wide range of books for every type of reader Toddlers to teens, Dabblers to Bookworms under a modern, vibrant ambience with effective use of technology. Like we love saying – At Just Books, there is a book for everyone in the family"
         android:textSize="15sp" />
 
-    <Button
+    <LinearLayout
         android:id="@+id/btn_care"
         android:layout_below="@+id/textView2"
         android:layout_marginTop="20dip"
         android:layout_width="250dp"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/gcm_reg_button"
-        android:text="Call Customercare"
-        android:textColor="#ffffff" />
-    <TextView 
+        android:background="@drawable/button_green"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:gravity="center">
+        <ImageView 
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:src="@drawable/ic_phone"
+            android:layout_marginRight="10dip"/>
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Call Customer Care"
+            android:textColor="#ffffff"/>
+    </LinearLayout>
+    <TextView
         android:id="@+id/toll_free"
         android:layout_below="@+id/btn_care"
         android:layout_width="wrap_content"

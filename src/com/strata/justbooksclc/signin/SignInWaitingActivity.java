@@ -58,7 +58,7 @@ public class SignInWaitingActivity extends Activity {
 		else
 			setTheme(R.style.MyTheme);
 
-		setContentView(R.layout.activity_sign_in_waiting);
+		setContentView(R.layout.sign_in_waiting);
 		//getting the 4 digit random number
 		Intent auth_val = getIntent();
 		pas_rand = auth_val.getStringExtra("pas_rand");

@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.newrelic.agent.android.NewRelic;
 import com.strata.justbooksclc.R;
@@ -49,7 +49,7 @@ public class HelpActivity extends Activity {
 		setContentView(R.layout.help_activity);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		final Button btn_care = (Button) findViewById(R.id.btn_care);
+		final LinearLayout btn_care = (LinearLayout) findViewById(R.id.btn_care);
 		btn_care.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
 				 String phoneNumber = "18001022665";

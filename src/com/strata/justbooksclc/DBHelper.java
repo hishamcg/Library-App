@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
-
+   public static int DATABASE_VERSION = 2;
    public static final String DATABASE_NAME = "MyDBName.db";
    public static final String[] TABLE_NAME = {"your_next_read","new_arrivals","top_rentals","wishlist"};
    public static final String CONTACTS_COLUMN_ID = "id";
@@ -18,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
    public DBHelper(Context context)
    {
-      super(context, DATABASE_NAME , null, 1);
+      super(context, DATABASE_NAME , null, DATABASE_VERSION);
    }
 
    @Override
