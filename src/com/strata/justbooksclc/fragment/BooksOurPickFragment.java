@@ -169,8 +169,6 @@ public class BooksOurPickFragment extends ListFragment {
 				// adding HashList to ArrayList
 				bookList.add(book);
 			}
-		}else{
-			setEmptyText("No books to show");
 		}
 		adapter = new CustomAdapter(getActivity(), bookList);
 		// selecting single ListView item

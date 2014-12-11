@@ -289,7 +289,7 @@ public class WishlistFragment extends Fragment {
 	}
   public void onResume(){
 		super.onResume();
-		if(SharedValue.data().hasBeenChanged && adapter != null){
+		if((SharedValue.data().hasBeenChanged && adapter != null) || bookList.isEmpty()){
 			if(lastClickedPosition >= 0){
 				bookList.remove(lastClickedPosition);
 				adapter.notifyDataSetChanged();

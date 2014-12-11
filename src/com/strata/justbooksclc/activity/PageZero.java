@@ -31,6 +31,7 @@ import com.strata.justbooksclc.Config;
 import com.strata.justbooksclc.FontsOverride;
 import com.strata.justbooksclc.JSONParser;
 import com.strata.justbooksclc.R;
+import com.strata.justbooksclc.SharedValue;
 import com.strata.justbooksclc.gcm.RegisterActivity;
 import com.strata.justbooksclc.tabs.TabLayoutActivity;
 import com.strata.justbooksclc.tabs.TabMyListActivity;
@@ -62,7 +63,8 @@ public class PageZero extends Activity {
         }
 		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		memb = value.getString("MEMBERSHIP_NO", "");
-
+		//set datachanged to true
+		SharedValue.data().hasBeenChanged = true;
 		if (isNetworkAvailable()){
 			//checking if the user mobile has an android version above 3
 			if (android.os.Build.VERSION.SDK_INT >=  android.os.Build.VERSION_CODES.HONEYCOMB){

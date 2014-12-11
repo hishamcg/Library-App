@@ -29,12 +29,12 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 		String numb = value.getString("NUMBER", "");
 		String memb = value.getString("MEMBERSHIP_NO", "");
 		String auth_token = value.getString("AUTH_TOKEN", "");
-		int last_data_fetch = value.getInt("DATA_FETCH_DATE", 0);
+		//int last_data_fetch = value.getInt("DATA_FETCH_DATE", 0);
 		Calendar c = Calendar.getInstance();
 		int current_date = c.get(Calendar.WEEK_OF_YEAR)*7+c.get(Calendar.DATE);
 
 		String url = "";
-		if (last_data_fetch != current_date){
+		//if (last_data_fetch != current_date){
 			
 			if(index == 0){
 				if (numb != null && numb != ""){
@@ -53,7 +53,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 				//default load new arrivals
 				url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json";
 			}
-		}
+		//}
 		Bundle bundle = new Bundle();
 		if(index >=0 && index <3){
 			BooksOurPickFragment frag_next = new BooksOurPickFragment();
