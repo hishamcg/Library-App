@@ -57,7 +57,7 @@ public class SigninActivity extends Activity {
         final TextView hint_signin = (TextView) findViewById(R.id.hint_signin);
         final EditText my_numb = (EditText) findViewById(R.id.editText1);
         if (number != null){
-        my_numb.setText(number.replace("+91", ""));
+        	my_numb.setText(CorrectPhoneFormat(number));
         }
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
@@ -66,7 +66,7 @@ public class SigninActivity extends Activity {
 	        my_Button.setOnClickListener(new Button.OnClickListener() {
 	        	@SuppressLint("InlinedApi")
 				public void onClick(View v){
-	        		final String phone_no = my_numb.getText().toString();
+	        		final String phone_no = CorrectPhoneFormat(my_numb.getText().toString());
 	        		Log.i("phone_no", phone_no);
 	        		Toast.makeText(getApplicationContext(), "connnecting to server...",
 	    	        Toast.LENGTH_SHORT).show();
@@ -102,13 +102,14 @@ public class SigninActivity extends Activity {
 		      			              public void onClick(DialogInterface dialog, int which) {
 		      			            	  Random r = new Random();
 		      			            	  final int pas = r.nextInt(10000 - 1000) + 1000;
+		      			            	  //System.out.println(pas);
+		      			            	  //comment to bypass authentication via sms
 		      			            	  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/send_otp.json?phone=" + phone_no+"&otp="+String.valueOf(pas);
 		      			            	  System.out.println("score here"+ phone_no);
 		      			            	  // Creating JSON Parser instance
 		      			            	  JSONParser jParser = new JSONParser();
 		      			      			  jParser.getJSONFromUrl(url);
-			      			              			   		      				  //------------------------------
-			   		      				  //comment to bypass authentication via sms
+			   		      				  
 			   		      				  //Intent checking_auth = new Intent(getApplicationContext(), PageZero.class);
 			   			      			  Intent checking_auth = new Intent(getApplicationContext(), SignInWaitingActivity.class);
 			   		        	          checking_auth.putExtra("pas_rand", String.valueOf(pas));
@@ -152,6 +153,13 @@ public class SigninActivity extends Activity {
 		    Toast.LENGTH_SHORT).show();
         }
     }
+	
+	public String CorrectPhoneFormat(String number){
+		if (number.length()>10){
+			number = number.substring(number.length()-10);
+		}
+		return number;
+	}
 	@Override
 	public void onResume(){
 		super.onResume();

@@ -200,8 +200,10 @@ public class SignInWaitingActivity extends Activity {
 	}
 	 public void onBackPressed(){
 		 super.onBackPressed();
-		 count_down.cancel();
-		 count_down_type.cancel();
+		 if(count_down != null)
+			 count_down.cancel();
+		 if(count_down_type != null)
+			 count_down_type.cancel();
 	 }
 
 }

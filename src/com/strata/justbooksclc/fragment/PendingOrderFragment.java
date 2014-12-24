@@ -63,8 +63,8 @@ public class PendingOrderFragment extends ListFragment {
     auth_token = value.getString("AUTH_TOKEN","");
     memb = value.getString("MEMBERSHIP_NO","");
     numb = value.getString("NUMBER","");
-    json_parse = new JSONParse();
-    json_parse.execute();
+    //json_parse = new JSONParse();
+    //json_parse.execute();
   }
 
 
@@ -175,15 +175,18 @@ public class PendingOrderFragment extends ListFragment {
   }
   public void onResume(){
 	super.onResume();
-	if (adapter != null){
+	//if (adapter != null){
 		json_parse = new JSONParse();
-		json_parse.execute();}
+		json_parse.execute();
+	//}
   }
   public void onDestroy(){
 	  super.onDestroy();
-	 json_parse.cancel(true);
+	  if(json_parse != null)
+		  json_parse.cancel(true);
   }
   public void onBackPressed(){
-	  json_parse.cancel(true);
+	  if(json_parse != null)
+		  json_parse.cancel(true);
   }
 } 
