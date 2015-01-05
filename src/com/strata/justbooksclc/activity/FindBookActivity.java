@@ -155,8 +155,6 @@ public class FindBookActivity extends Activity{
 		    	json_parse = new JSONParse();
 		    	json_parse.execute(url);
 		    	LL_filter.setVisibility(View.GONE);
-		    	MenuItem men = (MenuItem)findViewById(R.id.action_filter);
-		    	men.setIcon(R.drawable.ic_filter);
 			}
 		});
 	    list_view.setOnItemClickListener(new OnItemClickListener() {
