@@ -5,6 +5,7 @@ import java.util.HashMap;
 import android.app.Application;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
  
 public class MyApplication extends Application {
@@ -34,9 +35,15 @@ public class MyApplication extends Application {
 			/*Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID)
 					: analytics.newTracker(R.xml.global_tracker);
 			mTrackers.put(trackerId, t);*/
+			analytics.setDryRun(false);
+			analytics.getLogger().setLogLevel(Logger.LogLevel.INFO);
+			Tracker track = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(R.xml.global_tracker) : null;
+            if (track != null) {
+            	track.enableAdvertisingIdCollection(true);
+            }
 			if( trackerId == TrackerName.GLOBAL_TRACKER )
             {
-                mTrackers.put(trackerId, analytics.newTracker(R.xml.global_tracker));
+                mTrackers.put(trackerId, track);
             }
 		}
 		return mTrackers.get(trackerId);

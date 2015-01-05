@@ -47,12 +47,14 @@
             android:noHistory="true"> 
             <intent-filter >
               <action android:name="android.intent.action.MAIN" />
-              <category android:name="android.intent.category.HOME" />
               <category android:name="android.intent.category.LAUNCHER" /> 
             </intent-filter>
             
+        </activity>GlobalMenuDrawerActivity
+        <activity
+            android:name="com.strata.justbooksclc.GlobalMenuDrawerActivity"
+            android:screenOrientation="portrait">
         </activity>
-        
         <activity
             android:name="com.strata.justbooksclc.signin.SigninActivity"
             android:windowSoftInputMode="stateAlwaysVisible"
@@ -66,6 +68,12 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:screenOrientation="portrait"
             android:label="Account Expired">
+        </activity>
+        
+        <activity
+            android:name="com.strata.justbooksclc.activity.FindBookActivity"
+            android:screenOrientation="portrait"
+            android:label="Filter">
         </activity>
         
         <activity
@@ -178,9 +186,9 @@
 		
 	    <meta-data android:name="com.google.android.gms.version"
            		   android:value="@integer/google_play_services_version" />
-	    <!-- Google Analytics Version v4 needs this value for easy tracking -->
+	    <!-- Google Analytics Version v4 needs this value for easy tracking 
 		<meta-data android:name="com.google.android.gms.analytics.globalConfigResource"
-				   android:resource="@xml/global_tracker" /> 
+				   android:resource="@xml/global_tracker" /> -->
 	   		  
     </application>
 

@@ -271,6 +271,33 @@
                   android:textSize="12sp"
                   android:textStyle="bold" />
           </LinearLayout>
+          
+          <LinearLayout
+              android:id="@+id/order_cancel"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:background="@drawable/icon_click"
+              android:clickable="true"
+              android:gravity="center"
+              android:visibility="gone"
+              android:orientation="vertical" >
+
+              <ImageView
+                  android:layout_width="30dp"
+                  android:layout_height="30dp"
+                  android:layout_marginBottom="5dp"
+                  android:background="@drawable/ic_cancel1"
+                  android:contentDescription="@string/hello" />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Cancel"
+                  android:textColor="#a000"
+                  android:textSize="12sp"
+                  android:textStyle="bold" />
+          </LinearLayout>
 
           <LinearLayout
               android:id="@+id/add_to_list"

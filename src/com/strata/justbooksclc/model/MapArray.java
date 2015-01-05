@@ -4,7 +4,24 @@ public class MapArray {
 	String latitude;
 	String longitude;
 	String name;
+	String address;
+	String phone;
 	Float distance;
+	
+	
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	
 	public String getLatitude() {
 		return latitude;
 	}

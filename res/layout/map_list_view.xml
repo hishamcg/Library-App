@@ -1,60 +1,24 @@
-<android.support.v4.widget.DrawerLayout 
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-	<RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:background="#fff"
-	    android:orientation="vertical">
-	    <ListView
-	        android:id="@+id/android:list"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:background="#fff"
-	        android:divider="#eee"
-			android:dividerHeight="1dp"/>
-	    <ProgressBar
-	        android:id="@+id/progress_bar"
-	        style="?android:attr/progressBarStyleLarge"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentTop="true"
-	        android:layout_centerHorizontal="true"
-	        android:layout_marginTop="174dp" />
-	</RelativeLayout>
-
-	<FrameLayout
-        android:id="@+id/frame_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <!-- Listview to display slider menu -->
-    <LinearLayout
-        android:id="@+id/linear_slide"
-        android:layout_width="240dp"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical"
-	    android:layout_gravity="start"
-	    android:background="#eee">
-		<TextView
-	 	    android:layout_width="wrap_content"
-	 	    android:layout_height="wrap_content"
-	 	    android:layout_marginTop="8dip"
-	 	    android:layout_marginBottom="8dip"
-	 	    android:layout_gravity="center"
-	 	    android:textColor="#000"
-	 	    android:textSize="16sp"
-	 	    android:text="Read Rent Return"/>
-	    <ListView
-	        android:id="@+id/list_slidermenu"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:choiceMode="singleChoice"
-	        android:divider="@color/list_divider"
-	        android:dividerHeight="1dp"       
-	        android:listSelector="@drawable/list_selector"
-	        android:background="@color/list_background"/>
-	</LinearLayout>
-</android.support.v4.widget.DrawerLayout>
+   	xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+    <ListView
+        android:id="@+id/store_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:divider="#eee"
+		android:dividerHeight="1dp"/>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="174dp" />
+</RelativeLayout>
+   

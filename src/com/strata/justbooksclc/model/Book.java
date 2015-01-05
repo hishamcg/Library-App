@@ -14,8 +14,44 @@ public class Book {
 	private String image_url;
 	private String summary;
 	private String pickup_order;
+	private String delivery_order_id;
 	
-
+	private Boolean allow_cancel;
+	private String disallow_cancel_reason;
+	private String order_type;
+	private String status;
+	
+	
+	public String getDelivery_order_id() {
+		return delivery_order_id;
+	}
+	public void setDelivery_order_id(String delivery_order_id) {
+		this.delivery_order_id = delivery_order_id;
+	}
+	public Boolean getAllow_cancel() {
+		return allow_cancel;
+	}
+	public void setAllow_cancel(Boolean allow_cancel) {
+		this.allow_cancel = allow_cancel;
+	}
+	public String getDisallow_cancel_reason() {
+		return disallow_cancel_reason;
+	}
+	public void setDisallow_cancel_reason(String disallow_cancel_reason) {
+		this.disallow_cancel_reason = disallow_cancel_reason;
+	}
+	public String getOrder_type() {
+		return order_type;
+	}
+	public void setOrder_type(String order_type) {
+		this.order_type = order_type;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	public String getPickup_order() {
 		return pickup_order;
 	}

@@ -206,12 +206,9 @@ public class WishlistFragment extends Fragment {
 					adapter.notifyDataSetChanged();
 					if(list.length() == 0)
 						empty_shelf_dialog.setVisibility(View.VISIBLE);
-				}else{
-					//setEmptyText("No books in wishlist");
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-				//setEmptyText("No books in wishlist");
 			}
 			
 			//adapter = new WishlistAdapter(getActivity(), bookList,numberOfRows,numberOfColumns,heightInPixels);

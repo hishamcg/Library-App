@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -59,8 +58,8 @@ public class SigninActivity extends Activity {
         if (number != null){
         	my_numb.setText(CorrectPhoneFormat(number));
         }
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		StrictMode.setThreadPolicy(policy);
+        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		//StrictMode.setThreadPolicy(policy);
 
         if (isNetworkAvailable()){
 	        my_Button.setOnClickListener(new Button.OnClickListener() {

@@ -58,7 +58,7 @@ public class BooksOurPickFragment extends ListFragment {
 	UpdateListFromDatabase(db_table_tagid);
 	if (adapter != null && !data_fetch_url.isEmpty()){
 		json_parse = new JSONParse();
-		json_parse.execute(data_fetch_url);
+		//json_parse.execute(data_fetch_url);
 	}
 	
   }
@@ -75,9 +75,9 @@ public class BooksOurPickFragment extends ListFragment {
       in.putExtra("title_id", bookList.get(position).getId());
       in.putExtra(TIMES_RENTED, bookList.get(position).getTimes_rented());
       in.putExtra(AVG_READING, bookList.get(position).getAvg_reading());
-		in.putExtra("message", "create");
-		in.putExtra("check","logged_in");
-		startActivity(in);
+      in.putExtra("message", "create");
+      in.putExtra("check","logged_in");
+      startActivity(in);
   }
   private class JSONParse extends AsyncTask<String,String,JSONObject>{
 	  protected void onPreExecute(){

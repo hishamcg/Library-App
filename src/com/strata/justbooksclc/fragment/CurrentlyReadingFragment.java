@@ -6,17 +6,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.strata.justbooksclc.Config;
 import com.strata.justbooksclc.JSONParser;
@@ -43,13 +43,14 @@ public class CurrentlyReadingFragment extends ListFragment {
   private static final String PICKUP_ORDER = "pickup_order_id";
   private static final String SUMMARY = "summary";
   //private JSONParse json_parse = new JSONParse();
-  private JSONParse json_parse;
+  private JSONParse json_parse = new JSONParse();;
   String auth_token;
   String memb;
   String numb;
   // contacts JSONArray
   JSONArray list = null;
   CustomAdapter adapter;
+  ArrayList<Book> bookList = new ArrayList<Book>();
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -57,9 +58,6 @@ public class CurrentlyReadingFragment extends ListFragment {
     ColorDrawable gray = new ColorDrawable(this.getResources().getColor(R.color.gray));
 	getListView().setDivider(gray);
 	getListView().setDividerHeight(1);
-	
-    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-    StrictMode.setThreadPolicy(policy);
   	
     SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
     auth_token = value.getString("AUTH_TOKEN","");
@@ -71,50 +69,24 @@ public class CurrentlyReadingFragment extends ListFragment {
 
 
   public void onListItemClick(ListView l, View view, int position, long id) {
-    // getting values from selected ListItem
-    String author = ((TextView) view.findViewById(R.id.author))
-        .getText().toString();
-    String category = ((TextView) view.findViewById(R.id.category))
-        .getText().toString();
-    String publisher = ((TextView) view
-        .findViewById(R.id.publisher)).getText().toString();
-    String price = ((TextView) view.findViewById(R.id.price))
-        .getText().toString();
-    String title = ((TextView) view.findViewById(R.id.title))
-        .getText().toString();
-    String image_url = ((TextView) view.findViewById(R.id.image_url))
-        .getText().toString();
-    String title_id = ((TextView) view.findViewById(R.id.title_id))
-        .getText().toString();
-    String rental_id = ((TextView) view.findViewById(R.id.rental_id))
-        .getText().toString();
-	String times_rented = ((TextView) view.findViewById(R.id.times_rented))
-			.getText().toString();
-	String avg_reading = ((TextView) view.findViewById(R.id.avg_reading))
-			.getText().toString();
-	String summary = ((TextView) view.findViewById(R.id.summary))
-			.getText().toString();
-	String pickup_order = ((TextView) view.findViewById(R.id.pickup_order))
-			.getText().toString();
-    
-    // Starting new intent
-    Intent in = new Intent(this.getActivity().getApplicationContext(),SingleMenuItemActivity.class);
-    in.putExtra(TAG_AUTHOR, author);
-    in.putExtra(TAG_CATEGORY, category);
-    in.putExtra(TAG_TITLE, title);
-    in.putExtra(TAG_LANGUAGE, publisher);
-    in.putExtra(TAG_PAGE, price);
-    in.putExtra(TAG_IMAGE_URL, image_url);
-    in.putExtra(TAG_ID_call, title_id);
-    in.putExtra(RENTAL_ID, rental_id);
-	in.putExtra(TIMES_RENTED,times_rented);
-	in.putExtra(AVG_READING,avg_reading);
-	in.putExtra(SUMMARY,summary);
-	in.putExtra(PICKUP_ORDER,pickup_order);
-    in.putExtra("message", "current");
-    in.putExtra("check","logged_in");
-    
-    startActivity(in);
+	  Intent in = new Intent(this.getActivity().getApplicationContext(),SingleMenuItemActivity.class);
+	  
+	  in.putExtra(TAG_AUTHOR, bookList.get(position).getAuthor());
+	  in.putExtra(TAG_CATEGORY, bookList.get(position).getCategory());
+	  in.putExtra(TAG_TITLE, bookList.get(position).getTitle());
+	  in.putExtra(TAG_LANGUAGE, bookList.get(position).getPublisher());
+	  in.putExtra(TAG_PAGE, bookList.get(position).getPrice());
+	  in.putExtra(TAG_IMAGE_URL, bookList.get(position).getImage_url());
+	  in.putExtra(SUMMARY, bookList.get(position).getSummary());
+	  in.putExtra(RENTAL_ID, bookList.get(position).getRental_id());
+	  in.putExtra(PICKUP_ORDER,bookList.get(position).getPickup_order());
+	  in.putExtra(TAG_ID_call, bookList.get(position).getId());
+	  in.putExtra(TIMES_RENTED, bookList.get(position).getTimes_rented());
+	  in.putExtra(AVG_READING, bookList.get(position).getAvg_reading());
+	  in.putExtra("message", "current");
+	  in.putExtra("check","logged_in");
+  
+	  startActivity(in);
   }
   private class JSONParse extends AsyncTask<String,String,JSONObject>{
     protected void onPreExecute(){
@@ -125,19 +97,17 @@ public class CurrentlyReadingFragment extends ListFragment {
       String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/books_at_home.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
       JSONParser jp = new JSONParser();
       JSONObject json = jp.getJSONFromUrl(url);
-      if (isCancelled())
-    	  return null;
-      else
-    	  return json;
+      return json;
     }
-    protected void onPostExecute(JSONObject json){
+    @SuppressWarnings("deprecation")
+	protected void onPostExecute(JSONObject json){
 	    if (json != null && !isCancelled()){
-	    	ArrayList<Book> bookList = new ArrayList<Book>();
 	      try {
 	        // Getting Array of data
 	        list = json.getJSONArray(TAG_WISHLIST);
 	        //checking if the array is empty 
 			if (list.length() != 0){
+				bookList.clear();
 		        // looping through All data
 		        for (int i = 0; i < list.length(); i++) {
 		          JSONObject c = list.getJSONObject(i);
@@ -175,13 +145,26 @@ public class CurrentlyReadingFragment extends ListFragment {
 			}else{
 				setEmptyText("Your dont hold any book");
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-			setEmptyText("Your dont hold any book");
-		}
-		adapter = new CustomAdapter(getActivity(), bookList);
-		// selecting single ListView item
-	    setListAdapter(adapter);
+	      }catch (JSONException e) {
+			  setEmptyText("Your dont hold any book");
+	      }
+	      adapter = new CustomAdapter(getActivity(), bookList);
+	      setListAdapter(adapter);
+		}else{
+			AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
+	        alert.setTitle("Connection Time Out!");
+	        alert.setMessage("We were not able to reach the server. Please try again after some time");
+	        alert.setButton("Retry", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int which) {
+		        	   json_parse = new JSONParse();
+		        	   json_parse.execute();
+		           }
+		        });
+	        // Set the Icon for the Dialog
+	        alert.setIcon(R.drawable.gcm_icon);
+	        alert.setCancelable(false);
+	        alert.show();
+	        
 		}
 	 }
   }
@@ -193,13 +176,9 @@ public class CurrentlyReadingFragment extends ListFragment {
 			//adapter.notifyDataSetChanged();
 		//}
   }
+  @Override
   public void onDestroy(){
 	  super.onDestroy();
-	  if(json_parse != null)
-		  json_parse.cancel(true);
-  }
-  public void onBackPressed(){
-	  if(json_parse != null)
-		  json_parse.cancel(true);
+		 json_parse.cancel(true);
   }
 } 

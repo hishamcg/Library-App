@@ -1,46 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="5dip"
+    android:padding="10dip"
     android:background="#f5f5f5">
-<TwoLineListItem 
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:paddingLeft="5dp"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginRight="5dp"
-	    android:layout_marginLeft="5dp" 
-	    android:layout_marginTop="5dp"
-	    android:background="@drawable/edit_border"
-	    android:minHeight="?android:attr/listPreferredItemHeight"
-	    android:mode="twoLine">
     
-        <TextView android:id="@android:id/text1"
+        <TextView android:id="@+id/name"
 			android:text="location name"
-			android:textColor="#a222"
+			android:textColor="#a000"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="6dip"
-			android:layout_marginTop="6dip"
 			android:textAppearance="?android:attr/textAppearanceMedium"/>
+        
+        <TextView android:id="@+id/address"
+			android:text="address"
+			android:layout_below="@+id/name"
+			android:textColor="#9222"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
                 
-        <TextView android:id="@android:id/text2"
+        <TextView android:id="@+id/distance"
 			android:text="distance in meters"
 			android:textColor="#dfa569"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentBottom="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@android:id/text1"
-    		android:layout_alignLeft="@android:id/text1"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@android:id/text2"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dip"
-            android:src="@drawable/map_view3" />
-
-</TwoLineListItem>
-</LinearLayout>
+        
+        <LinearLayout
+	        android:id="@+id/btn_call"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/button_white"
+	        android:layout_below="@+id/address"
+	        android:layout_alignParentBottom="true"
+	        android:orientation="horizontal"
+	        android:layout_marginTop="5dip"
+	        android:clickable="true"
+	        android:gravity="center">
+	        <ImageView 
+	            android:layout_width="20dip"
+	            android:layout_height="20dip"
+	            android:src="@drawable/ic_phone_green"
+	            android:layout_marginRight="10dip"/>
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="Call"
+	            android:textColor="#169c43"/>
+	    </LinearLayout>
+</RelativeLayout>

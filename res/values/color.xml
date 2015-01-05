@@ -8,6 +8,7 @@
     <color name="counter_text_color">#c5c4c4</color>
     <color name="white">#fff</color>
     <color name="gray">#eee</color>
+    <color name="dark_gray">#ccc</color>
     <!-- brown -->
     <color name="shelf_brown">#5e4122</color>
     <color name="shelf_brown1">#9d6c38</color>

@@ -66,7 +66,7 @@ public class SignInWaitingActivity extends Activity {
 		phone_no = auth_val.getStringExtra("NUMBER");
 		membership_no = auth_val.getStringExtra("MEMBERSHIP_NO");
 
-		int waiting_time = 60;
+		int waiting_time = 300;
 
 		mobNoVeryfyTv = (TextView) findViewById(R.id.SW_MobNoVeryfyDesctxt);
 		timerTv = (TextView) findViewById(R.id.SW_TimeRemainigTv);
@@ -76,7 +76,7 @@ public class SignInWaitingActivity extends Activity {
 		otp_input = (EditText) findViewById(R.id.SW_OtpText);
 		btn_skip = (Button) findViewById(R.id.btn_skip);
 
-		// show 30 second time count down
+		// show 300 second time count down
 		count_down = new CountDownTimer(waiting_time*1000, 1000) {
 
 			public void onTick(long millisUntilFinished) {

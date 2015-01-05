@@ -20,10 +20,10 @@ import com.strata.justbooksclc.R;
 import com.strata.justbooksclc.model.Book;
 
 public class CustomAdapter extends ArrayAdapter<Book> {
-	private final Activity context;
+	private final Context context;
 	ArrayList<Book> bookArry;
 
-	public CustomAdapter(Activity context, ArrayList<Book> bookArry) {
+	public CustomAdapter(Context context, ArrayList<Book> bookArry) {
 		super(context, R.layout.book_list_single_item, bookArry);
 		this.context = context;
 		this.bookArry = bookArry;
@@ -37,15 +37,8 @@ public class CustomAdapter extends ArrayAdapter<Book> {
 		View rowView = inflater.inflate(R.layout.book_list_single_item, parent, false);
 		TextView title = (TextView) rowView.findViewById(R.id.title);
 		TextView author = (TextView) rowView.findViewById(R.id.author);
-		TextView category = (TextView) rowView.findViewById(R.id.category);
-		TextView publisher = (TextView) rowView.findViewById(R.id.publisher);
-		TextView price = (TextView) rowView.findViewById(R.id.price);
-		TextView image_url = (TextView) rowView.findViewById(R.id.image_url);
-		TextView title_id = (TextView) rowView.findViewById(R.id.title_id);
-		TextView rental_id = (TextView) rowView.findViewById(R.id.rental_id);
 		TextView times_rented = (TextView) rowView.findViewById(R.id.times_rented);
 		TextView avg_reading = (TextView) rowView.findViewById(R.id.avg_reading);
-		TextView summary = (TextView) rowView.findViewById(R.id.summary);
 		TextView pickup_order = (TextView) rowView.findViewById(R.id.pickup_order);
 		LinearLayout detail_mini = (LinearLayout) rowView.findViewById(R.id.detail_mini);
 
@@ -68,15 +61,8 @@ public class CustomAdapter extends ArrayAdapter<Book> {
 		//--------------------------
 		title.setText(book.getTitle());
 		author.setText(book.getAuthor());
-		category.setText(book.getCategory());
-		publisher.setText(book.getPublisher());
-  		price.setText(book.getPrice());
-  		image_url.setText(book.getImage_url());
-  		title_id.setText(book.getId());
-  		rental_id.setText(book.getRental_id());
   		times_rented.setText(book.getTimes_rented());
   		avg_reading.setText(book.getAvg_reading());
-  		summary.setText(book.getSummary());
   		if (book.getPickup_order() != null && !book.getPickup_order().equals("null")){
   			pickup_order.setText("pickup in process...");
   			pickup_order.setVisibility(View.VISIBLE);

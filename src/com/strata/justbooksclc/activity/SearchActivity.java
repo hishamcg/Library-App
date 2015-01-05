@@ -11,9 +11,11 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -54,16 +56,17 @@ public class SearchActivity extends Activity {
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String AVG_READING = "avg_reading_times";
 	private String check_log="not_logged_in";
-	String auth_token;
-	String memb;
-	String numb;
-	String url;
-	String searchText="";
-	Boolean where_to = true;
-	SearchView searchView;
+	private String auth_token;
+	private String memb;
+	private String numb;
+	private String url;
+	private String searchText="";
+	private SearchView searchView;
 	// contacts JSONArray
-	JSONArray list = null;
-
+	private JSONArray list = null;
+	private ArrayList<Book> bookList = new ArrayList<Book>();
+	private JSONParse json_parse;
+	private ListView list_view;
 	@SuppressLint("NewApi")
 	@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
@@ -122,6 +125,32 @@ public class SearchActivity extends Activity {
         // Enabling Up / Back navigation
         actionBar.setDisplayHomeAsUpEnabled(true);
 		progress = new ProgressDialog(this);
+		list_view = (ListView)findViewById(R.id.list);
+		list_view.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				// Starting new intent
+				Intent in = new Intent(getApplicationContext(),SingleMenuItemActivity.class);
+				
+				in.putExtra(TAG_AUTHOR, bookList.get(position).getAuthor());
+				in.putExtra(TAG_CATEGORY, bookList.get(position).getCategory());
+				in.putExtra(TAG_TITLE, bookList.get(position).getTitle());
+				in.putExtra(TAG_LANGUAGE, bookList.get(position).getPublisher());
+				in.putExtra(TAG_PAGE, bookList.get(position).getPrice());
+				in.putExtra(TAG_IMAGE_URL, bookList.get(position).getImage_url());
+				in.putExtra(SUMMARY, bookList.get(position).getSummary());
+				in.putExtra(TAG_ID_call, bookList.get(position).getId());
+				in.putExtra(TIMES_RENTED, bookList.get(position).getTimes_rented());
+				in.putExtra(AVG_READING, bookList.get(position).getAvg_reading());
+				in.putExtra("message", "create");
+				in.putExtra("check", check_log);
+				startActivity(in);
+
+			}
+		});
 		handleIntent(getIntent());
 	}
 	@Override
@@ -148,10 +177,12 @@ public class SearchActivity extends Activity {
         	}finally{
         		System.out.println("hack failed");
         	}
-        	new JSONParse().execute();
+        	json_parse= new JSONParse();
+        	json_parse.execute();
         }
     }
 
+	@SuppressWarnings("deprecation")
 	private class JSONParse extends AsyncTask<String,String,JSONObject>{
 		protected void onPreExecute(){
 			final ProgressBar progress_bar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -188,7 +219,6 @@ public class SearchActivity extends Activity {
 			final ProgressBar progress_bar = (ProgressBar) findViewById(R.id.progress_bar);
 			progress_bar.setVisibility(View.GONE);
 			// Hashmap for ListView
-			ArrayList<Book> bookList = new ArrayList<Book>();
 			if (json != null ){
 				try {
 					// Getting Array of Books
@@ -196,6 +226,7 @@ public class SearchActivity extends Activity {
 					//checking if the array is empty
 					if (list.length() != 0){
 						// looping through All Books
+						bookList.clear();
 						for (int i = 0; i < list.length(); i++) {
 							JSONObject c = list.getJSONObject(i);
 
@@ -235,60 +266,23 @@ public class SearchActivity extends Activity {
 					e.printStackTrace();
 					Toast.makeText(getApplicationContext(),"No Data To Display",Toast.LENGTH_SHORT).show();
 				}
+				CustomAdapter adapter = new CustomAdapter(SearchActivity.this, bookList);
+				list_view.setAdapter(adapter);
+			}else{
+				AlertDialog alert = new AlertDialog.Builder(getBaseContext()).create();
+		        alert.setTitle("Connection Time Out!");
+		        alert.setMessage("We were not able to reach the server. Please try again after some time");
+		        alert.setButton("Retry", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int which) {
+			        	   json_parse = new JSONParse();
+			        	   json_parse.execute();
+			           }
+			        });
+		        // Set the Icon for the Dialog
+		        alert.setIcon(R.drawable.gcm_icon);
+		        alert.setCancelable(false);
+		        alert.show();
 			}
-			else{
-				Toast.makeText(getApplicationContext(),"No Data To Display",Toast.LENGTH_SHORT).show();
-			}
-			CustomAdapter adapter = new CustomAdapter(SearchActivity.this, bookList);
-			ListView lv = (ListView)findViewById(R.id.list);
-			lv.setAdapter(adapter);
-			// Launching new screen on Selecting Single ListItem
-			lv.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					// getting values from selected ListItem
-					String author = ((TextView) view.findViewById(R.id.author))
-							.getText().toString();
-					String category = ((TextView) view.findViewById(R.id.category))
-							.getText().toString();
-					String publisher = ((TextView) view
-							.findViewById(R.id.publisher)).getText().toString();
-					String price = ((TextView) view.findViewById(R.id.price))
-							.getText().toString();
-					String title = ((TextView) view.findViewById(R.id.title))
-							.getText().toString();
-					String image_url = ((TextView) view.findViewById(R.id.image_url))
-							.getText().toString();
-					String summary = ((TextView) view.findViewById(R.id.summary))
-							.getText().toString();
-					String title_id = ((TextView) view.findViewById(R.id.title_id))
-							.getText().toString();
-					String times_rented = ((TextView) view.findViewById(R.id.times_rented))
-							.getText().toString();
-					String avg_reading = ((TextView) view.findViewById(R.id.avg_reading))
-							.getText().toString();
-
-					// Starting new intent
-					Intent in = new Intent(getApplicationContext(),
-					SingleMenuItemActivity.class);
-					in.putExtra(TAG_AUTHOR, author);
-					in.putExtra(TAG_CATEGORY, category);
-					in.putExtra(TAG_TITLE, title);
-					in.putExtra(TAG_LANGUAGE, publisher);
-					in.putExtra(TAG_PAGE, price);
-					in.putExtra(TAG_IMAGE_URL, image_url);
-					in.putExtra(SUMMARY, summary);
-					in.putExtra(TAG_ID_call, title_id);
-					in.putExtra(TIMES_RENTED,times_rented);
-					in.putExtra(AVG_READING,avg_reading);
-					in.putExtra("message", "create");
-					in.putExtra("check", check_log);
-					startActivity(in);
-
-				}
-			});
 		}
 	}
 	@Override

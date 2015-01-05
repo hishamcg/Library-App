@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -77,6 +78,11 @@ public class SingleMenuItemActivity  extends Activity {
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String PICKUP_ORDER = "pickup_order_id";
 	private static final String AVG_READING = "avg_reading_times";
+	private static final String DeliveryOrderId = "delivery_order_id";
+	
+	private static final String AllowCancel = "allow_cancel";
+	private static final String OrderType = "order_type";
+	private static final String Status = "status";
 
 	private JSONParse json_parse = new JSONParse();
 	String branch_name;
@@ -84,7 +90,7 @@ public class SingleMenuItemActivity  extends Activity {
 	long time_of_last_shake = 0;
 	long initial_time = System.currentTimeMillis();
 	long buffer_time_for_shake = 1000;
-
+	private String order_type = null;
 	private SensorManager mSensorManager;
 	private ShakeEventListener mSensorListener;
 
@@ -158,13 +164,14 @@ public class SingleMenuItemActivity  extends Activity {
         String category = in.getStringExtra(TAG_CATEGORY);
         String publisher = in.getStringExtra(TAG_LANGUAGE);
         String price = in.getStringExtra(TAG_PAGE);
+        String image_url = in.getStringExtra(TAG_IMAGE_URL);
+        String summary = in.getStringExtra(SUMMARY);
         final String title = in.getStringExtra(TAG_TITLE);
         final String times_rented = in.getStringExtra(TIMES_RENTED);
         final String avg_reading = in.getStringExtra(AVG_READING);
-        String image_url = in.getStringExtra(TAG_IMAGE_URL);
         final String pickup_order = in.getStringExtra(PICKUP_ORDER);
-        String summary = in.getStringExtra(SUMMARY);
         final String rental_id = in.getStringExtra(RENTAL_ID);
+        final String delivery_order_id = in.getExtras().getString(DeliveryOrderId,null);
         if (summary.equals("null")){
         	summary = "No summary available";
         }
@@ -189,6 +196,7 @@ public class SingleMenuItemActivity  extends Activity {
         final LinearLayout remove = (LinearLayout) findViewById(R.id.remove);
         final LinearLayout add_to_list = (LinearLayout) findViewById(R.id.add_to_list);
         final LinearLayout pick_up = (LinearLayout) findViewById(R.id.pick_up);
+        final LinearLayout order_cancel = (LinearLayout) findViewById(R.id.order_cancel);
         //final RelativeLayout pickup_layout = (RelativeLayout) findViewById(R.id.relativeLayout_pickup);
         final LinearLayout share = (LinearLayout) findViewById(R.id.share);
         /*if (pickup_order != null && !pickup_order.equals("")){
@@ -207,13 +215,19 @@ public class SingleMenuItemActivity  extends Activity {
         		json_parse.execute();
 	        }
         	else if(message.equals("current")){
-        		pick_up.setVisibility(View.VISIBLE);
+        		if(pickup_order.isEmpty() || pickup_order.equals("null")){
+        			pick_up.setVisibility(View.VISIBLE);
+        		}
         		remove.setVisibility(View.GONE);
         		add_to_list.setVisibility(View.GONE);
         		rental_btn.setVisibility(View.GONE);
         		avail_layout.setVisibility(View.GONE);
-        	}else if (message.equals("delivery")){
+        	}else if (message.equals("pending")){
         		//lblpickup_order.setText("rental order in process...");
+        		if(in.getBooleanExtra(AllowCancel,false)){
+        			order_cancel.setVisibility(View.VISIBLE);
+        			order_type = in.getStringExtra(OrderType);
+        		}
         		pick_up.setVisibility(View.GONE);
         		remove.setVisibility(View.GONE);
         		add_to_list.setVisibility(View.GONE);
@@ -342,6 +356,37 @@ public class SingleMenuItemActivity  extends Activity {
     	        alert.show();
         	}
         });
+        order_cancel.setOnClickListener(new Button.OnClickListener() {
+        	@SuppressWarnings("deprecation")
+			public void onClick(View v){
+        		AlertDialog alert = new AlertDialog.Builder(SingleMenuItemActivity.this).create();
+    	        alert.setTitle(title);
+    	        alert.setMessage("Are You Sure You want\n to cancel the order");
+    	        alert.setButton("Yes", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int which) {
+    	        	   String url = null;
+    	        	   if(order_type.equals("P"))
+    	        		   url = "http://"+Config.SERVER_BASE_URL+"/api/v1/orders/order_cancel.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&rental_id="+rental_id+"&membership_no="+memb;
+    	        	   else if(order_type.equals("D"))
+    	        		   url = "http://"+Config.SERVER_BASE_URL+"/api/v1/orders/order_cancel.json?api_key="+auth_token+"&phone="+numb+"&title_id="+title_id+"&delivery_order_id="+delivery_order_id+"&membership_no="+memb;
+    	        	   String success = httpToPostRequest(url);
+    	        	   if(success.equals("true")){
+    	        		   //lblpickup_order.setText(pickup_order);
+	    	               //pickup_layout.setVisibility(View.VISIBLE);
+	    	               order_cancel.setVisibility(View.GONE);
+    	        	   }
+    	           }
+    	        });
+    	        alert.setButton2("No",new DialogInterface.OnClickListener() {
+    	            public void onClick(DialogInterface dialog, int id) {
+    	                dialog.cancel();
+    	            }
+    	        });
+    	        // Set the Icon for the Dialog
+    	        alert.setIcon(R.drawable.gcm_icon);
+    	        alert.show();
+        	}
+        });
         share.setOnClickListener(new Button.OnClickListener(){
         	public void onClick(View v){
         		Intent i=new Intent(android.content.Intent.ACTION_SEND);
@@ -381,6 +426,30 @@ public class SingleMenuItemActivity  extends Activity {
 
 
     }
+	
+	private class JSONRequest extends AsyncTask<String ,String , JSONObject>{
+		private ProgressDialog progress;
+		protected void onPreExecute(){
+			progress.setMessage("Loading...) ");
+		    progress.show();
+		}
+		protected JSONObject doInBackground(String... args){
+			JSONParser jp = new JSONParser();
+			JSONObject json = jp.getJSONFromUrl(args[0]);
+			return json;
+		}
+		protected void onPostExecute(JSONObject json){
+			progress.hide();
+			String INFO;
+			try {
+				INFO = json.getString(USER_INFO);
+				Toast.makeText(getApplicationContext(), INFO,Toast.LENGTH_SHORT).show();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+            
+		}
+	}
 	private String httpToPostRequest(String url) {
 		InputStream inputStream = null;
 		try {

@@ -10,35 +10,70 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnManagerPNames;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
  
 public class JSONParser {
- 
-    static InputStream is = null;
-    static JSONObject jObj = null;
-    static String json = "";
+
+    private static final int CONNECTION_TIMEOUT = 100000; /* 5 seconds */
+    private static final int SOCKET_TIMEOUT = 100000; /* 5 seconds */
+    private static final long MCC_TIMEOUT = 100000; /* 5 seconds */
  
     // constructor
     public JSONParser() {
  
     }
- 
+    
+    private static void setTimeouts(HttpParams params) {
+        params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 
+            CONNECTION_TIMEOUT);
+        params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, SOCKET_TIMEOUT);
+        params.setLongParameter(ConnManagerPNames.TIMEOUT, MCC_TIMEOUT);
+    }
+    
     public JSONObject getJSONFromUrl(String url) {
- 
+    	InputStream is = null;
         // Making HTTP request
         try {
-        	jObj = null;
-        	is = null;
-        	json = "";
       
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpPost = new HttpGet(url);
+            HttpGet httpGet = new HttpGet(url);
+            setTimeouts(httpGet.getParams());
+//            HttpParams httpParameters = new BasicHttpParams();
+//            HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+//         	HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
  
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            is = httpEntity.getContent();           
+ 
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return parseResult(is);
+    }
+    
+    public JSONObject postJSONToUrl(String url,Context context) {
+    	InputStream is = null;
+        // Making HTTP request
+        try {
+            // defaultHttpClient
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(url);
+            setTimeouts(httpPost.getParams());
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
             is = httpEntity.getContent();           
@@ -50,8 +85,13 @@ public class JSONParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-         
-        try {
+        return parseResult(is);
+    }
+    
+    private JSONObject parseResult(InputStream is){
+        JSONObject jObj = null;
+        String json = "";
+    	try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     is, "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
@@ -74,6 +114,5 @@ public class JSONParser {
  
         // return JSON String
         return jObj;
- 
     }
 }
