@@ -35,6 +35,14 @@
 		    android:minHeight="45dip"
 		    android:layout_margin="10dip"
 		    android:background="#fff"/>
+	    <Button
+	        android:id="@+id/btn_filter"
+	        android:layout_width="fill_parent"
+	        android:layout_height="40dp"
+	        android:layout_margin="10dip"
+	        android:background="@drawable/button_green"
+	        android:text="Filter"
+	        android:textColor="#ffffff" />
 	</LinearLayout>
 
 	<ProgressBar

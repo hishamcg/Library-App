@@ -18,10 +18,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -61,6 +63,7 @@ public class FindBookActivity extends Activity{
 	private Spinner spinner_name;
 	private LinearLayout LL_filter;
 	private ProgressBar progress;
+	private Button btn_filter;
 	String auth_token;
 	String memb;
 	String numb;
@@ -73,6 +76,7 @@ public class FindBookActivity extends Activity{
 	ArrayList<String> all_filter_name = new ArrayList<String>();
 	ArrayAdapter<String> adapter_name;
 	JSONObject filter;
+	String selected_id = "2";
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,10 +91,13 @@ public class FindBookActivity extends Activity{
 	    	finish();
 	    	return true;
 	    }else if (itemId == R.id.action_filter){
-	    	if(LL_filter.getVisibility()==View.GONE)
+	    	if(LL_filter.getVisibility()==View.GONE){
 	    		LL_filter.setVisibility(View.VISIBLE);
-	    	else
+	    		item.setIcon(R.drawable.ic_filter_inv);
+	    	}else{
 	    		LL_filter.setVisibility(View.GONE);
+	    		item.setIcon(R.drawable.ic_filter);
+	    	}
 	    	return true;
 	    }else {
 	    	return super.onOptionsItemSelected(item);
@@ -124,6 +131,7 @@ public class FindBookActivity extends Activity{
 		LL_filter = (LinearLayout)findViewById(R.id.LL_filter);
 	  	list_view = (ListView)findViewById(R.id.list);
 	  	progress = (ProgressBar)findViewById(R.id.progressBar1);
+	  	btn_filter = (Button)findViewById(R.id.btn_filter);
 	  	//fetch all filter
 	  	json_filter = new JSONFilter();
 	  	json_filter.execute();
@@ -132,7 +140,25 @@ public class FindBookActivity extends Activity{
     	json_parse = new JSONParse();
     	json_parse.execute(url);
     	
-	  	
+    	btn_filter.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String url;
+				if(memb!=null && memb!="")
+					url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="
+								   +selected_id+"&api_key="+auth_token
+								   +"&phone="+numb+"&membership_no="+memb;
+				else
+					url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="
+							   +selected_id;
+				
+		    	json_parse = new JSONParse();
+		    	json_parse.execute(url);
+		    	LL_filter.setVisibility(View.GONE);
+		    	MenuItem men = (MenuItem)findViewById(R.id.action_filter);
+		    	men.setIcon(R.drawable.ic_filter);
+			}
+		});
 	    list_view.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
@@ -182,25 +208,13 @@ public class FindBookActivity extends Activity{
 	    
 	    spinner_name.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemSelected(AdapterView<?> parent, View view,int position, long id) {
 				try {
-					JSONObject filter_obj;
-					filter_obj = filter.getJSONArray(all_filter_type.get(spinner_type.getSelectedItemPosition()))
-									   .getJSONObject(position);
-					String url;
-					if(memb!=null && memb!="")
-						url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="
-									   +filter_obj.getString("id")+"&api_key="+auth_token
-									   +"&phone="+numb+"&membership_no="+memb;
-					else
-						url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="
-								   +filter_obj.getString("id");
-					
-			    	json_parse = new JSONParse();
-			    	json_parse.execute(url);
-					
+					JSONObject filter_obj = filter.getJSONArray(all_filter_type.get(spinner_type.getSelectedItemPosition()))
+							   .getJSONObject(position);
+					selected_id = filter_obj.getString("id");
 				} catch (JSONException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
