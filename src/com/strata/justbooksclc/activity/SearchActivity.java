@@ -269,7 +269,7 @@ public class SearchActivity extends Activity {
 				CustomAdapter adapter = new CustomAdapter(SearchActivity.this, bookList);
 				list_view.setAdapter(adapter);
 			}else{
-				AlertDialog alert = new AlertDialog.Builder(getBaseContext()).create();
+				AlertDialog alert = new AlertDialog.Builder(SearchActivity.this).create();
 		        alert.setTitle("Connection Time Out!");
 		        alert.setMessage("We were not able to reach the server. Please try again after some time");
 		        alert.setButton("Retry", new DialogInterface.OnClickListener() {

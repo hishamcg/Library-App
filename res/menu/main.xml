@@ -72,6 +72,12 @@
 		          android:title="Policy"
 		          android:icon="@drawable/ic_policy"
 		          android:showAsAction="ifRoom" />
+			<item android:id="@+id/action_logout"
+		          android:textSize="12sp"
+		          android:title="Logout"
+		          android:icon="@drawable/ic_logout"
+		          android:showAsAction="ifRoom">
+			</item>
 	    </menu>
     </item>
 </menu>

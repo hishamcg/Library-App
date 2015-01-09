@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.strata.justbooksclc.Config;
 import com.strata.justbooksclc.JSONParser;
@@ -106,7 +107,7 @@ public class CurrentlyReadingFragment extends ListFragment {
 	        // Getting Array of data
 	        list = json.getJSONArray(TAG_WISHLIST);
 	        //checking if the array is empty 
-			if (list.length() != 0){
+			if (list != null){
 				bookList.clear();
 		        // looping through All data
 		        for (int i = 0; i < list.length(); i++) {
@@ -142,14 +143,16 @@ public class CurrentlyReadingFragment extends ListFragment {
 		          // adding HashList to ArrayList
 		          bookList.add(book);
 		        }
+		        if(bookList.size() == 0)
+					setEmptyText("Your dont hold any book");
+		        adapter = new CustomAdapter(getActivity(), bookList);
+			    setListAdapter(adapter);
 			}else{
 				setEmptyText("Your dont hold any book");
 			}
 	      }catch (JSONException e) {
 			  setEmptyText("Your dont hold any book");
 	      }
-	      adapter = new CustomAdapter(getActivity(), bookList);
-	      setListAdapter(adapter);
 		}else{
 			AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
 	        alert.setTitle("Connection Time Out!");
@@ -162,7 +165,6 @@ public class CurrentlyReadingFragment extends ListFragment {
 		        });
 	        // Set the Icon for the Dialog
 	        alert.setIcon(R.drawable.gcm_icon);
-	        alert.setCancelable(false);
 	        alert.show();
 	        
 		}

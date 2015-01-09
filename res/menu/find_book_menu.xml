@@ -1,9 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
     <item
-        android:id="@+id/action_filter"
-        android:showAsAction="always"
-        android:icon="@drawable/ic_filter"
-        android:title="filter"/>
-
+	    android:id="@+id/action_filter"
+	    android:icon="@drawable/ic_filter"
+	    android:actionLayout="@layout/filter_action_view"
+	    android:showAsAction="ifRoom"
+	    style="@android:style/Widget.ActionButton"
+	    android:title="filter"/>
 </menu>

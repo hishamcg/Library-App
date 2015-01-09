@@ -490,9 +490,9 @@ public class SingleMenuItemActivity  extends Activity {
 	            return jsonObject.getString("success");
 	            }
             else
-            	Toast.makeText(getApplicationContext(),"Unable to process",Toast.LENGTH_SHORT).show();
+            	Toast.makeText(getApplicationContext(),"Sorry! please try again later",Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
+            Toast.makeText(getApplicationContext(),"Sorry! please try again later",Toast.LENGTH_SHORT).show();
         }
 		return "false";
 	}

@@ -10,17 +10,26 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.strata.justbooksclc.DBHelper;
 import com.strata.justbooksclc.JSONParser;
+import com.strata.justbooksclc.R;
 import com.strata.justbooksclc.activity.SingleMenuItemActivity;
 import com.strata.justbooksclc.adapter.CustomAdapter;
 import com.strata.justbooksclc.model.Book;
 
-public class BooksOurPickFragment extends ListFragment {
+public class BooksOurPickFragment extends Fragment {
 	//private static final String SERVER_BASE_URL = "192.168.2.113:4321";
 	// JSON Node names
 	private static final String TAG_WISHLIST = "titles";
@@ -37,7 +46,10 @@ public class BooksOurPickFragment extends ListFragment {
 	private static final String SUMMARY = "summary";
 	//private JSONParse json_parse = new JSONParse();
 	private JSONParse json_parse;
-	
+	private View internetDown;
+	private ListView list_view;
+	private ImageButton refresh_button;
+	private ProgressBar progress;
 	CustomAdapter adapter;
 	// contacts JSONArray
 	JSONArray list = null;
@@ -45,7 +57,20 @@ public class BooksOurPickFragment extends ListFragment {
 	ArrayList<Book> bookList = new ArrayList<Book>();
 	String data_fetch_url;
 	int db_table_tagid;
-
+	
+	
+	@Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.common_list_view, container, false);
+		progress = (ProgressBar)rootView.findViewById(R.id.progress_bar);
+		list_view = (ListView)rootView.findViewById(android.R.id.list);
+		TextView emptyText = new TextView(getActivity());
+		emptyText.setText("No books to show");
+        list_view.setEmptyView(emptyText);
+		internetDown = rootView.findViewById(R.id.internet_down);
+	  	refresh_button = (ImageButton) internetDown.findViewById(R.id.refresh_button);
+		return rootView;
+	}
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -58,30 +83,45 @@ public class BooksOurPickFragment extends ListFragment {
 	UpdateListFromDatabase(db_table_tagid);
 	if (adapter != null && !data_fetch_url.isEmpty()){
 		json_parse = new JSONParse();
-		//json_parse.execute(data_fetch_url);
+		json_parse.execute(data_fetch_url);
 	}
 	
+	refresh_button.setOnClickListener(new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			internetDown.setVisibility(View.GONE);
+			json_parse = new JSONParse();
+			json_parse.execute(data_fetch_url);
+		}
+	});
+	
+	list_view.setOnItemClickListener(new OnItemClickListener(){
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+			  Intent in = new Intent(getActivity().getApplicationContext(),SingleMenuItemActivity.class);
+			  Book bookAtPos = bookList.get(position);
+			  in.putExtra(TAG_AUTHOR, bookAtPos.getAuthor());
+			  in.putExtra(TAG_CATEGORY, bookAtPos.getCategory());
+			  in.putExtra(TAG_TITLE, bookAtPos.getTitle());
+			  in.putExtra(TAG_LANGUAGE, bookAtPos.getPublisher());
+			  in.putExtra(TAG_PAGE, bookAtPos.getPrice());
+			  in.putExtra(TAG_IMAGE_URL, bookAtPos.getImage_url());
+			  in.putExtra(SUMMARY, bookAtPos.getSummary());
+			  in.putExtra(RENTAL_ID, "");
+			  in.putExtra("title_id", bookAtPos.getId());
+			  in.putExtra(TIMES_RENTED, bookAtPos.getTimes_rented());
+			  in.putExtra(AVG_READING, bookAtPos.getAvg_reading());
+			  in.putExtra("message", "create");
+		      startActivity(in);
+		}
+	});
+	
   }
-  public void onListItemClick(ListView l, View view, int position, long id) {
-	  Intent in = new Intent(getActivity().getApplicationContext(),SingleMenuItemActivity.class);
-	  in.putExtra(TAG_AUTHOR, bookList.get(position).getAuthor());
-      in.putExtra(TAG_CATEGORY, bookList.get(position).getCategory());
-      in.putExtra(TAG_TITLE, bookList.get(position).getTitle());
-      in.putExtra(TAG_LANGUAGE, bookList.get(position).getPublisher());
-      in.putExtra(TAG_PAGE, bookList.get(position).getPrice());
-      in.putExtra(TAG_IMAGE_URL, bookList.get(position).getImage_url());
-      in.putExtra(SUMMARY, bookList.get(position).getSummary());
-      in.putExtra(RENTAL_ID, "");
-      in.putExtra("title_id", bookList.get(position).getId());
-      in.putExtra(TIMES_RENTED, bookList.get(position).getTimes_rented());
-      in.putExtra(AVG_READING, bookList.get(position).getAvg_reading());
-      in.putExtra("message", "create");
-      in.putExtra("check","logged_in");
-      startActivity(in);
-  }
+  
   private class JSONParse extends AsyncTask<String,String,JSONObject>{
 	  protected void onPreExecute(){
-		  
+		  if(bookList.isEmpty())
+			  progress.setVisibility(View.VISIBLE);
 	  }
 	  protected JSONObject doInBackground(String... args){
 		  
@@ -93,6 +133,7 @@ public class BooksOurPickFragment extends ListFragment {
 			return json;
 	  }
 	  protected void onPostExecute(JSONObject json){
+		progress.setVisibility(View.GONE);
 		if (json != null && !isCancelled()){
 			try {
 				// Getting Array of data
@@ -133,14 +174,13 @@ public class BooksOurPickFragment extends ListFragment {
 					 }
 					mydb.insertAllData(bookArrayStringed,db_table_tagid);
 					adapter.notifyDataSetChanged();
-				}else{
-					setEmptyText("No books to show");
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-				setEmptyText("No books to show");
 			}
 			
+		}else if(bookList.size() == 0){
+			internetDown.setVisibility(View.VISIBLE);
 		}
 	  }
   }
@@ -172,7 +212,7 @@ public class BooksOurPickFragment extends ListFragment {
 		}
 		adapter = new CustomAdapter(getActivity(), bookList);
 		// selecting single ListView item
-	    setListAdapter(adapter);
+	    list_view.setAdapter(adapter);
 		
 	}
     public static String strSeparator = "__,__";

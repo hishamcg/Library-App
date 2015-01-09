@@ -10,10 +10,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -78,6 +81,12 @@ public class GlobalMenuDrawerActivity extends FragmentActivity{
 	      MenuItem overflow = menu.findItem(R.id.action_overflow);
 	      MenuItem user = menu.findItem(R.id.action_user);
 	      MenuItem action_level = menu.findItem(R.id.action_level);
+	      MenuItem action_logout = menu.findItem(R.id.action_logout);
+	      
+	      SpannableString s = new SpannableString("Logout");
+	      s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
+	      action_logout.setTitle(s);
+	      
 	      user.setTitle(email);
 	      //changing bookband heart color according to the theme
 	      setJustBooksTheme(action_level);
@@ -166,6 +175,21 @@ public class GlobalMenuDrawerActivity extends FragmentActivity{
 	    }else if (itemId == R.id.action_policy ){
 	    	Intent policy = new Intent(getApplicationContext(), Policy.class);
 	        startActivity(policy);
+	    	return true;
+	    }else if (itemId == R.id.action_logout ){
+	    	SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = pref.edit();
+			editor.putString("AUTH_TOKEN", "");
+		    editor.putString("MEMBERSHIP_NO", "");
+		    editor.putString("DATE_OF_SIGNUP", "");
+		    editor.putString("NUMBER", "");
+		    editor.putInt("BOOK_BAND", 0);
+		    editor.putString("MY_THEME", "");
+		    editor.commit();
+		    finish();
+		    Intent logout = new Intent(getApplicationContext(),PageZero.class);
+		    logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		    startActivity(logout);
 	    	return true;
 	    }else if (itemId == R.id.action_address ){
 	    	Intent profile = new Intent(getApplicationContext(), ProfilePage.class);
@@ -318,23 +342,6 @@ public class GlobalMenuDrawerActivity extends FragmentActivity{
 			Intent help = new Intent(getApplicationContext(),HelpActivity.class);
 			startActivity(help);
 			mDrawerLayout.closeDrawer(mDrawerLinear);
-			break;
-		case 5:
-			SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
-			SharedPreferences.Editor editor = pref.edit();
-			editor.putString("AUTH_TOKEN", "");
-		    editor.putString("MEMBERSHIP_NO", "");
-		    editor.putString("DATE_OF_SIGNUP", "");
-		    editor.putString("NUMBER", "");
-		    editor.putString("BOOK_BAND", "");
-		    editor.putString("MY_THEME", "");
-		    editor.commit();
-		    finish();
-		    
-		    Intent logout = new Intent(getApplicationContext(),PageZero.class);
-		    logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		    startActivity(logout);
-		    mDrawerLayout.closeDrawer(mDrawerLinear);
 			break;
 
 		default:

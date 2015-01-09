@@ -7,8 +7,11 @@
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
     <color name="white">#fff</color>
+    <color name="milky_white">#FEFCFF</color>
     <color name="gray">#eee</color>
     <color name="dark_gray">#ccc</color>
+    <color name="dark_red">#C51313</color>
+    <color name="light_green">#cff9e0</color>
     <!-- brown -->
     <color name="shelf_brown">#5e4122</color>
     <color name="shelf_brown1">#9d6c38</color>

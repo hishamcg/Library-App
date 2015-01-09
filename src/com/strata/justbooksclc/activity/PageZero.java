@@ -264,10 +264,13 @@ public class PageZero extends Activity {
 							    }else{
 							    	value = 4;
 							    	my_band = "blue";}
-
+					            
 					            SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 							    SharedPreferences.Editor   editor = preferences.edit();
 							    editor.putString("LOGIN_STATUS", user);
+							    if(preferences.getInt("BOOK_BAND", -1) < value)
+							    	editor.putString("MY_THEME",my_band);
+							    
 							    editor.putInt("BOOK_BAND", value);
 							    editor.putString("READING_SCORE", String.valueOf(books_returns_count));
 							    //editor.putString("USER_NAME",user_name );
@@ -280,7 +283,6 @@ public class PageZero extends Activity {
 							    editor.putString("EMAIL",email);
 							    editor.putString("PLAN",plan);
 							    editor.putString("BRANCH",branch);
-							    editor.putString("MY_THEME",my_band);
 							    editor.commit();
 
 					        } catch(NumberFormatException nfe) {
@@ -332,7 +334,7 @@ public class PageZero extends Activity {
 				//long diff =saveddatevalue - date_last_signup;
 				
 			}else{
-				AlertDialog alert = new AlertDialog.Builder(getBaseContext()).create();
+				AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
 		        alert.setTitle("Connection Time Out!");
 		        alert.setMessage("We were not able to reach the server. Please try again after some time");
 		        alert.setButton("Retry", new DialogInterface.OnClickListener() {
@@ -343,7 +345,6 @@ public class PageZero extends Activity {
 			        });
 		        // Set the Icon for the Dialog
 		        alert.setIcon(R.drawable.gcm_icon);
-		        alert.setCancelable(false);
 		        alert.show();
 		        
 			}

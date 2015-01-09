@@ -122,7 +122,7 @@ public class PendingOrderFragment extends ListFragment {
 	        // Getting Array of data
 	        list = json.getJSONArray(TAG_WISHLIST);
 	        //checking if the array is empty 
-			if (list.length() != 0){
+			if (list != null){
 				bookList.clear();
 		        // looping through All data
 		        for (int i = 0; i < list.length(); i++) {
@@ -150,19 +150,18 @@ public class PendingOrderFragment extends ListFragment {
 		          // adding HashList to ArrayList
 		          bookList.add(book);
 		        }
+		        if(bookList.size() == 0)
+					setEmptyText("You dont have any Pending Orders");
+		        adapter = new CustomAdapter(getActivity(), bookList);
+			    setListAdapter(adapter);
 			}
 			else{
-				if(!isCancelled())
-					setEmptyText("You dont have any Pending Orders");
+				setEmptyText("You dont have any Pending Orders");
 			}
 	      }catch (JSONException e) {
-	    	  if(!isCancelled())
-	    		  setEmptyText("You dont have any Pending Orders");
+    		  setEmptyText("You dont have any Pending Orders");
 	      }
-	      if(!isCancelled()){
-		      adapter = new CustomAdapter(getActivity(), bookList);
-		      setListAdapter(adapter);
-	      }
+		      
 	    }else{
 			AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
 	        alert.setTitle("Connection Time Out!");
@@ -175,7 +174,6 @@ public class PendingOrderFragment extends ListFragment {
 		        });
 	        // Set the Icon for the Dialog
 	        alert.setIcon(R.drawable.gcm_icon);
-	        alert.setCancelable(false);
 	        alert.show();
 	        
 		}

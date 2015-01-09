@@ -9,23 +9,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -38,11 +39,14 @@ import com.strata.justbooksclc.adapter.MapAdapter;
 import com.strata.justbooksclc.gps.GPSTracker;
 import com.strata.justbooksclc.model.MapArray;
 
-public class MyMap extends Activity {
+public class MyMap extends ListActivity {
 	  String numb;
     // Google Map
     //ListView listView ;
-	private JSONParse json_parse = new JSONParse();
+	private JSONParse json_parse;
+	private View internetDown;
+	private ImageButton refresh_button;
+	private ProgressBar progress;
     GPSTracker gps;
     JSONArray list = null;
     double latitude=0;
@@ -80,16 +84,28 @@ public class MyMap extends Activity {
 		else
 			setTheme(R.style.MyTheme);
 		
-        setContentView(R.layout.map_list_view);
+        setContentView(R.layout.common_list_view);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        list_view = (ListView)findViewById(R.id.store_list);
+        list_view = (ListView)findViewById(android.R.id.list);
+        TextView emptyText = new TextView(this);
+		emptyText.setText("No data to show");
+        list_view.setEmptyView(emptyText);
+        progress = (ProgressBar)findViewById(R.id.progress_bar);
+        internetDown = findViewById(R.id.internet_down);
+	  	refresh_button = (ImageButton) internetDown.findViewById(R.id.refresh_button);
+	  	
+	  	refresh_button.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				internetDown.setVisibility(View.GONE);
+				json_parse = new JSONParse();
+		    	json_parse.execute();
+			}
+		});
 		//Get a Tracker (should auto-report)
 		//GoogleAnalytics.getInstance(this).getLogger().setLogLevel(LogLevel.VERBOSE);
 		((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.GLOBAL_TRACKER);
 
-        ColorDrawable gray = new ColorDrawable(this.getResources().getColor(R.color.dark_gray));
-        list_view.setDivider(gray);
-        list_view.setDividerHeight(1);
         list_view.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
@@ -111,13 +127,14 @@ public class MyMap extends Activity {
             gps.showSettingsAlert();
         }
         //make the device wait for the response
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-    	StrictMode.setThreadPolicy(policy);
+        json_parse = new JSONParse();
     	json_parse.execute();
     }
 
     private class JSONParse extends AsyncTask<String,String,JSONObject>{
-
+    	protected void onPreExecute(){
+  		  progress.setVisibility(View.VISIBLE);
+  	  	}
 		@Override
 		protected JSONObject doInBackground(String... params) {
 			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/store_locations.json";
@@ -128,8 +145,7 @@ public class MyMap extends Activity {
 		}
 
 		protected void onPostExecute(JSONObject json){
-			final ProgressBar progress_bar = (ProgressBar) findViewById(R.id.progress_bar);
-			progress_bar.setVisibility(View.GONE);
+			progress.setVisibility(View.GONE);
 			Location tempLocal1 = new Location("ref1");
 	        Location tempLocal2 = new Location("ref2");
 	        tempLocal1.setLatitude(latitude);
@@ -170,11 +186,8 @@ public class MyMap extends Activity {
 					toast.setGravity(Gravity.TOP, 0, 170);
 					toast.show();
 		    	}
-	    	}
-	    	else {
-	    		Toast toast = Toast.makeText(getApplicationContext(),"Sorry no Data to Show\nThe server might be down",Toast.LENGTH_SHORT);
-				toast.setGravity(Gravity.TOP, 0, 170);
-				toast.show();
+	    	}else {
+	    		internetDown.setVisibility(View.VISIBLE);
 	    	}
 		}
     }

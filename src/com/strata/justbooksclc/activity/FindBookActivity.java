@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,11 +20,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -62,8 +70,12 @@ public class FindBookActivity extends Activity{
 	private Spinner spinner_type;
 	private Spinner spinner_name;
 	private LinearLayout LL_filter;
+	private LinearLayout LL_background;
 	private ProgressBar progress;
 	private Button btn_filter;
+	private View internetDown;
+	private ActionBar filterActionBar;
+	private String title_name = "Filter";
 	String auth_token;
 	String memb;
 	String numb;
@@ -77,11 +89,31 @@ public class FindBookActivity extends Activity{
 	ArrayAdapter<String> adapter_name;
 	JSONObject filter;
 	String selected_id = "2";
-	
+	ImageView filter_menu_icon;
+	Animation animation_icon_rotate;
+	Animation animation_open;
+	Animation animation_close;
+	Animation fadeIn;
+	Animation fadeOut;
+	//MenuItem filter_icon;
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
 		menuInflater.inflate(R.menu.find_book_menu, menu);
+		MenuItem filter_icon = menu.findItem(R.id.action_filter);
+		//filter_icon.setActionView(R.layout.filter_action_view);
+		filter_menu_icon = (ImageView) filter_icon.getActionView().findViewById(R.id.loadingImageView);
+		filter_menu_icon.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(LL_filter.getVisibility()==View.GONE){
+					ShowFilter();
+		    	}else{
+		    		HideFilter();
+		    		//item.setIcon(R.drawable.ic_filter);
+		    	}
+			}
+		});
 		return super.onCreateOptionsMenu(menu);
 	}
 	@Override
@@ -89,15 +121,6 @@ public class FindBookActivity extends Activity{
 	    int itemId = item.getItemId();
 	    if (itemId == android.R.id.home){
 	    	finish();
-	    	return true;
-	    }else if (itemId == R.id.action_filter){
-	    	if(LL_filter.getVisibility()==View.GONE){
-	    		LL_filter.setVisibility(View.VISIBLE);
-	    		item.setIcon(R.drawable.ic_filter_inv);
-	    	}else{
-	    		LL_filter.setVisibility(View.GONE);
-	    		item.setIcon(R.drawable.ic_filter);
-	    	}
 	    	return true;
 	    }else {
 	    	return super.onOptionsItemSelected(item);
@@ -125,36 +148,59 @@ public class FindBookActivity extends Activity{
 			setTheme(R.style.MyTheme);
 		
 		setContentView(R.layout.find_book_layout);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		filterActionBar = getActionBar();
+		filterActionBar.setDisplayHomeAsUpEnabled(true);
+		//animations
+		animation_icon_rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.infinite_rotate);
+		animation_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.in_from_top);
+		animation_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.out_to_top);
+		
+		fadeIn = new AlphaAnimation(0, 1);
+		fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+		fadeIn.setDuration(500);
+
+		fadeOut = new AlphaAnimation(1, 0);
+		fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
+		fadeOut.setDuration(500);
+		
+		//call all views
 		spinner_type = (Spinner)findViewById(R.id.category_type);
 		spinner_name = (Spinner)findViewById(R.id.name);
 		LL_filter = (LinearLayout)findViewById(R.id.LL_filter);
+		LL_background = (LinearLayout)findViewById(R.id.LL_background);
 	  	list_view = (ListView)findViewById(R.id.list);
 	  	progress = (ProgressBar)findViewById(R.id.progressBar1);
 	  	btn_filter = (Button)findViewById(R.id.btn_filter);
-	  	//fetch all filter
-	  	json_filter = new JSONFilter();
-	  	json_filter.execute();
-	    //set initial view
-	  	String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="+2;
-    	json_parse = new JSONParse();
-    	json_parse.execute(url);
     	
+	  	//setting up no_internet view on include
+	  	internetDown = findViewById(R.id.internet_down);
+	  	ImageButton refresh_button = (ImageButton) internetDown.findViewById(R.id.refresh_button);
+	  	refresh_button.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//fetch all filter
+			  	json_filter = new JSONFilter();
+			  	json_filter.execute();
+			    //set initial view
+			  	String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="+2;
+		    	json_parse = new JSONParse();
+		    	json_parse.execute(url);
+			}
+		});
+	  	
+	  	LL_background.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				HideFilter();
+			}
+		});
     	btn_filter.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String url;
-				if(memb!=null && memb!="")
-					url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="
-								   +selected_id+"&api_key="+auth_token
-								   +"&phone="+numb+"&membership_no="+memb;
-				else
-					url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="
-							   +selected_id;
-				
-		    	json_parse = new JSONParse();
-		    	json_parse.execute(url);
-		    	LL_filter.setVisibility(View.GONE);
+				filter_menu_icon.startAnimation(animation_icon_rotate);
+				title_name = spinner_type.getSelectedItem().toString()+" > "+spinner_name.getSelectedItem().toString();
+				filterActionBar.setTitle(title_name);
+				FetchDataForFilter();
 			}
 		});
 	    list_view.setOnItemClickListener(new OnItemClickListener() {
@@ -174,7 +220,7 @@ public class FindBookActivity extends Activity{
 				  in.putExtra(TAG_ID_call, bookList.get(position).getId());
 				  in.putExtra(TIMES_RENTED, bookList.get(position).getTimes_rented());
 				  in.putExtra(AVG_READING, bookList.get(position).getAvg_reading());
-				  in.putExtra("message", "current");
+				  in.putExtra("message", "create");
 				  in.putExtra("check","logged_in");
 			  
 				  startActivity(in);
@@ -221,8 +267,42 @@ public class FindBookActivity extends Activity{
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
+	    //fetch all filter
+	  	json_filter = new JSONFilter();
+	  	json_filter.execute();
+	    //set initial view
+	  	String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="+2;
+    	json_parse = new JSONParse();
+    	json_parse.execute(url);
 	}
 	
+	private void FetchDataForFilter(){
+		String url;
+		if(memb!=null && memb!="")
+			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="
+						   +selected_id+"&api_key="+auth_token
+						   +"&phone="+numb+"&membership_no="+memb;
+		else
+			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="
+					   +selected_id;
+		
+		json_parse = new JSONParse();
+		json_parse.execute(url);
+		HideFilter();
+        
+	}
+	private void HideFilter(){
+		LL_filter.startAnimation(animation_close);
+        LL_filter.setVisibility(View.GONE);
+        LL_background.startAnimation(fadeOut);
+        LL_background.setVisibility(View.GONE);
+	}
+	private void ShowFilter(){
+		LL_filter.setVisibility(View.VISIBLE);
+        LL_filter.startAnimation(animation_open);
+        LL_background.setVisibility(View.VISIBLE);
+        LL_background.startAnimation(fadeIn);
+	}
 	private class JSONFilter extends AsyncTask<String,String,JSONObject>{
 		
 	    protected JSONObject doInBackground(String... args){
@@ -257,15 +337,21 @@ public class FindBookActivity extends Activity{
 		        adapter_name.setDropDownViewResource(R.layout.spinner_item);
 	    		// Apply the adapter to the spinner
 	    		spinner_name.setAdapter(adapter_name);
+	    		
+	    		title_name = spinner_type.getSelectedItem().toString()+" > "+spinner_name.getSelectedItem().toString();
+				filterActionBar.setTitle(title_name);
 		      }catch (JSONException e) {
 		      }
-			}
+
+			ShowFilter();
+		    }
 		 }
 	  }
 	
 	private class JSONParse extends AsyncTask<String,String,JSONObject>{
 	    protected void onPreExecute(){
 	    	progress.setVisibility(View.VISIBLE);
+	    	internetDown.setVisibility(View.GONE);
 	    }
 	    protected JSONObject doInBackground(String... args){
 	      JSONParser jp = new JSONParser();
@@ -274,12 +360,15 @@ public class FindBookActivity extends Activity{
 	    }
 		@SuppressWarnings("deprecation")
 		protected void onPostExecute(JSONObject json){
+			progress.setVisibility(View.GONE);
+			if(filter_menu_icon != null)
+				filter_menu_icon.clearAnimation();
 			if (json != null ){
 				try {
 					// Getting Array of Books
 					list = json.getJSONArray(TAG_SEARCHLIST);
 					//checking if the array is empty
-					if (list.length() != 0){
+					if (list != null){
 						// looping through All Books
 						bookList.clear();
 						for (int i = 0; i < list.length(); i++) {
@@ -313,6 +402,10 @@ public class FindBookActivity extends Activity{
 							// adding HashList to ArrayList
 							bookList.add(book);
 						}
+						if(bookList.size() == 0)
+							Toast.makeText(getApplicationContext(),"No Data To Display",Toast.LENGTH_SHORT).show();
+						CustomAdapter adapter = new CustomAdapter(FindBookActivity.this, bookList);
+						list_view.setAdapter(adapter);
 					}
 					else{
 						Toast.makeText(getApplicationContext(),"No Data To Display",Toast.LENGTH_SHORT).show();
@@ -321,30 +414,15 @@ public class FindBookActivity extends Activity{
 					e.printStackTrace();
 					Toast.makeText(getApplicationContext(),"No Data To Display",Toast.LENGTH_SHORT).show();
 				}
-				progress.setVisibility(View.GONE);
-				CustomAdapter adapter = new CustomAdapter(FindBookActivity.this, bookList);
-				list_view.setAdapter(adapter);
 			}else{
-				AlertDialog alert = new AlertDialog.Builder(getBaseContext()).create();
-		        alert.setTitle("Connection Time Out!");
-		        alert.setMessage("We were not able to reach the server. Please try again after some time");
-		        alert.setButton("Retry", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			        	   json_parse = new JSONParse();
-			        	   json_parse.execute();
-			           }
-			        });
-		        // Set the Icon for the Dialog
-		        alert.setIcon(R.drawable.gcm_icon);
-		        alert.setCancelable(false);
-		        alert.show();
+				internetDown.setVisibility(View.VISIBLE);
 			}
 		 }
 	  }
-	
 	@Override
-	  public void onDestroy(){
-		  super.onDestroy();
-			 json_parse.cancel(true);
-	  }
+	public void onDestroy(){
+	   super.onDestroy();
+		 json_parse.cancel(true);
+		 json_filter.cancel(true);
+	}
 }

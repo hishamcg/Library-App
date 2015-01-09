@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dip"
+    android:background="#eee">
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="5dip"
+    android:layout_marginLeft="5dip"
+    android:layout_marginTop="5dip"
+    android:layout_marginBottom="1dip"
     android:padding="10dip"
-    android:background="#f5f5f5">
+    android:background="@drawable/edit_border_small">
     
         <TextView android:id="@+id/name"
 			android:text="location name"
@@ -53,3 +60,4 @@
 	            android:textColor="#169c43"/>
 	    </LinearLayout>
 </RelativeLayout>
+</LinearLayout>

@@ -63,10 +63,23 @@ public class CustomAdapter extends ArrayAdapter<Book> {
 		author.setText(book.getAuthor());
   		times_rented.setText(book.getTimes_rented());
   		avg_reading.setText(book.getAvg_reading());
-  		if (book.getPickup_order() != null && !book.getPickup_order().equals("null")){
-  			pickup_order.setText("pickup in process...");
-  			pickup_order.setVisibility(View.VISIBLE);
-  			detail_mini.setVisibility(View.GONE);
+  		
+  		Boolean HideDetailMini = false;
+  		if(book.getOrder_type() != null && book.getOrder_type().equals("P")){
+  			HideDetailMini = true;
+			pickup_order.setText("PICK UP ORDER");
+  		}else if(book.getOrder_type() != null && book.getOrder_type().equals("D")){
+  			HideDetailMini = true;
+			pickup_order.setText("DELIVERY ORDER");
+			pickup_order.setTextColor(context.getResources().getColor(R.color.shelf_green3));
+  		}else if (book.getPickup_order() != null && !book.getPickup_order().equals("null")){
+  			HideDetailMini = true;
+			pickup_order.setText("PICK UP IN PROCESS");
+  		}
+  		
+  		if(HideDetailMini){
+			pickup_order.setVisibility(View.VISIBLE);
+			detail_mini.setVisibility(View.GONE);
   		}
 
 		return rowView;

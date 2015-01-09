@@ -104,19 +104,17 @@
                  android:textSize="12sp"/>
            </LinearLayout>
     </LinearLayout>
+
     <TextView
         android:id="@+id/pickup_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textStyle="italic"
-        android:textColor="#F54747"
-        android:text="null"
-        android:layout_toRightOf="@+id/image"
         android:layout_below="@id/author"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"/>
+        android:layout_marginTop="20dip"
+        android:layout_toRightOf="@+id/image"
+        android:visibility="gone"
+        android:textColor="#F54747"/>
     
     <ProgressBar
         android:id="@+id/progressBar1"

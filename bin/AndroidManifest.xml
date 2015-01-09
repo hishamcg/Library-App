@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.strata.justbooksclc"
     
-    android:versionCode="9"
-    android:versionName="1.8" >
+    android:versionCode="10"
+    android:versionName="1.9" >
     
     <uses-sdk android:minSdkVersion="11" 
               android:targetSdkVersion="21"/>
@@ -50,7 +50,7 @@
               <category android:name="android.intent.category.LAUNCHER" /> 
             </intent-filter>
             
-        </activity>GlobalMenuDrawerActivity
+        </activity>
         <activity
             android:name="com.strata.justbooksclc.GlobalMenuDrawerActivity"
             android:screenOrientation="portrait">

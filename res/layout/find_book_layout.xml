@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff">
@@ -10,16 +10,30 @@
         android:background="#fff"
         android:divider="#eee"
 		android:dividerHeight="1dp"/>
+    <ProgressBar
+	    android:id="@+id/progressBar1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:indeterminateDrawable="@drawable/progress_override_default"/>
+    <LinearLayout 
+        android:id="@+id/LL_background"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#8000">
+    </LinearLayout>
     <LinearLayout 
         android:id="@+id/LL_filter"
 	    android:orientation="vertical"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:background="#eee"
 	    android:visibility="gone"
+	    android:background="#eee"
 	    android:padding="10dip"
-	    android:layout_marginLeft="10dip"
-	    android:layout_marginRight="10dip"
+	    android:layout_marginLeft="15dip"
+	    android:layout_marginRight="15dip"
 	    android:gravity="center">
 	    <Spinner
 		    android:id="@+id/category_type"
@@ -27,14 +41,14 @@
 		    android:layout_height="wrap_content"
 		    android:minHeight="45dip"
 		    android:layout_margin="10dip"
-		    android:background="#fff"/>
+		    android:background="@drawable/edit_border_small_rectangle"/>
 	    <Spinner
 		    android:id="@+id/name"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:minHeight="45dip"
 		    android:layout_margin="10dip"
-		    android:background="#fff"/>
+		    android:background="@drawable/edit_border_small_rectangle"/>
 	    <Button
 	        android:id="@+id/btn_filter"
 	        android:layout_width="fill_parent"
@@ -44,12 +58,10 @@
 	        android:text="Filter"
 	        android:textColor="#ffffff" />
 	</LinearLayout>
-
-	<ProgressBar
-	    android:id="@+id/progressBar1"
-	    style="?android:attr/progressBarStyleLarge"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_centerInParent="true"/>
-
-</RelativeLayout>
+	<include
+        android:id="@+id/internet_down"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/no_internet_layout" />
+</FrameLayout>
