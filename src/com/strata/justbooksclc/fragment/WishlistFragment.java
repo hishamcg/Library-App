@@ -45,14 +45,15 @@ public class WishlistFragment extends Fragment {
 	private static final String TAG_IMAGE_URL = "image_url";
 	private static final String SUMMARY = "summary";
 	private static final String RENTAL_ID = "rental_id";
-	private static final String TAG_LANGUAGE = "language"; 
+	private static final String ISBN = "isbn";
+	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
 	private static final String TAG_ID = "title_id";
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String AVG_READING = "avg_reading_times";
 	//private JSONParse json_parse = new JSONParse();
 	private JSONParse json_parse;
-	
+
 	String auth_token;
 	String memb;
 	String numb;
@@ -80,46 +81,48 @@ public class WishlistFragment extends Fragment {
 		empty_shelf_dialog = (RelativeLayout)rootView.findViewById(R.id.empty_shelf_dialog);
 		btn_lets_go = (Button)rootView.findViewById(R.id.btn_lets_go);
 		btn_later = (Button)rootView.findViewById(R.id.btn_later);
-		
+
 		return rootView;
-		
+
 	}
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    
+
     mydb = new DBHelper(getActivity());
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 	StrictMode.setThreadPolicy(policy);
-	
+
 	getDimens();
 	SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
 	auth_token = value.getString("AUTH_TOKEN","");
 	memb = value.getString("MEMBERSHIP_NO","");
 	numb = value.getString("NUMBER","");
-	
+
 	UpdateListFromDatabase(3);
 	//json_parse = new JSONParse();
 	//json_parse.execute();
-	
+
 	gridview.setOnItemClickListener(new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 			if(bookList.size() > position){
 				lastClickedPosition = position;
 				Intent in = new Intent(getActivity().getApplicationContext(),SingleMenuItemActivity.class);
-				in.putExtra(TAG_AUTHOR, bookList.get(position).getAuthor());
-	            in.putExtra(TAG_CATEGORY, bookList.get(position).getCategory());
-	            in.putExtra(TAG_TITLE, bookList.get(position).getTitle());
-	            in.putExtra(TAG_LANGUAGE, bookList.get(position).getPublisher());
-	            in.putExtra(TAG_PAGE, bookList.get(position).getPrice());
-	            in.putExtra(TAG_IMAGE_URL, bookList.get(position).getImage_url());
-	            in.putExtra(SUMMARY, bookList.get(position).getSummary());
-	            in.putExtra(RENTAL_ID, "");
-	            in.putExtra(TAG_ID, bookList.get(position).getId());
-	            in.putExtra(TIMES_RENTED, bookList.get(position).getTimes_rented());
-	            in.putExtra(AVG_READING, bookList.get(position).getAvg_reading());
+				Book bookAtPos = bookList.get(position);
+				in.putExtra(TAG_AUTHOR, bookAtPos.getAuthor());
+				in.putExtra(TAG_CATEGORY, bookAtPos.getCategory());
+				in.putExtra(TAG_TITLE, bookAtPos.getTitle());
+				in.putExtra(TAG_LANGUAGE, bookAtPos.getPublisher());
+				in.putExtra(TAG_PAGE, bookAtPos.getPrice());
+				in.putExtra(TAG_IMAGE_URL, bookAtPos.getImage_url());
+				in.putExtra(SUMMARY, bookAtPos.getSummary());
+				in.putExtra(RENTAL_ID, "");
+				in.putExtra(ISBN, bookAtPos.getIsbn());
+				in.putExtra(TAG_ID, bookAtPos.getId());
+				in.putExtra(TIMES_RENTED, bookAtPos.getTimes_rented());
+				in.putExtra(AVG_READING, bookAtPos.getAvg_reading());
 				in.putExtra("message", "destroy");
 				in.putExtra("check","logged_in");
 				startActivity(in);
@@ -128,7 +131,7 @@ public class WishlistFragment extends Fragment {
 				in.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				startActivity(in);
 			}
-			
+
 		}
 	});
 	btn_lets_go.setOnClickListener(new OnClickListener() {
@@ -140,7 +143,7 @@ public class WishlistFragment extends Fragment {
 			empty_shelf_dialog.setVisibility(View.GONE);
 		}
 	});
-	
+
 	btn_later.setOnClickListener(new OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -151,10 +154,10 @@ public class WishlistFragment extends Fragment {
 
   private class JSONParse extends AsyncTask<String,String,JSONObject>{
 	  protected void onPreExecute(){
-		  
+
 	  }
 	  protected JSONObject doInBackground(String... args){
-		  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/wishlists.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+		  String url = "http://"+Config.SERVER_BASE_URL+"/wishlists.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 		  JSONParser jp = new JSONParser();
 		  JSONObject json = jp.getJSONFromUrl(url);
 		  if (isCancelled()){
@@ -173,9 +176,9 @@ public class WishlistFragment extends Fragment {
 					bookList.clear();
 					// looping through All data
 					for (int i = 0; i < list.length(); i++) {
-						String[] temp_array = new String[10];
+						String[] temp_array = new String[11];
 						JSONObject c = list.getJSONObject(i);
-		
+
 						temp_array[0] = c.getString(TAG_TITLE);
 						temp_array[1] = c.getString(TAG_AUTHOR);
 						temp_array[2] = c.getString(TAG_CATEGORY);
@@ -186,8 +189,9 @@ public class WishlistFragment extends Fragment {
 						temp_array[7] = c.getString(TAG_ID);
 						temp_array[8] = c.getString(TIMES_RENTED);
 						temp_array[9] = c.getString(AVG_READING);
+						temp_array[10] = c.getString(ISBN);
 						bookArrayStringed[i] = convertArrayToString(temp_array);
-						
+
 						Book book = new Book();
 						book.setTitle(temp_array[0]);
 						book.setAuthor(temp_array[1]);
@@ -199,6 +203,7 @@ public class WishlistFragment extends Fragment {
 						book.setId(temp_array[7]);
 						book.setTimes_rented(temp_array[8]);
 						book.setAvg_reading(temp_array[9]);
+						book.setIsbn(temp_array[10]);
 						// adding HashList to ArrayList
 						bookList.add(book);
 					 }
@@ -210,25 +215,25 @@ public class WishlistFragment extends Fragment {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			
+
 			//adapter = new WishlistAdapter(getActivity(), bookList,numberOfRows,numberOfColumns,heightInPixels);
 			// selecting single ListView item
 		    //gridview.setAdapter(adapter);
 			}
 	  }
   }
-  
+
   protected void getDimens() {
 	  DisplayMetrics displayMetrics = new DisplayMetrics();
       getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
       float height = (float) Math.floor(displayMetrics.heightPixels/displayMetrics.density);
       float width = (float) Math.floor(displayMetrics.widthPixels/displayMetrics.density);
-      //float a = height/185; 
+      //float a = height/185;
       numberOfRows = (int) Math.floor(width/120);
       numberOfColumns = (int) Math.floor(height/185);
       heightInPixels = (int) Math.ceil(185*displayMetrics.density);
   }
-  
+
     private void UpdateListFromDatabase(final int slot){
 	    new Thread(new Runnable() {
 	        public void run() {
@@ -237,7 +242,7 @@ public class WishlistFragment extends Fragment {
 	    		db_list = mydb.getAllCotacts(slot);
 	    		if (db_list != null && !db_list.isEmpty()){
 	    			l_count = db_list.size();
-	    			String[] temp_array = new String[10];
+	    			String[] temp_array = new String[11];
 	    			//shake_array_length += l_count;
 	    			for (int i=0; i < l_count; i++){
 	    				temp_array = convertStringToArray(db_list.get(i));
@@ -252,14 +257,14 @@ public class WishlistFragment extends Fragment {
 	    				book.setId(temp_array[7]);
 	    				book.setTimes_rented(temp_array[8]);
 	    				book.setAvg_reading(temp_array[9]);
+	    				book.setIsbn(temp_array[10]);
 	    				// adding HashList to ArrayList
 	    				bookList.add(book);
 	    			}
-	    			progress.setVisibility(View.GONE);
 	    			System.out.println("wish_list_is_not_empty");
 	    		}
 	    		adapter = new WishlistAdapter(getActivity(), bookList,numberOfRows,numberOfColumns,heightInPixels);
-	
+
 	        	gridview.post(new Runnable() {
 	                public void run() {
 	                    gridview.setAdapter(adapter);
@@ -267,6 +272,7 @@ public class WishlistFragment extends Fragment {
 	            });
 	        }
         }).start();
+	    progress.setVisibility(View.GONE);
 	}
     public static String strSeparator = "__,__";
 	public static String convertArrayToString(String[] array){
@@ -304,4 +310,4 @@ public class WishlistFragment extends Fragment {
 	  mydb.close();
   }
 
-} 
+}

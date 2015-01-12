@@ -147,7 +147,7 @@ public class PageZero extends Activity {
 	        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 
-			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/sessions.json?membership_no=" + memb;
+			String url = "http://"+Config.SERVER_BASE_URL+"/sessions.json?membership_no=" + memb;
 			JSONParser jp = new JSONParser();
 			JSONObject json = jp.getJSONFromUrl(url);
 			return json;
@@ -200,7 +200,7 @@ public class PageZero extends Activity {
 
 					new_version = Integer.parseInt(DATA.getString("version"));
 					my_version = Integer.parseInt(getPackageManager().getPackageInfo(getPackageName(), 0).versionName.split("\\.")[0]);
-					
+
 					if (new_version > my_version){
 						AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
 		    	        alert.setTitle("Alert!");
@@ -264,13 +264,13 @@ public class PageZero extends Activity {
 							    }else{
 							    	value = 4;
 							    	my_band = "blue";}
-					            
+
 					            SharedPreferences preferences = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 							    SharedPreferences.Editor   editor = preferences.edit();
 							    editor.putString("LOGIN_STATUS", user);
 							    if(preferences.getInt("BOOK_BAND", -1) < value)
 							    	editor.putString("MY_THEME",my_band);
-							    
+
 							    editor.putInt("BOOK_BAND", value);
 							    editor.putString("READING_SCORE", String.valueOf(books_returns_count));
 							    //editor.putString("USER_NAME",user_name );
@@ -301,52 +301,14 @@ public class PageZero extends Activity {
 			    		startActivity(in);
 					}
 				} catch (JSONException e) {
-					e.printStackTrace();
-					AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
-			        alert.setTitle("Authentication Error!");
-			        alert.setMessage("A problem occured while authenticating your account.\nplease logout and login again.");
-			        alert.setButton("Logout", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			        	   finish();
-			        	   SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
-				   		   SharedPreferences.Editor editor = pref.edit();
-				   		   editor.putString("AUTH_TOKEN", "");
-				   	       editor.putString("MEMBERSHIP_NO", "");
-				   	       editor.putString("DATE_OF_SIGNUP", "");
-				  		   editor.putString("NUMBER","");
-						   editor.putString("BOOK_BAND", "");
-				  		   editor.putString("MY_THEME","");
-				   		   editor.commit();
-
-				   		   Intent logout = new Intent(getApplicationContext(),PageZero.class);
-				   		   startActivity(logout);
-			           }
-			        });
-			        // Set the Icon for the Dialog
-			        alert.setIcon(R.drawable.gcm_icon);
-			        alert.setCancelable(false);
-			        alert.show();
+					ErrorMessage();
 				} catch (NameNotFoundException e) {
 					e.printStackTrace();
 				}
-
 				//long date_last_signup = Long.parseLong(dateOfSignup);
 				//long diff =saveddatevalue - date_last_signup;
-				
 			}else{
-				AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
-		        alert.setTitle("Connection Time Out!");
-		        alert.setMessage("We were not able to reach the server. Please try again after some time");
-		        alert.setButton("Retry", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			        	   json_parse = new JSONParse();
-			        	   json_parse.execute();
-			           }
-			        });
-		        // Set the Icon for the Dialog
-		        alert.setIcon(R.drawable.gcm_icon);
-		        alert.show();
-		        
+				ErrorMessage();
 			}
 
 		}
@@ -362,6 +324,41 @@ public class PageZero extends Activity {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	@SuppressWarnings("deprecation")
+	private void ErrorMessage(){
+		AlertDialog alert = new AlertDialog.Builder(PageZero.this).create();
+        alert.setTitle("Connection Time Out!");
+        alert.setMessage("We were not able to reach the server. Please try again after some time");
+        alert.setButton2("Retry", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int which) {
+	        	   json_parse = new JSONParse();
+	        	   json_parse.execute();
+	           }
+	        });
+        alert.setButton("Logout", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int which) {
+	        	   finish();
+	        	   SharedPreferences pref = getSharedPreferences("PREF",Context.MODE_PRIVATE);
+		   		   SharedPreferences.Editor editor = pref.edit();
+		   		   editor.putString("AUTH_TOKEN", "");
+		   	       editor.putString("MEMBERSHIP_NO", "");
+		   	       editor.putString("DATE_OF_SIGNUP", "");
+		  		   editor.putString("NUMBER","");
+				   editor.putInt("BOOK_BAND", 0);
+		  		   editor.putString("MY_THEME","");
+		   		   editor.commit();
+
+		   		   Intent logout = new Intent(getApplicationContext(),PageZero.class);
+		   		   startActivity(logout);
+	           }
+	        });
+        // Set the Icon for the Dialog
+        alert.setCancelable(false);
+        alert.setIcon(R.drawable.gcm_icon);
+        alert.show();
+	}
+	
 	private boolean isNetworkAvailable() {
 	    ConnectivityManager connectivityManager
 	          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

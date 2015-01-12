@@ -24,8 +24,8 @@ import android.util.Log;
 public class JSONParser {
 
     private static final int CONNECTION_TIMEOUT = 10000; /* 5 seconds */
-    private static final int SOCKET_TIMEOUT = 10000; /* 5 seconds */
-    private static final long MCC_TIMEOUT = 10000; /* 5 seconds */
+    private static final int SOCKET_TIMEOUT = 15000; /* 5 seconds */
+    private static final long MCC_TIMEOUT = 15000; /* 5 seconds */
  
     // constructor
     public JSONParser() {

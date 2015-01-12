@@ -35,23 +35,23 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
 		String url = "";
 		//if (last_data_fetch != current_date){
-			
+
 			if(index == 0){
 				if (numb != null && numb != ""){
-					url = "http://"+Config.SERVER_BASE_URL+"/api/v1/your_next_read.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+					url = "http://"+Config.SERVER_BASE_URL+"/your_next_read.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
 				}else{
-					url= "http://"+Config.SERVER_BASE_URL+"/api/v1/your_next_read.json";
+					url= "http://"+Config.SERVER_BASE_URL+"/your_next_read.json";
 				}
 			}else if(index == 1){
-				url = "http://"+Config.SERVER_BASE_URL+"/api/v1/top_rentals.json";
+				url = "http://"+Config.SERVER_BASE_URL+"/top_rentals.json";
 			}else if(index == 2){
-				url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json";
+				url = "http://"+Config.SERVER_BASE_URL+"/new_arrivals.json";
 				SharedPreferences.Editor   editor = value.edit();
 				editor.putInt("DATA_FETCH_DATE", current_date);
 				editor.commit();
 			}else{
 				//default load new arrivals
-				url = "http://"+Config.SERVER_BASE_URL+"/api/v1/new_arrivals.json";
+				url = "http://"+Config.SERVER_BASE_URL+"/new_arrivals.json";
 			}
 		//}
 		Bundle bundle = new Bundle();
@@ -70,6 +70,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 		// get item count - equal to number of tabs
 		return 3;
 	}
-	
+
 
 }

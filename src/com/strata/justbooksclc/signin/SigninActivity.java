@@ -71,7 +71,7 @@ public class SigninActivity extends Activity {
 	    	        Toast.LENGTH_SHORT).show();
 
 
-	        		String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/sessions.json?phone=" + phone_no;
+	        		String url = "http://"+Config.SERVER_BASE_URL+"/sessions.json?phone=" + phone_no;
 	        		// Creating JSON Parser instance
 	        		JSONParser jParser = new JSONParser();
 	      			JSONObject json = jParser.getJSONFromUrl(url);
@@ -103,12 +103,12 @@ public class SigninActivity extends Activity {
 		      			            	  final int pas = r.nextInt(10000 - 1000) + 1000;
 		      			            	  //System.out.println(pas);
 		      			            	  //comment to bypass authentication via sms
-		      			            	  String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/send_otp.json?phone=" + phone_no+"&otp="+String.valueOf(pas);
+		      			            	  String url = "http://"+Config.SERVER_BASE_URL+"/send_otp.json?phone=" + phone_no+"&otp="+String.valueOf(pas);
 		      			            	  System.out.println("score here"+ phone_no);
 		      			            	  // Creating JSON Parser instance
 		      			            	  JSONParser jParser = new JSONParser();
 		      			      			  jParser.getJSONFromUrl(url);
-			   		      				  
+
 			   		      				  //Intent checking_auth = new Intent(getApplicationContext(), PageZero.class);
 			   			      			  Intent checking_auth = new Intent(getApplicationContext(), SignInWaitingActivity.class);
 			   		        	          checking_auth.putExtra("pas_rand", String.valueOf(pas));
@@ -152,7 +152,7 @@ public class SigninActivity extends Activity {
 		    Toast.LENGTH_SHORT).show();
         }
     }
-	
+
 	public String CorrectPhoneFormat(String number){
 		if (number.length()>10){
 			number = number.substring(number.length()-10);

@@ -51,6 +51,7 @@ public class SearchActivity extends Activity {
 	private static final String TAG_PAGE = "no_of_pages";
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
+	private static final String ISBN = "isbn";
 	private static final String TAG_ID = "id";
 	private static final String TAG_ID_call = "title_id";
 	private static final String TIMES_RENTED = "no_of_times_rented";
@@ -134,17 +135,18 @@ public class SearchActivity extends Activity {
 
 				// Starting new intent
 				Intent in = new Intent(getApplicationContext(),SingleMenuItemActivity.class);
-				
-				in.putExtra(TAG_AUTHOR, bookList.get(position).getAuthor());
-				in.putExtra(TAG_CATEGORY, bookList.get(position).getCategory());
-				in.putExtra(TAG_TITLE, bookList.get(position).getTitle());
-				in.putExtra(TAG_LANGUAGE, bookList.get(position).getPublisher());
-				in.putExtra(TAG_PAGE, bookList.get(position).getPrice());
-				in.putExtra(TAG_IMAGE_URL, bookList.get(position).getImage_url());
-				in.putExtra(SUMMARY, bookList.get(position).getSummary());
-				in.putExtra(TAG_ID_call, bookList.get(position).getId());
-				in.putExtra(TIMES_RENTED, bookList.get(position).getTimes_rented());
-				in.putExtra(AVG_READING, bookList.get(position).getAvg_reading());
+				Book bookAtPos = bookList.get(position);
+				in.putExtra(TAG_AUTHOR, bookAtPos.getAuthor());
+				in.putExtra(TAG_CATEGORY, bookAtPos.getCategory());
+				in.putExtra(TAG_TITLE, bookAtPos.getTitle());
+				in.putExtra(TAG_LANGUAGE, bookAtPos.getPublisher());
+				in.putExtra(TAG_PAGE, bookAtPos.getPrice());
+				in.putExtra(TAG_IMAGE_URL, bookAtPos.getImage_url());
+				in.putExtra(SUMMARY, bookAtPos.getSummary());
+				in.putExtra(TAG_ID_call, bookAtPos.getId());
+				in.putExtra(TIMES_RENTED, bookAtPos.getTimes_rented());
+				in.putExtra(AVG_READING, bookAtPos.getAvg_reading());
+				in.putExtra(ISBN, bookAtPos.getIsbn());
 				in.putExtra("message", "create");
 				in.putExtra("check", check_log);
 				startActivity(in);
@@ -204,9 +206,9 @@ public class SearchActivity extends Activity {
 				auth_token = value.getString("AUTH_TOKEN","");
 				memb = value.getString("MEMBERSHIP_NO","");
 				numb = value.getString("NUMBER","");
-				url = "http://"+Config.SERVER_BASE_URL+"/api/v1/search.json?phone="+numb+"&api_key="+auth_token+"&membership_no="+memb+"&q="+fin;
+				url = "http://"+Config.SERVER_BASE_URL+"/search.json?phone="+numb+"&api_key="+auth_token+"&membership_no="+memb+"&q="+fin;
 			} else {
-				url = "http://"+Config.SERVER_BASE_URL+"/api/v1/search.json?q="+fin;}
+				url = "http://"+Config.SERVER_BASE_URL+"/search.json?q="+fin;}
 			System.out.println("score");
 
 			// Creating JSON Parser instance
@@ -230,31 +232,18 @@ public class SearchActivity extends Activity {
 						for (int i = 0; i < list.length(); i++) {
 							JSONObject c = list.getJSONObject(i);
 
-							// Storing each json item in variable
-							String author = c.getString(TAG_AUTHOR);
-							String category = c.getString(TAG_CATEGORY);
-							String page = c.getString(TAG_PAGE);
-							String language = c.getString(TAG_LANGUAGE);
-							String title = c.getString(TAG_TITLE);
-							String image_url = c.getString(TAG_IMAGE_URL);
-							String summary = c.getString(SUMMARY);
-							String title_id = c.getString(TAG_ID);
-					        String times_rented = c.getString(TIMES_RENTED);
-					        String avg_reading= c.getString(AVG_READING);
-
-
 							Book book = new Book();
-							book.setTitle(title);
-							book.setAuthor(author);
-							book.setCategory(category);
-							book.setPrice(page);
-							book.setPublisher(language);
-							book.setImage_url(image_url);
-							book.setSummary(summary);
-							book.setId(title_id);
-							book.setTimes_rented(times_rented);
-							book.setAvg_reading(avg_reading);
-
+							book.setTitle(c.getString(TAG_AUTHOR));
+							book.setAuthor(c.getString(TAG_CATEGORY));
+							book.setCategory(c.getString(TAG_PAGE));
+							book.setPrice(c.getString(TAG_LANGUAGE));
+							book.setPublisher(c.getString(TAG_TITLE));
+							book.setImage_url(c.getString(TAG_IMAGE_URL));
+							book.setSummary(c.getString(SUMMARY));
+							book.setId(c.getString(TAG_ID));
+							book.setTimes_rented(c.getString(TIMES_RENTED));
+							book.setAvg_reading(c.getString(AVG_READING));
+							book.setIsbn(c.getString(ISBN));
 							// adding HashList to ArrayList
 							bookList.add(book);
 						}

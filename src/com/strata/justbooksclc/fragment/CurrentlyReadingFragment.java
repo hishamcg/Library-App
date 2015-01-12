@@ -37,6 +37,7 @@ public class CurrentlyReadingFragment extends ListFragment {
   private static final String TAG_LANGUAGE = "language";
   private static final String TAG_TITLE = "title";
   private static final String TAG_ID = "id";
+  private static final String ISBN = "isbn";
   private static final String TAG_ID_call = "title_id";
   private static final String RENTAL_ID = "rental_id";
   private static final String TIMES_RENTED = "no_of_times_rented";
@@ -55,11 +56,11 @@ public class CurrentlyReadingFragment extends ListFragment {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    
+
     ColorDrawable gray = new ColorDrawable(this.getResources().getColor(R.color.gray));
 	getListView().setDivider(gray);
 	getListView().setDividerHeight(1);
-  	
+
     SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
     auth_token = value.getString("AUTH_TOKEN","");
     memb = value.getString("MEMBERSHIP_NO","");
@@ -71,31 +72,31 @@ public class CurrentlyReadingFragment extends ListFragment {
 
   public void onListItemClick(ListView l, View view, int position, long id) {
 	  Intent in = new Intent(this.getActivity().getApplicationContext(),SingleMenuItemActivity.class);
-	  
-	  in.putExtra(TAG_AUTHOR, bookList.get(position).getAuthor());
-	  in.putExtra(TAG_CATEGORY, bookList.get(position).getCategory());
-	  in.putExtra(TAG_TITLE, bookList.get(position).getTitle());
-	  in.putExtra(TAG_LANGUAGE, bookList.get(position).getPublisher());
-	  in.putExtra(TAG_PAGE, bookList.get(position).getPrice());
-	  in.putExtra(TAG_IMAGE_URL, bookList.get(position).getImage_url());
-	  in.putExtra(SUMMARY, bookList.get(position).getSummary());
-	  in.putExtra(RENTAL_ID, bookList.get(position).getRental_id());
-	  in.putExtra(PICKUP_ORDER,bookList.get(position).getPickup_order());
-	  in.putExtra(TAG_ID_call, bookList.get(position).getId());
-	  in.putExtra(TIMES_RENTED, bookList.get(position).getTimes_rented());
-	  in.putExtra(AVG_READING, bookList.get(position).getAvg_reading());
+	  Book bookAtPos = bookList.get(position);
+	  in.putExtra(TAG_AUTHOR, bookAtPos.getAuthor());
+	  in.putExtra(TAG_CATEGORY, bookAtPos.getCategory());
+	  in.putExtra(TAG_TITLE, bookAtPos.getTitle());
+	  in.putExtra(TAG_LANGUAGE, bookAtPos.getPublisher());
+	  in.putExtra(TAG_PAGE, bookAtPos.getPrice());
+	  in.putExtra(TAG_IMAGE_URL, bookAtPos.getImage_url());
+	  in.putExtra(SUMMARY, bookAtPos.getSummary());
+	  in.putExtra(ISBN, bookAtPos.getIsbn());
+	  in.putExtra(RENTAL_ID, bookAtPos.getRental_id());
+	  in.putExtra(PICKUP_ORDER,bookAtPos.getPickup_order());
+	  in.putExtra(TAG_ID_call, bookAtPos.getId());
+	  in.putExtra(TIMES_RENTED, bookAtPos.getTimes_rented());
+	  in.putExtra(AVG_READING, bookAtPos.getAvg_reading());
 	  in.putExtra("message", "current");
 	  in.putExtra("check","logged_in");
-  
+
 	  startActivity(in);
   }
   private class JSONParse extends AsyncTask<String,String,JSONObject>{
     protected void onPreExecute(){
-      
+
     }
     protected JSONObject doInBackground(String... args){
-      System.out.println("score");
-      String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/books_at_home.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+      String url = "http://"+Config.SERVER_BASE_URL+"/books_at_home.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
       JSONParser jp = new JSONParser();
       JSONObject json = jp.getJSONFromUrl(url);
       return json;
@@ -106,40 +107,27 @@ public class CurrentlyReadingFragment extends ListFragment {
 	      try {
 	        // Getting Array of data
 	        list = json.getJSONArray(TAG_WISHLIST);
-	        //checking if the array is empty 
+	        //checking if the array is empty
 			if (list != null){
 				bookList.clear();
 		        // looping through All data
 		        for (int i = 0; i < list.length(); i++) {
 		          JSONObject c = list.getJSONObject(i);
-		          
-		          // Storing each json item in variable
-		          String author = c.getString(TAG_AUTHOR);
-		          String category = c.getString(TAG_CATEGORY);
-		          String page = c.getString(TAG_PAGE);
-		          String language = c.getString(TAG_LANGUAGE);
-		          String title = c.getString(TAG_TITLE);
-		          String summary = c.getString(SUMMARY);
-		          String rental_id = c.getString(RENTAL_ID);
-		          String image_url = c.getString(TAG_IMAGE_URL);
-		          String title_id = c.getString(TAG_ID);
-			      String times_rented = c.getString(TIMES_RENTED);
-			      String avg_reading= c.getString(AVG_READING);
-			      String pickup_order = c.getString(PICKUP_ORDER);
-		  
+
 		          Book book = new Book();
-		          book.setTitle(title);
-		          book.setAuthor(author);
-		          book.setCategory(category);
-		          book.setPrice(page);
-		          book.setPublisher(language);
-		          book.setImage_url(image_url);
-		          book.setSummary(summary);
-		          book.setId(title_id);
-		          book.setRental_id(rental_id);
-		          book.setTimes_rented(times_rented);
-		          book.setAvg_reading(avg_reading);
-		          book.setPickup_order(pickup_order);
+		          book.setTitle(c.getString(TAG_AUTHOR));
+		          book.setAuthor(c.getString(TAG_CATEGORY));
+		          book.setCategory(c.getString(TAG_PAGE));
+		          book.setPrice(c.getString(TAG_LANGUAGE));
+		          book.setPublisher(c.getString(TAG_TITLE));
+		          book.setImage_url(c.getString(SUMMARY));
+		          book.setSummary(c.getString(RENTAL_ID));
+		          book.setId(c.getString(TAG_IMAGE_URL));
+		          book.setRental_id(c.getString(TAG_ID));
+		          book.setIsbn(c.getString(ISBN));
+		          book.setTimes_rented(c.getString(TIMES_RENTED));
+		          book.setAvg_reading(c.getString(AVG_READING));
+		          book.setPickup_order(c.getString(PICKUP_ORDER));
 		          // adding HashList to ArrayList
 		          bookList.add(book);
 		        }
@@ -166,7 +154,7 @@ public class CurrentlyReadingFragment extends ListFragment {
 	        // Set the Icon for the Dialog
 	        alert.setIcon(R.drawable.gcm_icon);
 	        alert.show();
-	        
+
 		}
 	 }
   }
@@ -183,4 +171,4 @@ public class CurrentlyReadingFragment extends ListFragment {
 	  super.onDestroy();
 		 json_parse.cancel(true);
   }
-} 
+}

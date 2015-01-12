@@ -39,6 +39,7 @@ public class BooksOurPickFragment extends Fragment {
 	private static final String TAG_LANGUAGE = "language";
 	private static final String TAG_TITLE = "title";
 	private static final String TAG_ID = "id";
+	private static final String ISBN = "isbn";
 	private static final String RENTAL_ID = "rental_id";
 	private static final String TIMES_RENTED = "no_of_times_rented";
 	private static final String AVG_READING = "avg_reading_times";
@@ -109,6 +110,7 @@ public class BooksOurPickFragment extends Fragment {
 			  in.putExtra(SUMMARY, bookAtPos.getSummary());
 			  in.putExtra(RENTAL_ID, "");
 			  in.putExtra("title_id", bookAtPos.getId());
+			  in.putExtra(ISBN, bookAtPos.getIsbn());
 			  in.putExtra(TIMES_RENTED, bookAtPos.getTimes_rented());
 			  in.putExtra(AVG_READING, bookAtPos.getAvg_reading());
 			  in.putExtra("message", "create");
@@ -143,7 +145,7 @@ public class BooksOurPickFragment extends Fragment {
 					bookList.clear();
 					// looping through All data
 					for (int i = 0; i < list.length(); i++) {
-						String[] temp_array = new String[10];
+						String[] temp_array = new String[11];
 						JSONObject c = list.getJSONObject(i);
 		
 						temp_array[0] = c.getString(TAG_TITLE);
@@ -156,6 +158,7 @@ public class BooksOurPickFragment extends Fragment {
 						temp_array[7] = c.getString(TAG_ID);
 						temp_array[8] = c.getString(TIMES_RENTED);
 						temp_array[9] = c.getString(AVG_READING);
+						temp_array[10] = c.getString(ISBN);
 						bookArrayStringed[i] = convertArrayToString(temp_array);
 						
 						Book book = new Book();
@@ -169,6 +172,7 @@ public class BooksOurPickFragment extends Fragment {
 						book.setId(temp_array[7]);
 						book.setTimes_rented(temp_array[8]);
 						book.setAvg_reading(temp_array[9]);
+						book.setIsbn(temp_array[10]);
 						// adding HashList to ArrayList
 						bookList.add(book);
 					 }
@@ -191,7 +195,7 @@ public class BooksOurPickFragment extends Fragment {
 		db_list = mydb.getAllCotacts(slot);
 		if (db_list != null && !db_list.isEmpty()){
 			l_count = db_list.size();
-			String[] temp_array = new String[10];
+			String[] temp_array = new String[11];
 			//shake_array_length += l_count;
 			for (int i=0; i < l_count; i++){
 				temp_array = convertStringToArray(db_list.get(i));
@@ -206,6 +210,7 @@ public class BooksOurPickFragment extends Fragment {
 				book.setId(temp_array[7]);
 				book.setTimes_rented(temp_array[8]);
 				book.setAvg_reading(temp_array[9]);
+				book.setIsbn(temp_array[10]);
 				// adding HashList to ArrayList
 				bookList.add(book);
 			}

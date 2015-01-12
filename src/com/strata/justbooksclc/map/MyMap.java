@@ -54,7 +54,7 @@ public class MyMap extends ListActivity {
     MapAdapter map_adapter;
     ArrayList<MapArray> map_array_list;
     ListView list_view;
-    
+
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    int itemId = item.getItemId();
@@ -72,7 +72,7 @@ public class MyMap extends ListActivity {
         NewRelic.withApplicationToken("AA6bdf42b2e97af26de101413a456782897ba273f7").start(this.getApplication());
 		SharedPreferences value = getSharedPreferences("PREF", Context.MODE_PRIVATE);
 		String my_theme = value.getString("MY_THEME", "");
-			
+
 		if (my_theme.equals("green"))
 			setTheme(R.style.MyThemeGreen);
 		else if (my_theme.equals("brown"))
@@ -83,7 +83,7 @@ public class MyMap extends ListActivity {
 			setTheme(R.style.MyThemeBlue);
 		else
 			setTheme(R.style.MyTheme);
-		
+
         setContentView(R.layout.common_list_view);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         list_view = (ListView)findViewById(android.R.id.list);
@@ -93,7 +93,7 @@ public class MyMap extends ListActivity {
         progress = (ProgressBar)findViewById(R.id.progress_bar);
         internetDown = findViewById(R.id.internet_down);
 	  	refresh_button = (ImageButton) internetDown.findViewById(R.id.refresh_button);
-	  	
+
 	  	refresh_button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -137,7 +137,7 @@ public class MyMap extends ListActivity {
   	  	}
 		@Override
 		protected JSONObject doInBackground(String... params) {
-			String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/store_locations.json";
+			String url = "http://"+Config.SERVER_BASE_URL+"/store_locations.json";
 	    	JSONParser jParser = new JSONParser();
 	    	// getting JSON string from URL
 	    	JSONObject json = jParser.getJSONFromUrl(url);
@@ -191,7 +191,7 @@ public class MyMap extends ListActivity {
 	    	}
 		}
     }
-    
+
   	public void onDestroy(){
   	  super.onDestroy();
   	  json_parse.cancel(true);

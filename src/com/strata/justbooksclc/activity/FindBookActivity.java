@@ -46,7 +46,7 @@ import com.strata.justbooksclc.adapter.CustomAdapter;
 import com.strata.justbooksclc.model.Book;
 
 public class FindBookActivity extends Activity{
-	
+
 	//private static final String SERVER_BASE_URL = "192.168.2.113:4321";
 	// JSON Node names
 	private static final String TAG_SEARCHLIST = "titles";
@@ -135,7 +135,7 @@ public class FindBookActivity extends Activity{
 		auth_token = value.getString("AUTH_TOKEN","");
 		memb = value.getString("MEMBERSHIP_NO","");
 		numb = value.getString("NUMBER","");
-			
+
 		if (my_theme.equals("green"))
 			setTheme(R.style.MyThemeGreen);
 		else if (my_theme.equals("brown"))
@@ -146,7 +146,7 @@ public class FindBookActivity extends Activity{
 			setTheme(R.style.MyThemeBlue);
 		else
 			setTheme(R.style.MyTheme);
-		
+
 		setContentView(R.layout.find_book_layout);
 		filterActionBar = getActionBar();
 		filterActionBar.setDisplayHomeAsUpEnabled(true);
@@ -154,7 +154,7 @@ public class FindBookActivity extends Activity{
 		animation_icon_rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.infinite_rotate);
 		animation_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.in_from_top);
 		animation_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.out_to_top);
-		
+
 		fadeIn = new AlphaAnimation(0, 1);
 		fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
 		fadeIn.setDuration(500);
@@ -162,7 +162,7 @@ public class FindBookActivity extends Activity{
 		fadeOut = new AlphaAnimation(1, 0);
 		fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
 		fadeOut.setDuration(500);
-		
+
 		//call all views
 		spinner_type = (Spinner)findViewById(R.id.category_type);
 		spinner_name = (Spinner)findViewById(R.id.name);
@@ -171,7 +171,7 @@ public class FindBookActivity extends Activity{
 	  	list_view = (ListView)findViewById(R.id.list);
 	  	progress = (ProgressBar)findViewById(R.id.progressBar1);
 	  	btn_filter = (Button)findViewById(R.id.btn_filter);
-    	
+
 	  	//setting up no_internet view on include
 	  	internetDown = findViewById(R.id.internet_down);
 	  	ImageButton refresh_button = (ImageButton) internetDown.findViewById(R.id.refresh_button);
@@ -182,12 +182,12 @@ public class FindBookActivity extends Activity{
 			  	json_filter = new JSONFilter();
 			  	json_filter.execute();
 			    //set initial view
-			  	String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="+2;
+			  	String url = "http://"+Config.SERVER_BASE_URL+"/find_book.json?category_id=2";
 		    	json_parse = new JSONParse();
 		    	json_parse.execute(url);
 			}
 		});
-	  	
+
 	  	LL_background.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -207,7 +207,7 @@ public class FindBookActivity extends Activity{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				Intent in = new Intent(getApplicationContext(),SingleMenuItemActivity.class);
-				  
+
 				  in.putExtra(TAG_AUTHOR, bookList.get(position).getAuthor());
 				  in.putExtra(TAG_CATEGORY, bookList.get(position).getCategory());
 				  in.putExtra(TAG_TITLE, bookList.get(position).getTitle());
@@ -222,11 +222,11 @@ public class FindBookActivity extends Activity{
 				  in.putExtra(AVG_READING, bookList.get(position).getAvg_reading());
 				  in.putExtra("message", "create");
 				  in.putExtra("check","logged_in");
-			  
+
 				  startActivity(in);
 			}
 		});
-	    
+
 	    spinner_type.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,int position, long id) {
@@ -246,10 +246,10 @@ public class FindBookActivity extends Activity{
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
-	    
+
 	    spinner_name.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,int position, long id) {
@@ -271,25 +271,25 @@ public class FindBookActivity extends Activity{
 	  	json_filter = new JSONFilter();
 	  	json_filter.execute();
 	    //set initial view
-	  	String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="+2;
+	  	String url = "http://"+Config.SERVER_BASE_URL+"/find_book.json?category_id="+2;
     	json_parse = new JSONParse();
     	json_parse.execute(url);
 	}
-	
+
 	private void FetchDataForFilter(){
 		String url;
 		if(memb!=null && memb!="")
-			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="
+			url = "http://"+Config.SERVER_BASE_URL+"/find_book.json?category_id="
 						   +selected_id+"&api_key="+auth_token
 						   +"&phone="+numb+"&membership_no="+memb;
 		else
-			url = "http://"+Config.SERVER_BASE_URL+"/api/v1/find_book.json?category_id="
+			url = "http://"+Config.SERVER_BASE_URL+"/find_book.json?category_id="
 					   +selected_id;
-		
+
 		json_parse = new JSONParse();
 		json_parse.execute(url);
 		HideFilter();
-        
+
 	}
 	private void HideFilter(){
 		LL_filter.startAnimation(animation_close);
@@ -304,9 +304,9 @@ public class FindBookActivity extends Activity{
         LL_background.startAnimation(fadeIn);
 	}
 	private class JSONFilter extends AsyncTask<String,String,JSONObject>{
-		
+
 	    protected JSONObject doInBackground(String... args){
-	      String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/category.json";
+	      String url = "http://"+Config.SERVER_BASE_URL+"/category.json";
 	      JSONParser jp = new JSONParser();
 	      JSONObject json = jp.getJSONFromUrl(url);
 	      return json;
@@ -325,19 +325,19 @@ public class FindBookActivity extends Activity{
 		        adapter_type.setDropDownViewResource(R.layout.spinner_item);
 	    		// Apply the adapter to the spinner
 	    		spinner_type.setAdapter(adapter_type);
-	    		
+
 	    		JSONArray filter_name = filter.getJSONArray(all_filter_type.get(0));
 		        all_filter_name.clear();
 		        for (int i = 0; i < filter_name.length(); i++) {
 		        	all_filter_name.add(filter_name.getJSONObject(i).getString("name"));
 		        }
-		        
+
 		        adapter_name = new ArrayAdapter<String>(getBaseContext(),R.layout.spinner_item,all_filter_name);
 	    		// Specify the layout to use when the list of choices appears
 		        adapter_name.setDropDownViewResource(R.layout.spinner_item);
 	    		// Apply the adapter to the spinner
 	    		spinner_name.setAdapter(adapter_name);
-	    		
+
 	    		title_name = spinner_type.getSelectedItem().toString()+" > "+spinner_name.getSelectedItem().toString();
 				filterActionBar.setTitle(title_name);
 		      }catch (JSONException e) {
@@ -347,7 +347,7 @@ public class FindBookActivity extends Activity{
 		    }
 		 }
 	  }
-	
+
 	private class JSONParse extends AsyncTask<String,String,JSONObject>{
 	    protected void onPreExecute(){
 	    	progress.setVisibility(View.VISIBLE);

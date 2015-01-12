@@ -222,16 +222,17 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_weight="1"
-              android:background="@drawable/icon_click"
               android:clickable="true"
               android:gravity="center"
               android:orientation="vertical" >
 
               <ImageView
-                  android:layout_width="30dp"
-                  android:layout_height="30dp"
+                  android:layout_width="60dp"
+                  android:layout_height="60dp"
                   android:layout_marginBottom="5dp"
-                  android:background="@drawable/rent"
+                  android:src="@drawable/rent"
+                  android:padding="15dip"
+                  android:background="@drawable/icon_click"
                   android:contentDescription="@string/hello" />
 
               <TextView
@@ -248,16 +249,17 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_weight="1"
-              android:background="@drawable/icon_click"
               android:clickable="true"
               android:gravity="center"
               android:orientation="vertical" >
 
               <ImageView
-                  android:layout_width="30dp"
-                  android:layout_height="30dp"
+                  android:layout_width="60dp"
+                  android:layout_height="60dp"
                   android:layout_marginBottom="5dp"
-                  android:background="@drawable/remove"
+                  android:background="@drawable/icon_click"
+                  android:padding="15dip"
+                  android:src="@drawable/remove"
                   android:contentDescription="@string/hello" />
 
               <TextView
@@ -270,21 +272,50 @@
           </LinearLayout>
           
           <LinearLayout
+              android:id="@+id/track"
+              android:visibility="gone"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:clickable="true"
+              android:gravity="center"
+              android:orientation="vertical" >
+
+              <ImageView
+                  android:layout_width="60dp"
+                  android:layout_height="60dp"
+                  android:layout_marginBottom="5dp"
+                  android:background="@drawable/icon_click"
+                  android:src="@drawable/ic_track"
+                  android:padding="15dip"
+                  android:contentDescription="@string/hello" />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Track"
+                  android:textColor="#a000"
+                  android:textSize="12sp"
+                  android:textStyle="bold" />
+          </LinearLayout>
+          
+          <LinearLayout
               android:id="@+id/order_cancel"
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_weight="1"
-              android:background="@drawable/icon_click"
               android:clickable="true"
               android:gravity="center"
               android:visibility="gone"
               android:orientation="vertical" >
 
               <ImageView
-                  android:layout_width="30dp"
-                  android:layout_height="30dp"
+                  android:layout_width="60dp"
+                  android:layout_height="60dp"
                   android:layout_marginBottom="5dp"
-                  android:background="@drawable/ic_cancel1"
+                  android:background="@drawable/icon_click"
+                  android:padding="15dip"
+                  android:src="@drawable/ic_cancel1"
                   android:contentDescription="@string/hello" />
 
               <TextView
@@ -301,16 +332,17 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_weight="1"
-              android:background="@drawable/icon_click"
               android:clickable="true"
               android:gravity="center"
               android:orientation="vertical" >
 
               <ImageView
-                  android:layout_width="30dp"
-                  android:layout_height="30dp"
+                  android:layout_width="60dp"
+                  android:layout_height="60dp"
                   android:layout_marginBottom="5dp"
-                  android:background="@drawable/add"
+                  android:background="@drawable/icon_click"
+                  android:padding="15dip"
+                  android:src="@drawable/add"
                   android:contentDescription="@string/hello" />
 
               <TextView
@@ -328,16 +360,17 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_weight="1"
-              android:background="@drawable/icon_click"
               android:clickable="true"
               android:gravity="center"
               android:orientation="vertical" >
 
               <ImageView
-                  android:layout_width="30dp"
-                  android:layout_height="30dp"
+                  android:layout_width="60dp"
+                  android:layout_height="60dp"
                   android:layout_marginBottom="5dp"
-                  android:background="@drawable/pick_up1"
+                  android:background="@drawable/icon_click"
+                  android:padding="15dip"
+                  android:src="@drawable/pick_up1"
                   android:contentDescription="@string/hello" />
 
               <TextView
@@ -354,16 +387,17 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_weight="1"
-              android:background="@drawable/icon_click"
               android:clickable="true"
               android:gravity="center"
               android:orientation="vertical" >
 
               <ImageView
-                  android:layout_width="30dp"
-                  android:layout_height="30dp"
+                  android:layout_width="60dp"
+                  android:layout_height="60dp"
                   android:layout_marginBottom="5dp"
-                  android:background="@drawable/sign_in_1"
+                  android:background="@drawable/icon_click"
+                  android:padding="15dip"
+                  android:src="@drawable/sign_in_1"
                   android:contentDescription="@string/hello" />
 
               <TextView
@@ -380,16 +414,17 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_weight="1"
-              android:background="@drawable/icon_click"
               android:clickable="true"
               android:gravity="center"
               android:orientation="vertical" >
 
               <ImageView
-                  android:layout_width="30dp"
-                  android:layout_height="30dp"
+                  android:layout_width="60dp"
+                  android:layout_height="60dp"
                   android:layout_marginBottom="5dp"
-                  android:background="@drawable/sign_up"
+                  android:background="@drawable/icon_click"
+                  android:padding="15dip"
+                  android:src="@drawable/sign_up"
                   android:contentDescription="@string/hello" />
 
               <TextView
@@ -405,16 +440,17 @@
              android:layout_width="0dp"
              android:layout_height="wrap_content"
              android:layout_weight="1"
-             android:background="@drawable/icon_click"
              android:clickable="true"
              android:gravity="center"
              android:orientation="vertical" >
 			
              <ImageView
-                 android:layout_width="30dp"
-                 android:layout_height="30dp"
-                 android:layout_marginBottom="5dp"
-                 android:background="@drawable/share"
+                 android:layout_width="60dp"
+                  android:layout_height="60dp"
+                  android:layout_marginBottom="5dp"
+                  android:background="@drawable/icon_click"
+                  android:padding="15dip"
+                  android:src="@drawable/share"
                  android:contentDescription="@string/hello" />
 
              <TextView
@@ -464,61 +500,32 @@
           android:layout_height="1dp"
           android:background="#dfa569"
           android:textStyle="bold"/>
-        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:paddingLeft="5dp" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pages : "
-                android:textColor="#a000"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/price_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="300"
-                android:textColor="#a000"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="5dp" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Language : "
-                android:textColor="#a000"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/publisher_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textColor="#a000"
-                android:textSize="14sp" />
-        </LinearLayout>
+      <TextView
+          android:id="@+id/price_label"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+      	  android:paddingLeft="5dp"
+          android:textColor="#a000"
+          android:textSize="14sp" />
+      <TextView
+          android:id="@+id/publisher_label"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:paddingLeft="5dp"
+          android:textColor="#a000"
+          android:textSize="14sp" />
      </LinearLayout>
-    <LinearLayout
+<!-- ######################################################################################## -->
+    <RelativeLayout
+        android:id="@+id/Summarylayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/DetailLayout"
-        android:orientation="vertical" >
+        android:layout_below="@id/DetailLayout">
 
         <TextView
+            android:id="@+id/summary_head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SUMMARY"
@@ -527,20 +534,61 @@
             android:textSize="12sp" />
 
         <View
+            android:id="@+id/summary_line"
+            android:layout_below="@+id/summary_head"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="#dfa569"
             android:textStyle="bold"/>
         <TextView
-          android:id="@+id/summary"
+          	android:id="@+id/summary"
+          	android:layout_below="@+id/summary_line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:layout_marginTop="5dp"
-            android:text="summary is not available"
+            android:text="fetching summary ..."
             android:textColor="#a000"
+            android:maxLines="5"
             android:textSize="14sp" />
-    </LinearLayout>
 
+        <TextView
+            android:id="@+id/expand"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#cfff"
+            android:gravity="center"
+            android:padding="12dip"
+            android:text="EXPAND"
+            android:textColor="#AD1F26"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+<!-- ######################################################################################## -->
+
+    <LinearLayout
+        android:id="@+id/ReviewLayout"
+        android:layout_below="@+id/Summarylayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="10dip">
+	      <TextView
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:text="REVIEWS"
+	          android:textColor="#dfa569"
+	          android:textStyle="bold"
+	          android:textSize="12sp" />
+	      <View
+	          android:layout_width="fill_parent"
+	          android:layout_height="1dp"
+	          android:background="#dfa569"
+	          android:textStyle="bold"/>
+     </LinearLayout>
 </RelativeLayout>
 </ScrollView>

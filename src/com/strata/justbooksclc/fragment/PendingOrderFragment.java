@@ -37,6 +37,7 @@ public class PendingOrderFragment extends ListFragment {
   private static final String TAG_LANGUAGE = "language";
   private static final String TAG_TITLE = "title";
   private static final String TAG_ID = "id";
+  private static final String ISBN = "isbn";
   private static final String TAG_ID_call = "title_id";
   private static final String RENTAL_ID = "rental_id";
   private static final String TIMES_RENTED = "no_of_times_rented";
@@ -59,14 +60,14 @@ public class PendingOrderFragment extends ListFragment {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    
+
     ColorDrawable gray = new ColorDrawable(this.getResources().getColor(R.color.gray));
 	getListView().setDivider(gray);
 	getListView().setDividerHeight(1);
-	
+
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
     StrictMode.setThreadPolicy(policy);
-  	
+
     SharedPreferences value = getActivity().getSharedPreferences("PREF", Context.MODE_PRIVATE);
     auth_token = value.getString("AUTH_TOKEN","");
     memb = value.getString("MEMBERSHIP_NO","");
@@ -79,34 +80,34 @@ public class PendingOrderFragment extends ListFragment {
   public void onListItemClick(ListView l, View view, int position, long id) {
     // Starting new intent
     Intent in = new Intent(this.getActivity().getApplicationContext(),SingleMenuItemActivity.class);
-    
-    in.putExtra(TAG_AUTHOR, bookList.get(position).getAuthor());
-    in.putExtra(TAG_CATEGORY, bookList.get(position).getCategory());
-    in.putExtra(TAG_TITLE, bookList.get(position).getTitle());
-    in.putExtra(TAG_LANGUAGE, bookList.get(position).getPublisher());
-    in.putExtra(TAG_PAGE, bookList.get(position).getPrice());
-    in.putExtra(TAG_IMAGE_URL, bookList.get(position).getImage_url());
-    in.putExtra(SUMMARY, bookList.get(position).getSummary());
-    in.putExtra(RENTAL_ID, bookList.get(position).getRental_id());
-    in.putExtra(TAG_ID_call, bookList.get(position).getId());
-    in.putExtra(TIMES_RENTED, bookList.get(position).getTimes_rented());
-    in.putExtra(AVG_READING, bookList.get(position).getAvg_reading());
-    in.putExtra(DeliveryOrderId, bookList.get(position).getDelivery_order_id());
-    
-    in.putExtra(AllowCancel, bookList.get(position).getAllow_cancel());
-    in.putExtra(DisallowCancelReason, bookList.get(position).getDisallow_cancel_reason());
-    in.putExtra(OrderType, bookList.get(position).getOrder_type());
-    in.putExtra(Status, bookList.get(position).getStatus());
+    Book bookAtPos = bookList.get(position);
+    in.putExtra(TAG_AUTHOR, bookAtPos.getAuthor());
+    in.putExtra(TAG_CATEGORY, bookAtPos.getCategory());
+    in.putExtra(TAG_TITLE, bookAtPos.getTitle());
+    in.putExtra(TAG_LANGUAGE, bookAtPos.getPublisher());
+    in.putExtra(TAG_PAGE, bookAtPos.getPrice());
+    in.putExtra(TAG_IMAGE_URL, bookAtPos.getImage_url());
+    in.putExtra(SUMMARY, bookAtPos.getSummary());
+    in.putExtra(RENTAL_ID, bookAtPos.getRental_id());
+    in.putExtra(TAG_ID_call, bookAtPos.getId());
+    in.putExtra(TIMES_RENTED, bookAtPos.getTimes_rented());
+    in.putExtra(AVG_READING, bookAtPos.getAvg_reading());
+    in.putExtra(DeliveryOrderId, bookAtPos.getDelivery_order_id());
+    in.putExtra(ISBN, bookAtPos.getIsbn());
+    in.putExtra(AllowCancel, bookAtPos.getAllow_cancel());
+    in.putExtra(DisallowCancelReason, bookAtPos.getDisallow_cancel_reason());
+    in.putExtra(OrderType, bookAtPos.getOrder_type());
+    in.putExtra(Status, bookAtPos.getStatus());
     in.putExtra("message", "pending");
-    
+
     startActivity(in);
   }
   private class JSONParse extends AsyncTask<String,String,JSONObject>{
     protected void onPreExecute(){
-      
+
     }
     protected JSONObject doInBackground(String... args){
-      String url = "http://"+Config.SERVER_BASE_URL+"/api/v1/delivery_order.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
+      String url = "http://"+Config.SERVER_BASE_URL+"/delivery_order.json?api_key="+auth_token+"&phone="+numb+"&membership_no="+memb;
       JSONParser jp = new JSONParser();
       JSONObject json = jp.getJSONFromUrl(url);
       if (isCancelled())
@@ -116,20 +117,20 @@ public class PendingOrderFragment extends ListFragment {
     }
     @SuppressWarnings("deprecation")
 	protected void onPostExecute(JSONObject json){
-	    
+
 	    if (json != null){
 	      try {
 	        // Getting Array of data
 	        list = json.getJSONArray(TAG_WISHLIST);
-	        //checking if the array is empty 
+	        //checking if the array is empty
 			if (list != null){
 				bookList.clear();
 		        // looping through All data
 		        for (int i = 0; i < list.length(); i++) {
 		          JSONObject c = list.getJSONObject(i);
-		          
+
 		          // Storing each json item in variable
-		  
+
 		          Book book = new Book();
 		          book.setTitle(c.getString(TAG_TITLE));
 		          book.setAuthor(c.getString(TAG_AUTHOR));
@@ -139,6 +140,7 @@ public class PendingOrderFragment extends ListFragment {
 		          book.setImage_url(c.getString(TAG_IMAGE_URL));
 		          book.setSummary(c.getString(SUMMARY));
 		          book.setId(c.getString(TAG_ID));
+		          book.setIsbn(c.getString(ISBN));
 		          book.setTimes_rented(c.getString(TIMES_RENTED));
 		          book.setAvg_reading(c.getString(AVG_READING));
 		          book.setRental_id(c.getString(RENTAL_ID));
@@ -161,7 +163,7 @@ public class PendingOrderFragment extends ListFragment {
 	      }catch (JSONException e) {
     		  setEmptyText("You dont have any Pending Orders");
 	      }
-		      
+
 	    }else{
 			AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
 	        alert.setTitle("Connection Time Out!");
@@ -175,7 +177,7 @@ public class PendingOrderFragment extends ListFragment {
 	        // Set the Icon for the Dialog
 	        alert.setIcon(R.drawable.gcm_icon);
 	        alert.show();
-	        
+
 		}
 	 }
   }
@@ -192,4 +194,4 @@ public class PendingOrderFragment extends ListFragment {
 	  if(json_parse != null)
 		  json_parse.cancel(true);
   }
-} 
+}
