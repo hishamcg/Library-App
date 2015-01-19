@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
@@ -32,7 +33,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Layout;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -41,6 +41,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -89,15 +90,17 @@ public class SingleMenuItemActivity  extends Activity {
 	private JSONParse json_parse = new JSONParse();
 	private JSONParseSummary json_summary;
 	private JSONRequest json_track;
-	String branch_name;
-	String title_id;
-	long time_of_last_shake = 0;
-	long initial_time = System.currentTimeMillis();
-	long buffer_time_for_shake = 1000;
+	private String branch_name;
+	private String title_id;
+	private long time_of_last_shake = 0;
+	private long initial_time = System.currentTimeMillis();
+	private long buffer_time_for_shake = 1000;
 	private String order_type = null;
 	private SensorManager mSensorManager;
 	private ShakeEventListener mSensorListener;
 	private TextView lblSummary;
+	private LinearLayout write_review_btn;
+	private Boolean showAvailability = true;
 
 	@Override
 	  public boolean onCreateOptionsMenu(Menu menu) {
@@ -191,6 +194,7 @@ public class SingleMenuItemActivity  extends Activity {
         TextView lblTimesRented = (TextView) findViewById(R.id.times_rented);
         TextView lblAvgReading = (TextView) findViewById(R.id.avg_reading);
         lblSummary = (TextView) findViewById(R.id.summary);
+        
         //final TextView lblpickup_order = (TextView) findViewById(R.id.pickup_order);
         ImageView lblimage = (ImageView) findViewById(R.id.image_label);
 
@@ -202,6 +206,7 @@ public class SingleMenuItemActivity  extends Activity {
         final LinearLayout pick_up = (LinearLayout) findViewById(R.id.pick_up);
         final LinearLayout order_cancel = (LinearLayout) findViewById(R.id.order_cancel);
         final LinearLayout track = (LinearLayout) findViewById(R.id.track);
+        write_review_btn = (LinearLayout) findViewById(R.id.write_review_btn);
         //final RelativeLayout pickup_layout = (RelativeLayout) findViewById(R.id.relativeLayout_pickup);
         final LinearLayout share = (LinearLayout) findViewById(R.id.share);
         /*if (pickup_order != null && !pickup_order.equals("")){
@@ -219,13 +224,15 @@ public class SingleMenuItemActivity  extends Activity {
         }else{
         	lblSummary.setText("summary not available");
         }
+        
+        //fetch review and availability
+		json_parse.execute();
 
         if (login_status.equals("user") || login_status.equals("exp_user")){
         	sign_in.setVisibility(View.GONE);
         	sign_up.setVisibility(View.GONE);
         	if (message.equals("create")){
         		remove.setVisibility(View.GONE);
-        		json_parse.execute();
 	        }
         	else if(message.equals("current")){
         		if(pickup_order.isEmpty() || pickup_order.equals("null")){
@@ -235,6 +242,7 @@ public class SingleMenuItemActivity  extends Activity {
         		add_to_list.setVisibility(View.GONE);
         		rental_btn.setVisibility(View.GONE);
         		avail_layout.setVisibility(View.GONE);
+        		showAvailability = false;
         	}else if (message.equals("pending")){
         		//lblpickup_order.setText("rental order in process...");
         		if(in.getBooleanExtra(AllowCancel,false)){
@@ -247,10 +255,8 @@ public class SingleMenuItemActivity  extends Activity {
         		remove.setVisibility(View.GONE);
         		add_to_list.setVisibility(View.GONE);
         		rental_btn.setVisibility(View.GONE);
-        		json_parse.execute();
         	}else{
 	        	add_to_list.setVisibility(View.GONE);
-        		json_parse.execute();
 	        }
         }else{
         	rental_btn.setVisibility(View.GONE);
@@ -258,6 +264,8 @@ public class SingleMenuItemActivity  extends Activity {
         	remove.setVisibility(View.GONE);
         	add_to_list.setVisibility(View.GONE);
         	avail_layout.setVisibility(View.GONE);
+        	write_review_btn.setVisibility(View.GONE);
+        	showAvailability = false;
         }
         lblAuthor.setText(author);
         lblCategory.setText(category);
@@ -457,39 +465,6 @@ public class SingleMenuItemActivity  extends Activity {
 
     }
 	
-	private class JSONRequest extends AsyncTask<String ,String , JSONObject>{
-		protected JSONObject doInBackground(String... args){
-			JSONParser jp = new JSONParser();
-			JSONObject json = jp.getJSONFromUrl(args[0]);
-			return json;
-		}
-		protected void onPostExecute(JSONObject json){
-			if (json != null && !isCancelled()){
-		      try {
-		        // Getting Array of data
-		    	  JSONArray list = json.getJSONArray("order_details");
-		        //checking if the array is empty
-				if (list != null && list.length()>0){
-					String[] track_list = new String[list.length()];
-			        // looping through All data
-			        for (int i = 0; i < list.length(); i++) {
-			          JSONObject c = list.getJSONObject(i);
-			          track_list[i] = c.getString("message"); 
-			        }
-			        ContextThemeWrapper cw = new ContextThemeWrapper(SingleMenuItemActivity.this, R.style.AlertDialogTheme );
-					AlertDialog.Builder builder = new AlertDialog.Builder(cw);
-					builder.setTitle("Order Status")
-				           .setItems(track_list,null);
-					builder.setIcon(R.drawable.gcm_icon);
-					builder.show();
-				}else{
-				}
-		      }catch (JSONException e) {
-		      }
-			}
-		}
-	}
-	
 	private String httpToPostRequest(String url) {
 		InputStream inputStream = null;
 		try {
@@ -560,19 +535,59 @@ public class SingleMenuItemActivity  extends Activity {
 	        }
 	    }
 	}
-
+	
+	//request for tracking order
+	private class JSONRequest extends AsyncTask<String ,String , JSONObject>{
+		protected JSONObject doInBackground(String... args){
+			JSONParser jp = new JSONParser();
+			JSONObject json = jp.getJSONFromUrl(args[0]);
+			return json;
+		}
+		protected void onPostExecute(JSONObject json){
+			if (json != null && !isCancelled()){
+		      try {
+		        // Getting Array of data
+		    	  JSONArray list = json.getJSONArray("order_details");
+		        //checking if the array is empty
+				if (list != null && list.length()>0){
+					String[] track_list = new String[list.length()];
+			        // looping through All data
+			        for (int i = 0; i < list.length(); i++) {
+			          JSONObject c = list.getJSONObject(i);
+			          track_list[i] = "On "+c.getString("date").split(" ")[0]+", "+c.getString("message"); 
+			        }
+			        ContextThemeWrapper cw = new ContextThemeWrapper(SingleMenuItemActivity.this, R.style.AlertDialogTheme );
+					AlertDialog.Builder builder = new AlertDialog.Builder(cw);
+					builder.setTitle("Order Status")
+				           .setItems(track_list,null);
+					builder.setIcon(R.drawable.gcm_icon);
+					builder.show();
+				}else{
+				}
+		      }catch (JSONException e) {
+		      }
+			}
+		}
+	}
+	
+	//check availability and fetch review
 	private class JSONParse extends AsyncTask<String,String,JSONObject>{
 	  protected void onPreExecute(){
-
+			  
 	  }
 	  protected JSONObject doInBackground(String... args){
-		  try {
-			branch_name = URLEncoder.encode(branch_name, "UTF-8");
-		  } catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				branch_name = "801";
+		  String url;
+		  if(showAvailability){
+			  try {
+				branch_name = URLEncoder.encode(branch_name, "UTF-8");
+			  } catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+					branch_name = "801";
+			  }
+			  url = "http://"+Config.SERVER_BASE_URL+"/titles/check_availability.json?title_id="+title_id+"&branch_name="+branch_name;
+		  }else{
+			  url = "http://"+Config.SERVER_BASE_URL+"/titles/check_availability.json?title_id="+title_id;
 		  }
-		  String url = "http://"+Config.SERVER_BASE_URL+"/titles/check_availability.json?title_id="+title_id+"&branch_name="+branch_name;
 		  JSONParser jp = new JSONParser();
 		  JSONObject json = jp.getJSONFromUrl(url);
 		  if (isCancelled()){
@@ -584,6 +599,7 @@ public class SingleMenuItemActivity  extends Activity {
 		  if (json != null && !isCancelled()){
 			  TextView lblavail_text = (TextView) findViewById(R.id.avail_text);
 		      ProgressBar progress_avail = (ProgressBar) findViewById(R.id.progress_avail);
+		      int no_reviews = 10;
 			  try {
 					// Getting Array of data
 				  String status = json.getString("status");
@@ -591,8 +607,54 @@ public class SingleMenuItemActivity  extends Activity {
 				  progress_avail.setVisibility(View.GONE);
 				} catch (JSONException e) {
 					e.printStackTrace();
-					lblavail_text.setText("Books in circulation. Not currently available") ;
+					lblavail_text.setText("Books in circulation.") ;
 					progress_avail.setVisibility(View.GONE);
+				}
+			  	LinearLayout linearLayout = (LinearLayout) findViewById(R.id.recent_reviews);
+			  	TextView lblAll_reviews = (TextView) findViewById(R.id.all_reviews);
+				//JSONArray reviews = organization.getJSONArray("reviews");
+			  	String review = "One challenge in using threads is to consider the lifecycle of the application. The Android system may kill your activity or trigger a configuration change which will also restart your activity.";
+				String name = "Amit Kumar";
+				if (no_reviews == 0){
+			        lblAll_reviews.setText("No Reviews Found");
+			        write_review_btn.setVisibility(View.GONE);
+				}else{
+					lblAll_reviews.setText("See all reviews ("+no_reviews+ ")");
+					lblAll_reviews.setTextColor(Color.parseColor("#D35050"));
+					lblAll_reviews.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent in = new Intent(getBaseContext(),AllReviewsActivity.class);
+							in.putExtra("title_id", title_id);
+							startActivity(in);
+						}
+					});
+					if(no_reviews > 2)
+						no_reviews = 2;
+				}
+				
+				for (int i = 0; i < no_reviews ; i++) {
+					//JSONObject review = reviews.getJSONObject(i);
+
+					TextView valueTV = new TextView(getBaseContext());
+			        //valueTV.setText("By "+review.getString("name"));
+					valueTV.setText("By "+name);
+			        valueTV.setTextColor(Color.parseColor("#444444"));
+			        valueTV.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+			        linearLayout.addView(valueTV);
+
+			        TextView valueTV1 = new TextView(getBaseContext());
+			        //valueTV1.setText(review.getString("content"));
+			        valueTV1.setText(review);
+			        valueTV1.setTextColor(Color.parseColor("#777777"));
+			        valueTV1.setPadding(5, 0, 0, 10);
+			        valueTV1.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+			        linearLayout.addView(valueTV1);
+			        
+			        View border_bottom = new View(getBaseContext());
+			        border_bottom.setBackgroundColor(Color.parseColor("#dddddd"));
+			        border_bottom.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,1));
+			        linearLayout.addView(border_bottom);
 				}
 		  }
 	  }

@@ -83,6 +83,12 @@
         </activity>
         
         <activity
+            android:name="com.strata.justbooksclc.activity.AllReviewsActivity"
+            android:label="Review"
+            android:screenOrientation="portrait">
+        </activity>
+        
+        <activity
             android:name="com.strata.justbooksclc.activity.Policy"
             android:label="Terms and Conditions"
             android:screenOrientation="portrait">

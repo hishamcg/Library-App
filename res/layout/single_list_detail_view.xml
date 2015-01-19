@@ -589,6 +589,38 @@
 	          android:layout_height="1dp"
 	          android:background="#dfa569"
 	          android:textStyle="bold"/>
+	      <LinearLayout
+	          android:id="@+id/recent_reviews"
+	          android:layout_marginTop="5dp"
+	          android:layout_width="fill_parent"
+	          android:layout_height="wrap_content"
+	          android:orientation="vertical"/>
+	      <TextView
+	          android:id="@+id/all_reviews"
+	          android:layout_width="fill_parent"
+	          android:layout_height="wrap_content"
+	          android:padding="5dip"
+	          android:text="fetching review ..."
+	          android:textColor="#a000"
+	          android:textStyle="bold"/>
+	      <LinearLayout
+		      android:id="@+id/write_review_btn"
+	          android:layout_marginTop="5dp"
+	          android:layout_width="fill_parent"
+	          android:layout_height="wrap_content"
+	          android:gravity="center"
+	          android:background="@drawable/button_white">
+		      <TextView
+		          android:layout_width="wrap_content"
+		          android:layout_height="wrap_content"
+		          android:drawableLeft="@drawable/ic_review"
+		          android:gravity="center_vertical"
+		          android:drawablePadding="10dip"
+		          android:text="WRITE REVIEW"
+		          android:textSize="12sp"
+		          android:textColor="#a000"
+		          android:textStyle="bold"/>
+	      </LinearLayout>
      </LinearLayout>
 </RelativeLayout>
 </ScrollView>

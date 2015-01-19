@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dip"
+    android:background="@drawable/review_bubble"
+    android:orientation="vertical"
+    android:paddingLeft="10dip"
+    android:paddingBottom="10dip"
+    android:paddingTop="10dip"
+    android:paddingRight="20dip" >
+    <TextView 
+        android:id="@+id/id_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12-10-13"
+        android:textColor="#111"
+        android:textStyle="italic"/>
+    <TextView 
+        android:id="@+id/id_publisher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Publisher"
+        android:textColor="#005580"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="5dip"/>
+    <TextView 
+        android:id="@+id/id_content"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dip"
+        android:layout_height="wrap_content"
+        android:text="Enjoyed minutes related as at on on. Is fanny dried as often me. Goodness as reserved raptures to mistaken steepest oh screened he. Gravity he mr sixteen..."
+        android:textColor="#a111"
+        android:textSize="12sp"/>
+</LinearLayout>
